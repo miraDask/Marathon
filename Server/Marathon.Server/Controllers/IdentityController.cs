@@ -1,9 +1,5 @@
 ﻿namespace Marathon.Server.Controllers
 {
-    using System;
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Security.Claims;
-    using System.Text;
     using System.Threading.Tasks;
 
     using Marathon.Server.Data;
@@ -12,7 +8,6 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
-    using Microsoft.IdentityModel.Tokens;
 
     public class IdentityController : ApiController
     {
@@ -52,7 +47,7 @@
 
         [HttpPost]
         [Route(nameof(Login))]
-        public async Task<ActionResult<string>> Login(LoginRequestModel input)
+        public async Task<ActionResult<LoginResponseModel>> Login(LoginRequestModel input)
         {
             var user = await this.userManager.FindByNameAsync(input.UserName);
             if (user == null)
@@ -68,11 +63,10 @@
 
             var encriptedToken = this.identityService.GenerateJwtToken(user.Id, user.UserName, this.appSettings.Secret);
 
-            return encriptedToken;
-            //return new LoginResponseModel()
-            //{
-            //    Token = encriptedToken,
-            //};
+            return new LoginResponseModel()
+            {
+                Token = encriptedToken,
+            };
         }
     }
 }
