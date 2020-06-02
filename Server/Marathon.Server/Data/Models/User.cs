@@ -1,4 +1,4 @@
-﻿namespace Marathon.Server.Data
+﻿namespace Marathon.Server.Data.Models
 {
     using Microsoft.AspNetCore.Identity;
 

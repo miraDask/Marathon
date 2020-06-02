@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    using Marathon.Server.Data;
+    using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Identity.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;

@@ -3,6 +3,7 @@
     using System.Text;
 
     using Marathon.Server.Data;
+    using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Identity;
     using Marathon.Server.Infrastructure.Filters;
 
