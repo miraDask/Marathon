@@ -1,10 +1,9 @@
-﻿namespace Marathon.Server.Controllers
+﻿namespace Marathon.Server.Features.Identity
 {
     using System.Threading.Tasks;
 
     using Marathon.Server.Data;
-    using Marathon.Server.Models.Identity;
-    using Marathon.Server.Services;
+    using Marathon.Server.Features.Identity.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;

@@ -1,4 +1,4 @@
-﻿namespace Marathon.Server.Services
+﻿namespace Marathon.Server.Features.Identity
 {
     using System;
     using System.IdentityModel.Tokens.Jwt;

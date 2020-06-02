@@ -1,4 +1,4 @@
-﻿namespace Marathon.Server.Controllers
+﻿namespace Marathon.Server.Features
 {
     using Microsoft.AspNetCore.Mvc;
 

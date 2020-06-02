@@ -1,4 +1,4 @@
-﻿namespace Marathon.Server.Services
+﻿namespace Marathon.Server.Features.Identity
 {
     public interface IIdentityService
     {

@@ -1,4 +1,4 @@
-﻿namespace Marathon.Server.Models.Identity
+﻿namespace Marathon.Server.Features.Identity.Models
 {
     public class LoginResponseModel
     {
