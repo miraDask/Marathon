@@ -1,7 +1,6 @@
 ﻿namespace Marathon.Server.Data.Common
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Marathon.Server.Data.Models;
@@ -18,12 +17,21 @@
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
 
             // creating first user;
-            await CreateUser(userManager, UserName, Email);
+            var users = await userManager.Users.AnyAsync();
+            if (!users)
+            {
+                await CreateUser(userManager, UserName, Email);
+            }
 
             // creating initial issue statuses;
-            await CreateStatus(ToDoStatus, dbContext);
-            await CreateStatus(InProgressStatus, dbContext);
-            await CreateStatus(DoneStatus, dbContext);
+            var statusCollection = await dbContext.Statuses.AnyAsync();
+
+            if (!statusCollection)
+            {
+                await CreateStatus(ToDoStatus, dbContext);
+                await CreateStatus(InProgressStatus, dbContext);
+                await CreateStatus(DoneStatus, dbContext);
+            }
         }
 
         private static async Task<string> CreateUser(
@@ -38,12 +46,7 @@
             };
 
             var password = Password;
-
-            if (!userManager.Users.Any())
-            {
-                await userManager.CreateAsync(user, password);
-            }
-
+            await userManager.CreateAsync(user, password);
             return user.Id;
         }
 
@@ -54,13 +57,8 @@
                 Name = name,
             };
 
-            var statusCollection = await dbContext.Statuses.AnyAsync();
-
-            if (!statusCollection)
-            {
-                await dbContext.Statuses.AddAsync(status);
-                await dbContext.SaveChangesAsync();
-            }
+            await dbContext.Statuses.AddAsync(status);
+            await dbContext.SaveChangesAsync();
         }
     }
 }
