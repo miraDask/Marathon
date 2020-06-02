@@ -4,14 +4,16 @@ using Marathon.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Marathon.Server.Data.Migrations
 {
     [DbContext(typeof(MarathonDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200602224316_AddIssueSprintAndStatusEntities")]
+    partial class AddIssueSprintAndStatusEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,6 +56,9 @@ namespace Marathon.Server.Data.Migrations
 
                     b.Property<string>("ReporterId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ReportetId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SprintId")
                         .HasColumnType("int");

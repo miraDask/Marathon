@@ -22,6 +22,12 @@
         {
         }
 
+        public DbSet<Status> Statuses { get; set; }
+
+        public DbSet<Issue> Issues { get; set; }
+
+        public DbSet<Sprint> Sprints { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // Needed for Identity models configuration

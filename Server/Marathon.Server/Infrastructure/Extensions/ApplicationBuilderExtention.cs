@@ -1,6 +1,7 @@
 ﻿namespace Marathon.Server.Infrastructure.Extentions
 {
     using Marathon.Server.Data;
+    using Marathon.Server.Data.Common;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
@@ -21,8 +22,8 @@
             using var services = app.ApplicationServices.CreateScope();
 
             var dbContext = services.ServiceProvider.GetService<MarathonDbContext>();
-
             dbContext.Database.Migrate();
+            new DbContextSeeder().SeedAsync(dbContext, services.ServiceProvider).GetAwaiter().GetResult();
         }
     }
 }
