@@ -25,6 +25,7 @@ namespace Marathon.Server
                  .AddIdentity()
                  .AddJwtAuthentication(services.GetApplicationSettings(this.Configuration))
                  .AddApplicationServices()
+                 .AddSwagger()
                  .AddApiControllers();
         }
 
@@ -36,6 +37,7 @@ namespace Marathon.Server
             }
 
             app
+                .UseSwaggerUI()
                 .UseRouting()
                 .UseAuthorization()
                 .UseCors(options => options
