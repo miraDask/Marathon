@@ -27,5 +27,8 @@
   <ItemGroup>
     <None Include=".\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Configurations\" />
+  </ItemGroup>
 
 </Project>
