@@ -12,12 +12,13 @@
         public Project()
         {
             this.Sprints = new HashSet<Sprint>();
-            this.TeamsProjects = new HashSet<TeamProject>();
         }
 
         [Required]
         [MaxLength(NameMaxLength)]
         public string Name { get; set; }
+
+        public string ImageUrl { get; set; }
 
         [Required]
         [MaxLength(KeyMaxLength)]
@@ -29,7 +30,7 @@
 
         public virtual ICollection<Sprint> Sprints { get; set; }
 
-        public virtual ICollection<TeamProject> TeamsProjects { get; set; }
+        public virtual ICollection<Team> Teams { get; set; }
 
         public virtual ICollection<Issue> Issues { get; set; }
     }

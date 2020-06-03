@@ -9,7 +9,7 @@
     {
         public void Configure(EntityTypeBuilder<Project> project)
         {
-            project.HasMany(x => x.TeamsProjects)
+            project.HasMany(x => x.Teams)
                 .WithOne(x => x.Project)
                 .HasForeignKey(x => x.ProjectId);
         }

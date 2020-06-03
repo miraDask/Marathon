@@ -4,14 +4,16 @@ using Marathon.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Marathon.Server.Data.Migrations
 {
     [DbContext(typeof(MarathonDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200603153451_AddImageUrlToUserTeamAndProject")]
+    partial class AddImageUrlToUserTeamAndProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,9 +246,6 @@ namespace Marathon.Server.Data.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
@@ -256,9 +255,22 @@ namespace Marathon.Server.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
+                    b.ToTable("Teams");
+                });
+
+            modelBuilder.Entity("Marathon.Server.Data.Models.TeamProject", b =>
+                {
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TeamId", "ProjectId");
+
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Teams");
+                    b.ToTable("TeamsProjects");
                 });
 
             modelBuilder.Entity("Marathon.Server.Data.Models.TeamUser", b =>
@@ -534,11 +546,17 @@ namespace Marathon.Server.Data.Migrations
                         .HasForeignKey("ProjectId");
                 });
 
-            modelBuilder.Entity("Marathon.Server.Data.Models.Team", b =>
+            modelBuilder.Entity("Marathon.Server.Data.Models.TeamProject", b =>
                 {
                     b.HasOne("Marathon.Server.Data.Models.Project", "Project")
-                        .WithMany("Teams")
+                        .WithMany("TeamsProjects")
                         .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Marathon.Server.Data.Models.Team", "Team")
+                        .WithMany("TeamsProjects")
+                        .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

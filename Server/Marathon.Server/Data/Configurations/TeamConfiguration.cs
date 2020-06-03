@@ -11,10 +11,6 @@
             team.HasMany(x => x.TeamsUsers)
                 .WithOne(x => x.Team)
                 .HasForeignKey(x => x.TeamId);
-
-            team.HasMany(x => x.TeamsProjects)
-                .WithOne(x => x.Team)
-                .HasForeignKey(x => x.TeamId);
         }
     }
 }

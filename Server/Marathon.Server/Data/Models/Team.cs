@@ -11,7 +11,6 @@
     {
         public Team()
         {
-            this.TeamsProjects = new HashSet<TeamProject>();
             this.TeamsUsers = new HashSet<TeamUser>();
         }
 
@@ -19,7 +18,11 @@
         [MaxLength(TitleMaxLength)]
         public string Title { get; set; }
 
-        public virtual ICollection<TeamProject> TeamsProjects { get; set; }
+        public string ImageUrl { get; set; }
+
+        public int ProjectId { get; set; }
+
+        public virtual Project Project { get; set; }
 
         public virtual ICollection<TeamUser> TeamsUsers { get; set; }
     }

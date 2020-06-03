@@ -17,6 +17,8 @@
             this.CreatedProjects = new HashSet<Project>();
         }
 
+        public string ImageUrl { get; set; }
+
         [InverseProperty("Reporter")]
         public virtual ICollection<Issue> ReportedIssues { get; set; }
 
