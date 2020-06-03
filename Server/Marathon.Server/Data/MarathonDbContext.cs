@@ -28,6 +28,14 @@
 
         public DbSet<Sprint> Sprints { get; set; }
 
+        public DbSet<Project> Projects { get; set; }
+
+        public DbSet<Team> Teams { get; set; }
+
+        public DbSet<TeamProject> TeamsProjects { get; set; }
+
+        public DbSet<TeamUser> TeamsUsers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // Needed for Identity models configuration

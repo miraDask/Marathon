@@ -12,6 +12,8 @@
     <Compile Remove="Data\Migrations\20200602223610_AddIssueSprintAndStatusEntities.Designer.cs" />
     <Compile Remove="Data\Migrations\20200602223832_AddIssueSprintAndStatusEntities.cs" />
     <Compile Remove="Data\Migrations\20200602223832_AddIssueSprintAndStatusEntities.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200603002116_AddTeamProjectTeamsProjectsTeamsUsersEntities.cs" />
+    <Compile Remove="Data\Migrations\20200603002116_AddTeamProjectTeamsProjectsTeamsUsersEntities.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,9 +37,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".\.editorconfig" Link=".editorconfig" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\Configurations\" />
   </ItemGroup>
 
 </Project>

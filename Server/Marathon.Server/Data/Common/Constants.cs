@@ -33,5 +33,17 @@
         {
             public const int NameMaxLength = 25;
         }
+
+        public static class Team
+        {
+            public const int TitleMaxLength = 50;
+        }
+
+        public static class Project
+        {
+            public const int NameMaxLength = 80;
+            public const int KeyMaxLength = 10;
+        }
+
     }
 }

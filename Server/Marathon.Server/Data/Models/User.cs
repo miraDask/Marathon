@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+
     using Marathon.Server.Data.Common;
     using Microsoft.AspNetCore.Identity;
 
@@ -12,6 +13,8 @@
         {
             this.ReportedIssues = new HashSet<Issue>();
             this.AssignedIssues = new HashSet<Issue>();
+            this.TeamsUsers = new HashSet<TeamUser>();
+            this.CreatedProjects = new HashSet<Project>();
         }
 
         [InverseProperty("Reporter")]
@@ -19,6 +22,10 @@
 
         [InverseProperty("Assignee")]
         public virtual ICollection<Issue> AssignedIssues { get; set; }
+
+        public virtual ICollection<TeamUser> TeamsUsers { get; set; }
+
+        public virtual ICollection<Project> CreatedProjects { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

@@ -23,6 +23,8 @@
         [MaxLength(DescriptionMaxLength)]
         public string Description { get; set; }
 
+        public bool IsResolved { get; set; }
+
         public int? StoryPoins { get; set; }
 
         public Priority Priority { get; set; }
@@ -47,8 +49,12 @@
 
         public int? ParentIssueId { get; set; }
 
+        public int ProjectId { get; set; }
+
+        public virtual Project Project { get; set; }
+
         public virtual Issue ParentIssue { get; set; }
 
-        public ICollection<Issue> ChildIssues { get; set; }
+        public virtual ICollection<Issue> ChildIssues { get; set; }
     }
 }
