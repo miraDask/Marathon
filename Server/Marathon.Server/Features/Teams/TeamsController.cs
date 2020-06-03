@@ -2,13 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Teams.Models;
     using Marathon.Server.Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
     using static Marathon.Server.Infrastructure.WebConstants;
 
@@ -53,7 +53,7 @@
         }
 
         [HttpDelete]
-        [Route(Id)]
+        [Route(TeamId)]
         public async Task<ActionResult> Delete(int id)
         {
             var deleted = await this.teamService.DeleteAsync(id);
@@ -74,7 +74,7 @@
         }
 
         [HttpPost]
-        [Route(Id)]
+        [Route(TeamId)]
         public async Task<ActionResult<int>> AssignUserToTeam(AddUserToTeamRequestModel input)
         {
             var user = await this.userManager.FindByEmailAsync(input.Email);
@@ -85,6 +85,20 @@
             }
 
             var success = await this.teamService.AddUserToTeamAsync(user, input.TeamId);
+
+            if (!success)
+            {
+                return this.BadRequest();
+            }
+
+            return this.Ok();
+        }
+
+        [HttpDelete]
+        [Route(TeamIdUserId)]
+        public async Task<ActionResult<int>> RemoveUserFromTeam(DeleteUserFromTeamRequestModel input)
+        {
+            var success = await this.teamService.RemoveUserFromTeamAsync(input.UserId, input.TeamId);
 
             if (!success)
             {

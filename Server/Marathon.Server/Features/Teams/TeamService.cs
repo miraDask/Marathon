@@ -107,6 +107,20 @@
                 })
                 .FirstOrDefaultAsync();
 
+        public async Task<bool> RemoveUserFromTeamAsync(string userId, int teamId)
+        {
+            var teamUser = await this.dbContext.TeamsUsers.FirstOrDefaultAsync(x => x.UserId == userId && x.TeamId == teamId );
+            if (teamUser == null)
+            {
+                return false;
+            }
+
+            this.dbContext.TeamsUsers.Remove(teamUser);
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<bool> UpdateAsync(int id, string title, string imageUrl, int projectId)
         {
             var team = await this.GetByIdAsync(id);
