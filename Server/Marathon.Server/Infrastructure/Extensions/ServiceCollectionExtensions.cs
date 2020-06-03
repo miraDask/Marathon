@@ -5,6 +5,7 @@
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Identity;
+    using Marathon.Server.Features.Teams;
     using Marathon.Server.Infrastructure.Filters;
 
     using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -79,7 +80,8 @@
 
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
             => services
-                .AddTransient<IIdentityService, IdentityService>();
+                .AddTransient<IIdentityService, IdentityService>()
+                .AddTransient<ITeamService, TeamService>();
 
         public static IServiceCollection AddSwagger(this IServiceCollection services)
             => services.AddSwaggerGen(c =>
