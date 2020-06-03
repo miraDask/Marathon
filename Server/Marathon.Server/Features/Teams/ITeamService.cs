@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
+    using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Teams.Models;
 
     public interface ITeamService
@@ -16,5 +16,7 @@
         Task<IEnumerable<TeamListingServiceModel>> GetAllByProjectIdAsync(int id);
 
         Task<TeamDetailsServiceModel> GetDetailsAsync(int id);
+
+        Task<bool> AddUserToTeamAsync(User user, int teamId);
     }
 }

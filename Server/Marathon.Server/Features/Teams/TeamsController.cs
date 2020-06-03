@@ -2,11 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
+    using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Teams.Models;
     using Marathon.Server.Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
     using static Marathon.Server.Infrastructure.WebConstants;
 
@@ -14,10 +16,12 @@
     public class TeamsController : ApiController
     {
         private readonly ITeamService teamService;
+        private readonly UserManager<User> userManager;
 
-        public TeamsController(ITeamService teamService)
+        public TeamsController(ITeamService teamService, UserManager<User> userManager)
         {
             this.teamService = teamService;
+            this.userManager = userManager;
         }
 
         [HttpPost]
@@ -67,6 +71,27 @@
         public async Task<IEnumerable<TeamListingServiceModel>> GetAll(int projectId)
         {
             return await this.teamService.GetAllByProjectIdAsync(projectId);
+        }
+
+        [HttpPost]
+        [Route(Id)]
+        public async Task<ActionResult<int>> AssignUserToTeam(AddUserToTeamRequestModel input)
+        {
+            var user = await this.userManager.FindByEmailAsync(input.Email);
+
+            if (user == null)
+            {
+                return this.BadRequest();
+            }
+
+            var success = await this.teamService.AddUserToTeamAsync(user, input.TeamId);
+
+            if (!success)
+            {
+                return this.BadRequest();
+            }
+
+            return this.Ok();
         }
 
         [HttpGet]

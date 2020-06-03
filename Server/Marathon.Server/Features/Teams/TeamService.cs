@@ -7,6 +7,7 @@
 
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
+    using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Teams.Models;
     using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,27 @@
         public TeamService(MarathonDbContext dbContext)
         {
             this.dbContext = dbContext;
+        }
+
+        public async Task<bool> AddUserToTeamAsync(User user, int teamId)
+        {
+            var team = await this.GetByIdAsync(teamId);
+
+            if (team == null)
+            {
+                return false;
+            }
+
+            var teamUser = new TeamUser()
+            {
+                Team = team,
+                User = user,
+            };
+
+            await this.dbContext.TeamsUsers.AddAsync(teamUser);
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<int> CreateAsync(string title, string imageUrl, int projectId)
@@ -37,7 +59,7 @@
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var team = await this.GetById(id);
+            var team = await this.GetByIdAsync(id);
 
             if (team == null)
             {
@@ -76,13 +98,18 @@
                 {
                     Title = x.Title,
                     ImageUrl = x.ImageUrl,
-                    TeamUsers = x.TeamsUsers.Select(x => x.User.UserName),
+                    TeamUsers = x.TeamsUsers.Select(x => new UserInTeamListingServerModel()
+                    {
+                        Id = x.User.Id,
+                        UserName = x.User.UserName,
+                        ImageUrl = x.User.ImageUrl,
+                    }),
                 })
                 .FirstOrDefaultAsync();
 
         public async Task<bool> UpdateAsync(int id, string title, string imageUrl, int projectId)
         {
-            var team = await this.GetById(id);
+            var team = await this.GetByIdAsync(id);
 
             if (team == null)
             {
@@ -99,7 +126,7 @@
             return true;
         }
 
-        private async Task<Team> GetById(int id)
+        private async Task<Team> GetByIdAsync(int id)
         => await this.dbContext
                 .Teams
                 .Where(x => x.Id == id)

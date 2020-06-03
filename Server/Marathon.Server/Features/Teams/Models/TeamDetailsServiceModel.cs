@@ -2,12 +2,14 @@
 {
     using System.Collections.Generic;
 
+    using Marathon.Server.Features.Identity.Models;
+
     public class TeamDetailsServiceModel
     {
         public string Title { get; set; }
 
         public string ImageUrl { get; set; }
 
-        public virtual IEnumerable<string> TeamUsers { get; set; }
+        public virtual IEnumerable<UserInTeamListingServerModel> TeamUsers { get; set; }
     }
 }
