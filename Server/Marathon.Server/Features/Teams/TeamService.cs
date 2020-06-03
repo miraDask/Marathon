@@ -1,11 +1,13 @@
 ﻿namespace Marathon.Server.Features.Teams
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
+    using Marathon.Server.Features.Teams.Models;
     using Microsoft.EntityFrameworkCore;
 
     public class TeamService : ITeamService
@@ -52,6 +54,32 @@
             return true;
         }
 
+        public async Task<IEnumerable<TeamListingServiceModel>> GetAllByProjectIdAsync(int id)
+        {
+            return await this.dbContext
+                .Teams
+                .Where(x => x.ProjectId == id)
+                .Select(x => new TeamListingServiceModel()
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    ImageUrl = x.Title,
+                })
+                .ToListAsync();
+        }
+
+        public async Task<TeamDetailsServiceModel> GetDetailsAsync(int id)
+        => await this.dbContext
+                .Teams
+                .Where(x => x.Id == id)
+                .Select(x => new TeamDetailsServiceModel()
+                {
+                    Title = x.Title,
+                    ImageUrl = x.ImageUrl,
+                    TeamUsers = x.TeamsUsers.Select(x => x.User.UserName),
+                })
+                .FirstOrDefaultAsync();
+
         public async Task<bool> UpdateAsync(int id, string title, string imageUrl, int projectId)
         {
             var team = await this.GetById(id);
@@ -74,7 +102,7 @@
         private async Task<Team> GetById(int id)
         => await this.dbContext
                 .Teams
-                .Where(c => c.Id == id)
+                .Where(x => x.Id == id)
                 .FirstOrDefaultAsync();
     }
 }

@@ -1,8 +1,10 @@
 ﻿namespace Marathon.Server.Features.Teams
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Marathon.Server.Features.Teams.Models;
+    using Marathon.Server.Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -59,5 +61,17 @@
 
             return this.Ok();
         }
+
+        [HttpGet]
+        [Route(ProjectId)]
+        public async Task<IEnumerable<TeamListingServiceModel>> GetAll(int projectId)
+        {
+            return await this.teamService.GetAllByProjectIdAsync(projectId);
+        }
+
+        [HttpGet]
+        [Route(ProjectTeam)]
+        public async Task<ActionResult<TeamDetailsServiceModel>> Details(int teamId)
+            => await this.teamService.GetDetailsAsync(teamId);
     }
 }
