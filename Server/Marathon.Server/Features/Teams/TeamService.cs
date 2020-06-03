@@ -33,6 +33,25 @@
             return team.Id;
         }
 
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var team = await this.GetById(id);
+
+            if (team == null)
+            {
+                return false;
+            }
+
+            team.IsDeleted = true;
+            team.DeletedOn = DateTime.UtcNow;
+
+            this.dbContext.Teams.Update(team);
+
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<bool> UpdateAsync(int id, string title, string imageUrl, int projectId)
         {
             var team = await this.GetById(id);

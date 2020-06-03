@@ -3,9 +3,10 @@
     using System.Threading.Tasks;
 
     using Marathon.Server.Features.Teams.Models;
-    using Marathon.Server.Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
+    using static Marathon.Server.Infrastructure.WebConstants;
 
     // [Authorize]
     public class TeamsController : ApiController
@@ -38,6 +39,20 @@
                 input.ProjectId);
 
             if (!updated)
+            {
+                return this.BadRequest();
+            }
+
+            return this.Ok();
+        }
+
+        [HttpDelete]
+        [Route(Id)]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var deleted = await this.teamService.DeleteAsync(id);
+
+            if (!deleted)
             {
                 return this.BadRequest();
             }

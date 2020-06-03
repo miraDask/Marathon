@@ -7,5 +7,7 @@
         Task<int> CreateAsync(string title, string imageUrl, int projectId);
 
         Task<bool> UpdateAsync(int id, string title, string imageUrl, int projectId);
+
+        Task<bool> DeleteAsync(int id);
     }
 }
