@@ -4,6 +4,8 @@
 
     public interface ITeamService
     {
-        Task<int> Create(string title, string imageUrl, int projectId);
+        Task<int> CreateAsync(string title, string imageUrl, int projectId);
+
+        Task<bool> UpdateAsync(int id, string title, string imageUrl, int projectId);
     }
 }

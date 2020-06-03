@@ -1,8 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace Marathon.Server.Data.Migrations
+﻿namespace Marathon.Server.Data.Migrations
 {
+    using System;
+
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class UpdateUserEntityToInheriteIAuditInfoAndIDeletableEntity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

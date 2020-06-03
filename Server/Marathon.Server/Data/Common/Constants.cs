@@ -44,6 +44,5 @@
             public const int NameMaxLength = 80;
             public const int KeyMaxLength = 10;
         }
-
     }
 }

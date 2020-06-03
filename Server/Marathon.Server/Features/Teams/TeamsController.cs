@@ -7,7 +7,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    //[Authorize]
+    // [Authorize]
     public class TeamsController : ApiController
     {
         private readonly ITeamService teamService;
@@ -18,17 +18,31 @@
         }
 
         [HttpPost]
-        //[Route(nameof(Create))]
         public async Task<ActionResult<int>> Create(CreateTeamRequestModel input)
         {
-            var userId = this.User.GetId();
-
-            var id = await this.teamService.Create(
+            var id = await this.teamService.CreateAsync(
                 input.Title,
                 input.ImageUrl,
                 input.ProjectId);
 
             return this.Created(nameof(this.Create), id);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Update(UpdateTeamRequestModel input)
+        {
+            var updated = await this.teamService.UpdateAsync(
+                input.Id,
+                input.Title,
+                input.ImageUrl,
+                input.ProjectId);
+
+            if (!updated)
+            {
+                return this.BadRequest();
+            }
+
+            return this.Ok();
         }
     }
 }
