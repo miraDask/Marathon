@@ -119,10 +119,33 @@
             return project;
         }
 
+        public async Task<bool> AddTeamToProjectAsync(int projectId, int teamId)
+        {
+            var project = await this.GetByIdAsync(projectId);
+
+            if (project == null)
+            {
+                return false;
+            }
+
+            var team = await this.dbContext.Teams.FirstOrDefaultAsync(x => x.Id == teamId);
+
+            if (team == null)
+            {
+                return false;
+            }
+
+            project.Teams.Add(team);
+            this.dbContext.Update(project);
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
         private async Task<Project> GetByIdAsync(int id)
-        => await this.dbContext
-                .Projects
-                .Where(x => x.Id == id)
-                .FirstOrDefaultAsync();
+            => await this.dbContext
+                    .Projects
+                    .Where(x => x.Id == id)
+                    .FirstOrDefaultAsync();
     }
 }

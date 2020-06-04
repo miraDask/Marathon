@@ -16,5 +16,7 @@
         Task<IEnumerable<ProjectListingServiceModel>> GetAllByUserIdAsync(string id);
 
         Task<ProjectDetailsServiceModel> GetDetailsAsync(int id);
+
+        Task<bool> AddTeamToProjectAsync(int projectId, int teamId);
     }
 }

@@ -115,5 +115,26 @@
         [Route(ProjectId)]
         public async Task<ActionResult<ProjectDetailsServiceModel>> Details(int projectId)
             => await this.projectsService.GetDetailsAsync(projectId);
+
+        /// <summary>
+        /// Assign current Team to current Project.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <response code="201"> Successfully assigned team to project.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpPost]
+        [Route(ProjectId)]
+        public async Task<ActionResult<int>> AssignTeamToProject(AddTeamToProjectRequestModel input)
+        {
+            var success = await this.projectsService.AddTeamToProjectAsync(input.ProjectId, input.TeamId);
+
+            if (!success)
+            {
+                return this.BadRequest();
+            }
+
+            return this.Ok();
+        }
     }
 }

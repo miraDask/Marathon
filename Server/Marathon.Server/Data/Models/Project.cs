@@ -12,6 +12,8 @@
         public Project()
         {
             this.Sprints = new HashSet<Sprint>();
+            this.Teams = new HashSet<Team>();
+            this.Issues = new HashSet<Issue>();
         }
 
         [Required]

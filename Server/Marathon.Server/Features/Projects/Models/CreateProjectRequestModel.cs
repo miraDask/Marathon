@@ -17,8 +17,5 @@
         [MinLength(KeyMinLength)]
         [MaxLength(KeyMaxLength)]
         public string Key { get; set; }
-
-        [Required]
-        public string CreatorId { get; set; }
     }
 }
