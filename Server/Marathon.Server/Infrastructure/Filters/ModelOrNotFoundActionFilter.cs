@@ -13,7 +13,7 @@
 
                 if (model == null)
                 {
-                    context.Result = new NotFoundResult();
+                    context.Result = new BadRequestResult();
                 }
             }
         }

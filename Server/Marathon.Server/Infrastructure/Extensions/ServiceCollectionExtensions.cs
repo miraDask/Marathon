@@ -1,5 +1,10 @@
 ﻿namespace Marathon.Server.Infrastructure.Extensions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.IO;
+    using System.Reflection;
     using System.Text;
 
     using Marathon.Server.Data;
@@ -60,6 +65,7 @@
                 .AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(x =>
@@ -72,6 +78,8 @@
                         IssuerSigningKey = new SymmetricSecurityKey(key),
                         ValidateIssuer = false,
                         ValidateAudience = false,
+                        RequireExpirationTime = false,
+                        ValidateLifetime = true,
                     };
                 });
 
@@ -84,16 +92,48 @@
                 .AddTransient<ITeamService, TeamService>();
 
         public static IServiceCollection AddSwagger(this IServiceCollection services)
-            => services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc(
-                    "v1",
-                    new OpenApiInfo
-                    {
-                        Title = "Marathon API",
-                        Version = "v1",
-                    });
-            });
+        {
+            return services.AddSwaggerGen(c =>
+                        {
+                            c.SwaggerDoc(
+                                "v1",
+                                new OpenApiInfo
+                                {
+                                    Title = "Marathon API",
+                                    Version = "v1",
+                                });
+
+                            // Bearer token authentication
+                            var securityScheme = new OpenApiSecurityScheme
+                            {
+                                Name = "Authorization",
+                                Description = "Enter JWT Bearer authorisation token",
+                                In = ParameterLocation.Header,
+                                Type = SecuritySchemeType.Http,
+                                Scheme = "bearer", // must be lowercase!!!
+                                BearerFormat = "Bearer {token}",
+                                Reference = new OpenApiReference
+                                {
+                                    Id = JwtBearerDefaults.AuthenticationScheme,
+                                    Type = ReferenceType.SecurityScheme,
+                                },
+                            };
+
+                            c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securityScheme);
+
+                            OpenApiSecurityRequirement securityRequirements = new OpenApiSecurityRequirement()
+                            {
+                                { securityScheme, new string[] { } },
+                            };
+
+                            c.AddSecurityRequirement(securityRequirements);
+
+                            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+                            c.IncludeXmlComments(xmlPath);
+                        });
+        }
 
         public static void AddApiControllers(this IServiceCollection services)
             => services
