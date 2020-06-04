@@ -134,15 +134,16 @@
         /// <summary>
         /// Remove current User from current Team.
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="teamId"></param>
+        /// <param name="userId"></param>
         /// <response code="201"> Successfully removed user from team.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(TeamIdUserId)]
-        public async Task<ActionResult<int>> RemoveUserFromTeam(DeleteUserFromTeamRequestModel input)
+        public async Task<ActionResult<int>> RemoveUserFromTeam(int teamId, string userId)
         {
-            var success = await this.teamService.RemoveUserFromTeamAsync(input.UserId, input.TeamId);
+            var success = await this.teamService.RemoveUserFromTeamAsync(userId, teamId);
 
             if (!success)
             {

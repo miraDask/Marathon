@@ -18,5 +18,7 @@
         Task<ProjectDetailsServiceModel> GetDetailsAsync(int id);
 
         Task<bool> AddTeamToProjectAsync(int projectId, int teamId);
+
+        Task<bool> RemoveTeamFromProjectAsync(int projectId, int teamId);
     }
 }

@@ -1,8 +1,6 @@
 ﻿namespace Marathon.Server.Infrastructure.Extensions
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.IO;
     using System.Reflection;
     using System.Text;

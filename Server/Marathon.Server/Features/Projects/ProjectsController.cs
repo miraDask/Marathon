@@ -136,5 +136,27 @@
 
             return this.Ok();
         }
+
+        /// <summary>
+        /// Remove current Team from current Project.
+        /// </summary>
+        /// <param name="teamId"></param>
+        /// <param name="projectId"></param>
+        /// <response code="201"> Successfully removed team from project.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpDelete]
+        [Route(ProjectTeam)]
+        public async Task<ActionResult<int>> AssignTeamToProject(int projectId, int teamId)
+        {
+            var success = await this.projectsService.RemoveTeamFromProjectAsync(projectId, teamId);
+
+            if (!success)
+            {
+                return this.BadRequest();
+            }
+
+            return this.Ok();
+        }
     }
 }
