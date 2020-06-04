@@ -41,5 +41,29 @@
 
             return this.Created(nameof(this.Create), id);
         }
+
+        /// <summary>
+        /// Update current project.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <response code="200">Successfully updated.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpPut]
+        public async Task<ActionResult> Update(UpdateProjectRequestModel input)
+        {
+            var updated = await this.projectsService.UpdateAsync(
+                input.Id,
+                input.Name,
+                input.Key,
+                input.ImageUrl);
+
+            if (!updated)
+            {
+                return this.BadRequest();
+            }
+
+            return this.Ok();
+        }
     }
 }

@@ -7,6 +7,7 @@
 
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
+    using Microsoft.EntityFrameworkCore;
 
     public class ProjectsService : IProjectsService
     {
@@ -33,5 +34,30 @@
 
             return project.Id;
         }
+
+        public async Task<bool> UpdateAsync(int id, string name, string key, string imageUrl)
+        {
+            var project = await this.GetByIdAsync(id);
+
+            if (project == null)
+            {
+                return false;
+            }
+
+            project.Name = name;
+            project.ImageUrl = imageUrl;
+            project.Key = key;
+            project.ModifiedOn = DateTime.UtcNow;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        private async Task<Project> GetByIdAsync(int id)
+        => await this.dbContext
+                .Projects
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
     }
 }
