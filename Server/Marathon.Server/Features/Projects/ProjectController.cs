@@ -9,6 +9,8 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
+    using static Marathon.Server.Infrastructure.WebConstants;
+
     [Authorize(AuthenticationSchemes = "Bearer")]
     public class ProjectController : ApiController
     {
@@ -59,6 +61,27 @@
                 input.ImageUrl);
 
             if (!updated)
+            {
+                return this.BadRequest();
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// Delete current project.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <response code="200">Successfully deleted.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpDelete]
+        [Route(ProjectId)]
+        public async Task<ActionResult> Delete(int projectId)
+        {
+            var deleted = await this.projectsService.DeleteAsync(projectId);
+
+            if (!deleted)
             {
                 return this.BadRequest();
             }

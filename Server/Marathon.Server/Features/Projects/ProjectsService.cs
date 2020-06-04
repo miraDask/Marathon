@@ -54,6 +54,25 @@
             return true;
         }
 
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var project = await this.GetByIdAsync(id);
+
+            if (project == null)
+            {
+                return false;
+            }
+
+            project.IsDeleted = true;
+            project.DeletedOn = DateTime.UtcNow;
+
+            this.dbContext.Projects.Update(project);
+
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
         private async Task<Project> GetByIdAsync(int id)
         => await this.dbContext
                 .Projects
