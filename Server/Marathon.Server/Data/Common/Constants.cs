@@ -36,12 +36,15 @@
 
         public static class Team
         {
+            public const int TitleMinLength = 3;
             public const int TitleMaxLength = 50;
         }
 
         public static class Project
         {
+            public const int NameMinLength = 3;
             public const int NameMaxLength = 80;
+            public const int KeyMinLength = 3;
             public const int KeyMaxLength = 10;
         }
     }

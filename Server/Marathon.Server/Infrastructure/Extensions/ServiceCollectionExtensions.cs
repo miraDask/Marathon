@@ -10,6 +10,7 @@
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Identity;
+    using Marathon.Server.Features.Projects;
     using Marathon.Server.Features.Teams;
     using Marathon.Server.Infrastructure.Filters;
 
@@ -89,6 +90,7 @@
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
             => services
                 .AddTransient<IIdentityService, IdentityService>()
+                .AddTransient<IProjectsService, ProjectsService>()
                 .AddTransient<ITeamService, TeamService>();
 
         public static IServiceCollection AddSwagger(this IServiceCollection services)
@@ -139,6 +141,6 @@
             => services
                 .AddControllers(options => options
                     .Filters
-                    .Add<ModelOrNotFoundActionFilter>());
+                    .Add<ValidateModelAttribute>());
     }
 }
