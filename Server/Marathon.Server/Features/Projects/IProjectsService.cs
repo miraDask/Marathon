@@ -1,6 +1,9 @@
 ﻿namespace Marathon.Server.Features.Projects
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
+
+    using Marathon.Server.Features.Projects.Models;
 
     public interface IProjectsService
     {
@@ -9,5 +12,7 @@
         Task<bool> UpdateAsync(int id, string name, string key, string imageUrl);
 
         Task<bool> DeleteAsync(int id);
+
+        Task<IEnumerable<ProjectListingServiceModel>> GetAllByUserIdAsync(string id);
     }
 }

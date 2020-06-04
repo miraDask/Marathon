@@ -77,8 +77,7 @@
         }
 
         public async Task<IEnumerable<TeamListingServiceModel>> GetAllByProjectIdAsync(int id)
-        {
-            return await this.dbContext
+        => await this.dbContext
                 .Teams
                 .Where(x => x.ProjectId == id)
                 .Select(x => new TeamListingServiceModel()
@@ -88,7 +87,6 @@
                     ImageUrl = x.Title,
                 })
                 .ToListAsync();
-        }
 
         public async Task<TeamDetailsServiceModel> GetDetailsAsync(int id)
         => await this.dbContext

@@ -1,5 +1,6 @@
 ﻿namespace Marathon.Server.Features.Projects
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Marathon.Server.Features.Projects.Models;
@@ -12,13 +13,27 @@
     using static Marathon.Server.Infrastructure.WebConstants;
 
     [Authorize(AuthenticationSchemes = "Bearer")]
-    public class ProjectController : ApiController
+    public class ProjectsController : ApiController
     {
         private readonly IProjectsService projectsService;
 
-        public ProjectController(IProjectsService projectsService)
+        public ProjectsController(IProjectsService projectsService)
         {
             this.projectsService = projectsService;
+        }
+
+        /// <summary>
+        /// Get all projects for current user - creator or participant.
+        /// </summary>
+        /// <response code="200">Returns all projects for current user.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpGet]
+        public async Task<IEnumerable<ProjectListingServiceModel>> GetAll()
+        {
+            var userId = this.User.GetId();
+
+            return await this.projectsService.GetAllByUserIdAsync(userId);
         }
 
         /// <summary>

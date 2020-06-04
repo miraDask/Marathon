@@ -7,6 +7,7 @@
 
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
+    using Marathon.Server.Features.Projects.Models;
     using Microsoft.EntityFrameworkCore;
 
     public class ProjectsService : IProjectsService
@@ -72,6 +73,20 @@
 
             return true;
         }
+
+        public async Task<IEnumerable<ProjectListingServiceModel>> GetAllByUserIdAsync(string id)
+        => await this.dbContext
+                .Projects
+                .Where(x => x.CreatorId == id || x.Teams.Any(x => x.TeamsUsers.Any(x => x.UserId == id)))
+                .Select(x => new ProjectListingServiceModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Key = x.Key,
+                    ImageUrl = x.ImageUrl,
+                    IsCurrentUserCreator = x.CreatorId == id,
+                })
+                .ToListAsync();
 
         private async Task<Project> GetByIdAsync(int id)
         => await this.dbContext
