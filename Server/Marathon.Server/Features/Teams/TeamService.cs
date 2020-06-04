@@ -96,7 +96,7 @@
                 {
                     Title = x.Title,
                     ImageUrl = x.ImageUrl,
-                    TeamUsers = x.TeamsUsers.Select(x => new UserInTeamListingServerModel()
+                    TeamUsers = x.TeamsUsers.Select(x => new UserListingServerModel()
                     {
                         Id = x.User.Id,
                         UserName = x.User.UserName,

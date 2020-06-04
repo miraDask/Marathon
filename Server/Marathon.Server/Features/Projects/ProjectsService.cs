@@ -7,7 +7,9 @@
 
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
+    using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Projects.Models;
+    using Marathon.Server.Features.Teams.Models;
     using Microsoft.EntityFrameworkCore;
 
     public class ProjectsService : IProjectsService
@@ -87,6 +89,35 @@
                     IsCurrentUserCreator = x.CreatorId == id,
                 })
                 .ToListAsync();
+
+        public async Task<ProjectDetailsServiceModel> GetDetailsAsync(int id)
+        {
+            var project = await this.dbContext
+                .Projects
+                .Where(x => x.Id == id)
+                .Select(x => new ProjectDetailsServiceModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    ImageUrl = x.ImageUrl,
+                    Key = x.Key,
+                    Creator = new UserListingServerModel
+                    {
+                        Id = x.Creator.Id,
+                        UserName = x.Creator.UserName,
+                        ImageUrl = x.Creator.ImageUrl,
+                    },
+                    Teams = x.Teams.Select(x => new TeamListingServiceModel
+                    {
+                        Id = x.Id,
+                        Title = x.Title,
+                        ImageUrl = x.ImageUrl,
+                    }),
+                })
+                .FirstOrDefaultAsync();
+
+            return project;
+        }
 
         private async Task<Project> GetByIdAsync(int id)
         => await this.dbContext

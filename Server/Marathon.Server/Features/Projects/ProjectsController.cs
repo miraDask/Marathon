@@ -103,5 +103,17 @@
 
             return this.Ok();
         }
+
+        /// <summary>
+        /// Get details for current project.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <response code="201"> Successfully return details for current project.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpGet]
+        [Route(ProjectId)]
+        public async Task<ActionResult<ProjectDetailsServiceModel>> Details(int projectId)
+            => await this.projectsService.GetDetailsAsync(projectId);
     }
 }

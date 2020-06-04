@@ -1,6 +1,6 @@
 ﻿namespace Marathon.Server.Features.Identity.Models
 {
-    public class UserInTeamListingServerModel
+    public class UserListingServerModel
     {
         public string Id { get; set; }
 

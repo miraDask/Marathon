@@ -10,6 +10,6 @@
 
         public string ImageUrl { get; set; }
 
-        public virtual IEnumerable<UserInTeamListingServerModel> TeamUsers { get; set; }
+        public IEnumerable<UserListingServerModel> TeamUsers { get; set; }
     }
 }

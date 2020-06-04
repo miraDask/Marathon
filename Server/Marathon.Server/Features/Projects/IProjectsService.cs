@@ -14,5 +14,7 @@
         Task<bool> DeleteAsync(int id);
 
         Task<IEnumerable<ProjectListingServiceModel>> GetAllByUserIdAsync(string id);
+
+        Task<ProjectDetailsServiceModel> GetDetailsAsync(int id);
     }
 }
