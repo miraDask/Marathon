@@ -5,7 +5,7 @@
 
     using Marathon.Server.Features.Projects.Models;
     using Marathon.Server.Infrastructure.Extensions;
-
+    using Marathon.Server.Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -93,6 +93,7 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
         [Route(Projects.Delete)]
         public async Task<ActionResult> Delete(int projectId)
         {

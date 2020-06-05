@@ -7,6 +7,7 @@
 
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
+    using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Projects.Models;
     using Marathon.Server.Features.Teams.Models;
@@ -15,10 +16,12 @@
     public class ProjectsService : IProjectsService
     {
         private readonly MarathonDbContext dbContext;
+        private readonly IIdentityService identityService;
 
-        public ProjectsService(MarathonDbContext dbContext)
+        public ProjectsService(MarathonDbContext dbContext, IIdentityService identityService)
         {
             this.dbContext = dbContext;
+            this.identityService = identityService;
         }
 
         public async Task<int> CreateAsync(string name, string key, string imageUrl, string userId)
@@ -34,7 +37,7 @@
             this.dbContext.Projects.Add(project);
 
             await this.dbContext.SaveChangesAsync();
-
+            await this.identityService.AddClaimToUserAsync(userId, project.Id.ToString());
             return project.Id;
         }
 

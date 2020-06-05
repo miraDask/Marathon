@@ -12,7 +12,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.IdentityModel.Tokens;
 
-    using static Marathon.Server.Features.Common.Constants.Errors;
+    using static Marathon.Server.Features.Common.Constants;
 
     public class IdentityService : IIdentityService
     {
@@ -23,6 +23,12 @@
             this.userManager = userManager;
         }
 
+        public async Task AddClaimToUserAsync(string userId, string projectId)
+        {
+            var user = await this.userManager.FindByIdAsync(userId);
+            await this.userManager.AddClaimAsync(user, new Claim(Claims.Admin, projectId));
+        }
+
         public async Task<ResultModel<string>> LoginAsync(string username, string password, string secret)
         {
             var user = await this.userManager.FindByNameAsync(username);
@@ -30,7 +36,7 @@
             {
                 return new ResultModel<string>
                 {
-                    Errors = new string[] { InvalidUserName },
+                    Errors = new string[] { Errors.InvalidUserName },
                 };
             }
 
@@ -39,7 +45,7 @@
             {
                 return new ResultModel<string>
                 {
-                    Errors = new string[] { InvalidPassword },
+                    Errors = new string[] { Errors.InvalidPassword },
                 };
             }
 
@@ -60,7 +66,7 @@
             {
                 return new ResultModel<string>
                 {
-                    Errors = new string[] { string.Format(AlreadyRegisteredUser, email) },
+                    Errors = new string[] { string.Format(Errors.AlreadyRegisteredUser, email) },
                 };
             }
 

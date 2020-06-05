@@ -9,5 +9,7 @@
         Task<ResultModel<string>> RegisterAsync(string username, string email, string password, string secret);
 
         Task<ResultModel<string>> LoginAsync(string username, string password, string secret);
+
+        Task AddClaimToUserAsync(string userId, string projectId);
     }
 }

@@ -9,5 +9,10 @@
             public const string InvalidPassword = "Invalid password.";
             public const string InvalidProjectId = "Invalid project id.";
         }
+
+        public static class Claims
+        {
+            public const string Admin = "Admin";
+        }
     }
 }
