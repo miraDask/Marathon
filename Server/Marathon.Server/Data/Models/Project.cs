@@ -14,6 +14,7 @@
             this.Sprints = new HashSet<Sprint>();
             this.Teams = new HashSet<Team>();
             this.Issues = new HashSet<Issue>();
+            this.ProjectsAdmins = new HashSet<ProjectAdmin>();
         }
 
         [Required]
@@ -35,5 +36,7 @@
         public virtual ICollection<Team> Teams { get; set; }
 
         public virtual ICollection<Issue> Issues { get; set; }
+
+        public virtual ICollection<ProjectAdmin> ProjectsAdmins { get; set; }
     }
 }

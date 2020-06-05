@@ -12,6 +12,10 @@
             user.HasMany(x => x.TeamsUsers)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId);
+
+            user.HasMany(x => x.ProjectsAdmins)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserId);
         }
     }
 }

@@ -15,6 +15,7 @@
             this.AssignedIssues = new HashSet<Issue>();
             this.TeamsUsers = new HashSet<TeamUser>();
             this.CreatedProjects = new HashSet<Project>();
+            this.ProjectsAdmins = new HashSet<ProjectAdmin>();
         }
 
         public string ImageUrl { get; set; }
@@ -28,6 +29,8 @@
         public virtual ICollection<TeamUser> TeamsUsers { get; set; }
 
         public virtual ICollection<Project> CreatedProjects { get; set; }
+
+        public virtual ICollection<ProjectAdmin> ProjectsAdmins { get; set; }
 
         public DateTime CreatedOn { get; set; }
 
