@@ -1,6 +1,6 @@
 ﻿namespace Marathon.Server.Features.Identity.Models
 {
-    public class LoginResponseModel
+    public class AuthResponseModel
     {
         public string Token { get; set; }
     }

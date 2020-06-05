@@ -6,8 +6,6 @@
 
     public class UpdateProjectRequestModel
     {
-        public int Id { get; set; }
-
         [Required]
         [MinLength(NameMinLength)]
         [MaxLength(NameMaxLength)]

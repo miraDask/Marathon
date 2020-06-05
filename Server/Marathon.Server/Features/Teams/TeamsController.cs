@@ -4,16 +4,16 @@
     using System.Threading.Tasks;
 
     using Marathon.Server.Data.Models;
+    using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Teams.Models;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
-    using static Marathon.Server.Infrastructure.WebConstants;
+    using static Marathon.Server.Infrastructure.ApiRoutes;
 
     [Authorize(AuthenticationSchemes = "Bearer")]
-    public class TeamsController : ApiController
+    public class TeamsController : ControllerBase
     {
         private readonly ITeamService teamService;
         private readonly UserManager<User> userManager;
@@ -32,16 +32,24 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route(Teams.Create)]
         public async Task<ActionResult<int>> Create(CreateTeamRequestModel input)
         {
-            var id = await this.teamService.CreateAsync(
+            var teamCreationResult = await this.teamService.CreateAsync(
                 input.Title,
                 input.ImageUrl,
                 input.ProjectId);
 
-            return this.Created(nameof(this.Create), id);
+            if (!teamCreationResult.Success)
+            {
+                return this.BadRequest(
+                    new ErrorsResponseModel
+                    {
+                        Errors = teamCreationResult.Errors,
+                    });
+            }
+
+            return this.Created(nameof(this.Create), teamCreationResult.Result);
         }
 
         /// <summary>
@@ -52,6 +60,7 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPut]
+        [Route(Teams.Update)]
         public async Task<ActionResult> Update(UpdateTeamRequestModel input)
         {
             var updated = await this.teamService.UpdateAsync(
@@ -76,7 +85,7 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
-        [Route(TeamId)]
+        [Route(Teams.Delete)]
         public async Task<ActionResult> Delete(int id)
         {
             var deleted = await this.teamService.DeleteAsync(id);
@@ -97,7 +106,7 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
-        [Route(ProjectId)]
+        [Route(Teams.GetAllInProject)]
         public async Task<IEnumerable<TeamListingServiceModel>> GetAll(int projectId)
         {
             return await this.teamService.GetAllByProjectIdAsync(projectId);
@@ -111,7 +120,7 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
-        [Route(TeamId)]
+        [Route(Teams.AddUser)]
         public async Task<ActionResult<int>> AssignUserToTeam(AddUserToTeamRequestModel input)
         {
             var user = await this.userManager.FindByEmailAsync(input.Email);
@@ -140,7 +149,7 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
-        [Route(TeamIdUserId)]
+        [Route(Teams.RemoveUser)]
         public async Task<ActionResult<int>> RemoveUserFromTeam(int teamId, string userId)
         {
             var success = await this.teamService.RemoveUserFromTeamAsync(userId, teamId);
@@ -161,7 +170,7 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
-        [Route(ProjectTeam)]
+        [Route(Teams.GetDetails)]
         public async Task<ActionResult<TeamDetailsServiceModel>> Details(int teamId)
             => await this.teamService.GetDetailsAsync(teamId);
     }

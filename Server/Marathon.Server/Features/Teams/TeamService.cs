@@ -7,9 +7,12 @@
 
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
+    using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Teams.Models;
     using Microsoft.EntityFrameworkCore;
+
+    using static Marathon.Server.Features.Common.Constants.Errors;
 
     public class TeamService : ITeamService
     {
@@ -41,8 +44,18 @@
             return true;
         }
 
-        public async Task<int> CreateAsync(string title, string imageUrl, int projectId)
+        public async Task<ResultModel<int>> CreateAsync(string title, string imageUrl, int projectId)
         {
+            var response = new ResultModel<int>();
+
+            var project = await this.dbContext.Projects.FirstOrDefaultAsync(x => x.Id == projectId);
+
+            if (project == null)
+            {
+                response.Errors = new string[] { InvalidProjectId };
+                return response;
+            }
+
             var team = new Team
             {
                 Title = title,
@@ -54,7 +67,9 @@
 
             await this.dbContext.SaveChangesAsync();
 
-            return team.Id;
+            response.Success = true;
+            response.Result = team.Id;
+            return response;
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -107,7 +122,7 @@
 
         public async Task<bool> RemoveUserFromTeamAsync(string userId, int teamId)
         {
-            var teamUser = await this.dbContext.TeamsUsers.FirstOrDefaultAsync(x => x.UserId == userId && x.TeamId == teamId );
+            var teamUser = await this.dbContext.TeamsUsers.FirstOrDefaultAsync(x => x.UserId == userId && x.TeamId == teamId);
             if (teamUser == null)
             {
                 return false;

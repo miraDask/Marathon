@@ -10,10 +10,10 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
-    using static Marathon.Server.Infrastructure.WebConstants;
+    using static Marathon.Server.Infrastructure.ApiRoutes;
 
     [Authorize(AuthenticationSchemes = "Bearer")]
-    public class ProjectsController : ApiController
+    public class ProjectsController : ControllerBase
     {
         private readonly IProjectsService projectsService;
 
@@ -29,6 +29,7 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
+        [Route(Projects.GetAllForUser)]
         public async Task<IEnumerable<ProjectListingServiceModel>> GetAll()
         {
             var userId = this.User.GetId();
@@ -44,8 +45,7 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route(Projects.Create)]
         public async Task<ActionResult<int>> Create(CreateProjectRequestModel input)
         {
             var userId = this.User.GetId();
@@ -63,14 +63,16 @@
         /// Update current project.
         /// </summary>
         /// <param name="input"></param>
+        /// <param name="projectId"></param>
         /// <response code="200">Successfully updated.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPut]
-        public async Task<ActionResult> Update(UpdateProjectRequestModel input)
+        [Route(Projects.Update)]
+        public async Task<ActionResult> Update(int projectId, UpdateProjectRequestModel input)
         {
             var updated = await this.projectsService.UpdateAsync(
-                input.Id,
+                projectId,
                 input.Name,
                 input.Key,
                 input.ImageUrl);
@@ -91,7 +93,7 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
-        [Route(ProjectId)]
+        [Route(Projects.Delete)]
         public async Task<ActionResult> Delete(int projectId)
         {
             var deleted = await this.projectsService.DeleteAsync(projectId);
@@ -112,7 +114,7 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
-        [Route(ProjectId)]
+        [Route(Projects.GetDetails)]
         public async Task<ActionResult<ProjectDetailsServiceModel>> Details(int projectId)
             => await this.projectsService.GetDetailsAsync(projectId);
 
@@ -124,8 +126,8 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
-        [Route(ProjectId)]
-        public async Task<ActionResult<int>> AssignTeamToProject(AddTeamToProjectRequestModel input)
+        [Route(Projects.AddTeam)]
+        public async Task<ActionResult> AssignTeamToProject(AddTeamToProjectRequestModel input)
         {
             var success = await this.projectsService.AddTeamToProjectAsync(input.ProjectId, input.TeamId);
 
@@ -146,7 +148,7 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
-        [Route(ProjectTeam)]
+        [Route(Projects.RemoveTeam)]
         public async Task<ActionResult<int>> AssignTeamToProject(int projectId, int teamId)
         {
             var success = await this.projectsService.RemoveTeamFromProjectAsync(projectId, teamId);

@@ -3,12 +3,15 @@
     using System.Threading.Tasks;
 
     using Marathon.Server.Data.Models;
+    using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
 
-    public class IdentityController : ApiController
+    using static Marathon.Server.Infrastructure.ApiRoutes;
+
+    public class IdentityController : ControllerBase
     {
         private readonly UserManager<User> userManager;
         private readonly IIdentityService identityService;
@@ -25,46 +28,43 @@
         }
 
         [HttpPost]
-        [Route(nameof(Register))]
-        public async Task<ActionResult> Register(RegisterUserRequestModel input)
+        [Route(Identity.Register)]
+        public async Task<ActionResult<AuthResponseModel>> Register(RegisterUserRequestModel input)
         {
-            var user = new User()
-            {
-                UserName = input.UserName,
-                Email = input.Email,
-            };
+            var registerResult = await this.identityService.RegisterAsync(input.UserName, input.Email, input.Password, this.appSettings.Secret);
 
-            var result = await this.userManager.CreateAsync(user, input.Password);
-
-            if (!result.Succeeded)
+            if (!registerResult.Success)
             {
-                return this.BadRequest(result.Errors);
+                return this.BadRequest(
+                new ErrorsResponseModel
+                {
+                    Errors = registerResult.Errors,
+                });
             }
 
-            return this.Ok();
+            return new AuthResponseModel()
+            {
+                Token = registerResult.Result,
+            };
         }
 
         [HttpPost]
-        [Route(nameof(Login))]
-        public async Task<ActionResult<LoginResponseModel>> Login(LoginRequestModel input)
+        [Route(Identity.Login)]
+        public async Task<ActionResult<AuthResponseModel>> Login(LoginRequestModel input)
         {
-            var user = await this.userManager.FindByNameAsync(input.UserName);
-            if (user == null)
+            var loginResult = await this.identityService.LoginAsync(input.UserName, input.Password, this.appSettings.Secret);
+
+            if (!loginResult.Success)
             {
-                return this.Unauthorized();
+                return this.Unauthorized(new ErrorsResponseModel
+                {
+                    Errors = loginResult.Errors,
+                });
             }
 
-            var passwordValid = await this.userManager.CheckPasswordAsync(user, input.Password);
-            if (!passwordValid)
+            return new AuthResponseModel()
             {
-                return this.Unauthorized();
-            }
-
-            var encriptedToken = this.identityService.GenerateJwtToken(user.Id, user.UserName, this.appSettings.Secret);
-
-            return new LoginResponseModel()
-            {
-                Token = encriptedToken,
+                Token = loginResult.Result,
             };
         }
     }
