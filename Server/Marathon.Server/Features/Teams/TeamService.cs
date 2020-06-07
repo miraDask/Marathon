@@ -10,6 +10,7 @@
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Teams.Models;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
     using static Marathon.Server.Features.Common.Constants.Errors;
@@ -17,19 +18,34 @@
     public class TeamService : ITeamService
     {
         private readonly MarathonDbContext dbContext;
+        private readonly UserManager<User> userManager;
 
-        public TeamService(MarathonDbContext dbContext)
+        public TeamService(MarathonDbContext dbContext, UserManager<User> userManager)
         {
             this.dbContext = dbContext;
+            this.userManager = userManager;
         }
 
-        public async Task<bool> AddUserToTeamAsync(User user, int teamId)
+        public async Task<ResultModel<bool>> AddUserToTeamAsync(string userEmail, int teamId)
         {
+            var user = await this.userManager.FindByEmailAsync(userEmail);
+
+            if (user == null)
+            {
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { InvalidUserOrEmail },
+                };
+            }
+
             var team = await this.GetByIdAsync(teamId);
 
             if (team == null)
             {
-                return false;
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { InvalidTeamId },
+                };
             }
 
             var teamUser = new TeamUser()
@@ -41,19 +57,22 @@
             await this.dbContext.TeamsUsers.AddAsync(teamUser);
             await this.dbContext.SaveChangesAsync();
 
-            return true;
+            return new ResultModel<bool>
+            {
+                Success = true,
+            };
         }
 
         public async Task<ResultModel<int>> CreateAsync(string title, string imageUrl, int projectId)
         {
-            var response = new ResultModel<int>();
-
             var project = await this.dbContext.Projects.FirstOrDefaultAsync(x => x.Id == projectId);
 
             if (project == null)
             {
-                response.Errors = new string[] { InvalidProjectId };
-                return response;
+                return new ResultModel<int>
+                {
+                    Errors = new string[] { InvalidProjectId },
+                };
             }
 
             var team = new Team
@@ -67,18 +86,23 @@
 
             await this.dbContext.SaveChangesAsync();
 
-            response.Success = true;
-            response.Result = team.Id;
-            return response;
+            return new ResultModel<int>
+            {
+                Success = true,
+                Result = team.Id,
+            };
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<ResultModel<bool>> DeleteAsync(int id)
         {
             var team = await this.GetByIdAsync(id);
 
             if (team == null)
             {
-                return false;
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { InvalidTeamId },
+                };
             }
 
             team.IsDeleted = true;
@@ -88,11 +112,15 @@
 
             await this.dbContext.SaveChangesAsync();
 
-            return true;
+            return new ResultModel<bool>
+            {
+                Success = true,
+            };
         }
 
-        public async Task<IEnumerable<TeamListingServiceModel>> GetAllByProjectIdAsync(int id)
-        => await this.dbContext
+        public async Task<ResultModel<IEnumerable<TeamListingServiceModel>>> GetAllByProjectIdAsync(int id)
+        {
+            var getAllTeamsResult = await this.dbContext
                 .Teams
                 .Where(x => x.ProjectId == id)
                 .Select(x => new TeamListingServiceModel()
@@ -103,8 +131,24 @@
                 })
                 .ToListAsync();
 
-        public async Task<TeamDetailsServiceModel> GetDetailsAsync(int id)
-        => await this.dbContext
+            if (getAllTeamsResult == null)
+            {
+                return new ResultModel<IEnumerable<TeamListingServiceModel>>
+                {
+                    Errors = new string[] { InvalidProjectId },
+                };
+            }
+
+            return new ResultModel<IEnumerable<TeamListingServiceModel>>
+            {
+                Success = true,
+                Result = getAllTeamsResult,
+            };
+        }
+
+        public async Task<ResultModel<TeamDetailsServiceModel>> GetDetailsAsync(int id)
+        {
+            var detailsResult = await this.dbContext
                 .Teams
                 .Where(x => x.Id == id)
                 .Select(x => new TeamDetailsServiceModel()
@@ -120,27 +164,51 @@
                 })
                 .FirstOrDefaultAsync();
 
-        public async Task<bool> RemoveUserFromTeamAsync(string userId, int teamId)
+            if (detailsResult == null)
+            {
+                return new ResultModel<TeamDetailsServiceModel>
+                {
+                    Errors = new string[] { InvalidTeamId },
+                };
+            }
+
+            return new ResultModel<TeamDetailsServiceModel>
+            {
+                Success = true,
+                Result = detailsResult,
+            };
+        }
+
+        public async Task<ResultModel<bool>> RemoveUserFromTeamAsync(string userId, int teamId)
         {
             var teamUser = await this.dbContext.TeamsUsers.FirstOrDefaultAsync(x => x.UserId == userId && x.TeamId == teamId);
             if (teamUser == null)
             {
-                return false;
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { InvalidTeamIdOrUserId },
+                };
             }
 
             this.dbContext.TeamsUsers.Remove(teamUser);
             await this.dbContext.SaveChangesAsync();
 
-            return true;
+            return new ResultModel<bool>
+            {
+                Success = true,
+            };
         }
 
-        public async Task<bool> UpdateAsync(int id, string title, string imageUrl, int projectId)
+        public async Task<ResultModel<bool>> UpdateAsync(int id, string title, string imageUrl, int projectId)
         {
             var team = await this.GetByIdAsync(id);
 
             if (team == null)
             {
-                return false;
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { InvalidTeamId },
+                };
             }
 
             team.Title = title;
@@ -150,7 +218,10 @@
 
             await this.dbContext.SaveChangesAsync();
 
-            return true;
+            return new ResultModel<bool>
+            {
+                Success = true,
+            };
         }
 
         private async Task<Team> GetByIdAsync(int id)

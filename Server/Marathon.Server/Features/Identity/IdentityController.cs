@@ -2,10 +2,8 @@
 {
     using System.Threading.Tasks;
 
-    using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
 
@@ -13,16 +11,13 @@
 
     public class IdentityController : ControllerBase
     {
-        private readonly UserManager<User> userManager;
         private readonly IIdentityService identityService;
         private readonly AppSettings appSettings;
 
         public IdentityController(
-            UserManager<User> userManager,
             IOptions<AppSettings> appSettings,
             IIdentityService identityService)
         {
-            this.userManager = userManager;
             this.identityService = identityService;
             this.appSettings = appSettings.Value;
         }

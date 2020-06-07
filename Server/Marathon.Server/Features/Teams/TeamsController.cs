@@ -63,15 +63,18 @@
         [Route(Teams.Update)]
         public async Task<ActionResult> Update(UpdateTeamRequestModel input)
         {
-            var updated = await this.teamService.UpdateAsync(
+            var updateRequest = await this.teamService.UpdateAsync(
                 input.Id,
                 input.Title,
                 input.ImageUrl,
                 input.ProjectId);
 
-            if (!updated)
+            if (!updateRequest.Success)
             {
-                return this.BadRequest();
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = updateRequest.Errors,
+                });
             }
 
             return this.Ok();
@@ -80,19 +83,22 @@
         /// <summary>
         /// Delete current team.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="teamId"></param>
         /// <response code="200">Successfully deleted.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Teams.Delete)]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int teamId)
         {
-            var deleted = await this.teamService.DeleteAsync(id);
+            var deleteRequest = await this.teamService.DeleteAsync(teamId);
 
-            if (!deleted)
+            if (!deleteRequest.Success)
             {
-                return this.BadRequest();
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = deleteRequest.Errors,
+                });
             }
 
             return this.Ok();
@@ -107,34 +113,41 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Teams.GetAllInProject)]
-        public async Task<IEnumerable<TeamListingServiceModel>> GetAll(int projectId)
+        public async Task<ActionResult<IEnumerable<TeamListingServiceModel>>> GetAll(int projectId)
         {
-            return await this.teamService.GetAllByProjectIdAsync(projectId);
+            var getAllRequest = await this.teamService.GetAllByProjectIdAsync(projectId);
+
+            if (!getAllRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = getAllRequest.Errors,
+                });
+            }
+
+            return this.Ok(getAllRequest.Result);
         }
 
         /// <summary>
         /// Assign current User to current Team.
         /// </summary>
         /// <param name="input"></param>
+        /// <param name="teamId"></param>
         /// <response code="201"> Successfully assigned user to team.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Teams.AddUser)]
-        public async Task<ActionResult<int>> AssignUserToTeam(AddUserToTeamRequestModel input)
+        public async Task<ActionResult<int>> AssignUserToTeam(int teamId, AddUserToTeamRequestModel input)
         {
-            var user = await this.userManager.FindByEmailAsync(input.Email);
+            var assignUserRequest = await this.teamService.AddUserToTeamAsync(input.Email, teamId);
 
-            if (user == null)
+            if (!assignUserRequest.Success)
             {
-                return this.BadRequest();
-            }
-
-            var success = await this.teamService.AddUserToTeamAsync(user, input.TeamId);
-
-            if (!success)
-            {
-                return this.BadRequest();
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = assignUserRequest.Errors,
+                });
             }
 
             return this.Ok();
@@ -152,11 +165,14 @@
         [Route(Teams.RemoveUser)]
         public async Task<ActionResult<int>> RemoveUserFromTeam(int teamId, string userId)
         {
-            var success = await this.teamService.RemoveUserFromTeamAsync(userId, teamId);
+            var removeRequest = await this.teamService.RemoveUserFromTeamAsync(userId, teamId);
 
-            if (!success)
+            if (!removeRequest.Success)
             {
-                return this.BadRequest();
+                return this.BadRequest(new ErrorsResponseModel 
+                {
+                    Errors = removeRequest.Errors,
+                });
             }
 
             return this.Ok();
@@ -172,6 +188,18 @@
         [HttpGet]
         [Route(Teams.GetDetails)]
         public async Task<ActionResult<TeamDetailsServiceModel>> Details(int teamId)
-            => await this.teamService.GetDetailsAsync(teamId);
+        {
+            var detailsRequest = await this.teamService.GetDetailsAsync(teamId);
+
+            if (!detailsRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = detailsRequest.Errors,
+                });
+            }
+
+            return this.Ok(detailsRequest.Result);
+        }
     }
 }

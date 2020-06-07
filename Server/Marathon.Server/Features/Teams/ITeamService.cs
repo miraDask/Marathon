@@ -11,16 +11,16 @@
     {
         Task<ResultModel<int>> CreateAsync(string title, string imageUrl, int projectId);
 
-        Task<bool> UpdateAsync(int id, string title, string imageUrl, int projectId);
+        Task<ResultModel<bool>> UpdateAsync(int id, string title, string imageUrl, int projectId);
 
-        Task<bool> DeleteAsync(int id);
+        Task<ResultModel<bool>> DeleteAsync(int id);
 
-        Task<IEnumerable<TeamListingServiceModel>> GetAllByProjectIdAsync(int id);
+        Task<ResultModel<IEnumerable<TeamListingServiceModel>>> GetAllByProjectIdAsync(int id);
 
-        Task<TeamDetailsServiceModel> GetDetailsAsync(int id);
+        Task<ResultModel<TeamDetailsServiceModel>> GetDetailsAsync(int id);
 
-        Task<bool> AddUserToTeamAsync(User user, int teamId);
+        Task<ResultModel<bool>> AddUserToTeamAsync(string userEmail, int teamId);
 
-        Task<bool> RemoveUserFromTeamAsync(string userId, int teamId);
+        Task<ResultModel<bool>> RemoveUserFromTeamAsync(string userId, int teamId);
     }
 }

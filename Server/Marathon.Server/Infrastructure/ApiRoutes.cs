@@ -14,11 +14,11 @@
         {
             public const string Create = Root + "/teams";
             public const string Update = Root + "/teams";
-            public const string GetAllInProject = Root + "/teams/{projectId}";
+            public const string GetAllInProject = Root + "/teams";
             public const string Delete = Root + "/teams/{teamId}";
             public const string AddUser = Root + "/teams/{teamId}";
-            public const string RemoveUser = Root + "teams/{teamId}/{userId}";
-            public const string GetDetails = Root + "teams/{projectId}/{teamId}";
+            public const string RemoveUser = Root + "/teams/{teamId}/{userId}";
+            public const string GetDetails = Root + "/teams/{teamId}";
         }
 
         public static class Projects

@@ -3,11 +3,11 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Projects.Models;
     using Marathon.Server.Infrastructure.Extensions;
     using Marathon.Server.Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     using static Marathon.Server.Infrastructure.ApiRoutes;
@@ -69,17 +69,21 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPut]
         [Route(Projects.Update)]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
         public async Task<ActionResult> Update(int projectId, UpdateProjectRequestModel input)
         {
-            var updated = await this.projectsService.UpdateAsync(
+            var updateRequest = await this.projectsService.UpdateAsync(
                 projectId,
                 input.Name,
                 input.Key,
                 input.ImageUrl);
 
-            if (!updated)
+            if (!updateRequest.Success)
             {
-                return this.BadRequest();
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = updateRequest.Errors,
+                });
             }
 
             return this.Ok();
@@ -93,15 +97,18 @@
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
         [Route(Projects.Delete)]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
         public async Task<ActionResult> Delete(int projectId)
         {
-            var deleted = await this.projectsService.DeleteAsync(projectId);
+            var deleteRequest = await this.projectsService.DeleteAsync(projectId);
 
-            if (!deleted)
+            if (!deleteRequest.Success)
             {
-                return this.BadRequest();
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = deleteRequest.Errors,
+                });
             }
 
             return this.Ok();
@@ -116,25 +123,43 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Projects.GetDetails)]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
         public async Task<ActionResult<ProjectDetailsServiceModel>> Details(int projectId)
-            => await this.projectsService.GetDetailsAsync(projectId);
+        {
+            var detailsRequest = await this.projectsService.GetDetailsAsync(projectId);
+
+            if (!detailsRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = detailsRequest.Errors,
+                });
+            }
+
+            return this.Ok(detailsRequest.Result);
+        }
 
         /// <summary>
         /// Assign current Team to current Project.
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="projectId"></param>
+        /// <param name="teamId"></param>
         /// <response code="201"> Successfully assigned team to project.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Projects.AddTeam)]
-        public async Task<ActionResult> AssignTeamToProject(AddTeamToProjectRequestModel input)
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        public async Task<ActionResult> AssignTeamToProject(int projectId, int teamId)
         {
-            var success = await this.projectsService.AddTeamToProjectAsync(input.ProjectId, input.TeamId);
+            var assignTeamRequest = await this.projectsService.AddTeamToProjectAsync(projectId, teamId);
 
-            if (!success)
+            if (!assignTeamRequest.Success)
             {
-                return this.BadRequest();
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = assignTeamRequest.Errors,
+                });
             }
 
             return this.Ok();
@@ -150,13 +175,17 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Projects.RemoveTeam)]
-        public async Task<ActionResult<int>> AssignTeamToProject(int projectId, int teamId)
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        public async Task<ActionResult<int>> RemoveTeamFromProject(int projectId, int teamId)
         {
-            var success = await this.projectsService.RemoveTeamFromProjectAsync(projectId, teamId);
+            var removeTeamRequest = await this.projectsService.RemoveTeamFromProjectAsync(projectId, teamId);
 
-            if (!success)
+            if (!removeTeamRequest.Success)
             {
-                return this.BadRequest();
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = removeTeamRequest.Errors,
+                });
             }
 
             return this.Ok();

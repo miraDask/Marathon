@@ -1,9 +1,10 @@
 ﻿namespace Marathon.Server.Features.Teams.Models
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class AddUserToTeamRequestModel
     {
-        public int TeamId { get; set; }
-
+        [Required]
         public string Email { get; set; }
     }
 }
