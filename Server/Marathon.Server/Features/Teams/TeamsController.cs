@@ -6,6 +6,7 @@
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Teams.Models;
+    using Marathon.Server.Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -28,17 +29,19 @@
         /// Creates new Team.
         /// </summary>
         /// <param name="input"></param>
+        /// <param name="projectId"></param>
         /// <response code="201"> Successfully created team.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Teams.Create)]
-        public async Task<ActionResult<int>> Create(CreateTeamRequestModel input)
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        public async Task<ActionResult<int>> Create(int projectId, CreateTeamRequestModel input)
         {
             var teamCreationResult = await this.teamService.CreateAsync(
                 input.Title,
                 input.ImageUrl,
-                input.ProjectId);
+                projectId);
 
             if (!teamCreationResult.Success)
             {
@@ -56,18 +59,21 @@
         /// Update current team.
         /// </summary>
         /// <param name="input"></param>
+        /// <param name="projectId"></param>
+        /// <param name="teamId"></param>
         /// <response code="200">Successfully updated.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPut]
         [Route(Teams.Update)]
-        public async Task<ActionResult> Update(UpdateTeamRequestModel input)
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        public async Task<ActionResult> Update(int projectId, int teamId, UpdateTeamRequestModel input)
         {
             var updateRequest = await this.teamService.UpdateAsync(
-                input.Id,
+                teamId,
                 input.Title,
                 input.ImageUrl,
-                input.ProjectId);
+                projectId);
 
             if (!updateRequest.Success)
             {
@@ -89,6 +95,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Teams.Delete)]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
         public async Task<ActionResult> Delete(int teamId)
         {
             var deleteRequest = await this.teamService.DeleteAsync(teamId);
@@ -138,6 +145,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Teams.AddUser)]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
         public async Task<ActionResult<int>> AssignUserToTeam(int teamId, AddUserToTeamRequestModel input)
         {
             var assignUserRequest = await this.teamService.AddUserToTeamAsync(input.Email, teamId);
@@ -163,6 +171,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Teams.RemoveUser)]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
         public async Task<ActionResult<int>> RemoveUserFromTeam(int teamId, string userId)
         {
             var removeRequest = await this.teamService.RemoveUserFromTeamAsync(userId, teamId);
