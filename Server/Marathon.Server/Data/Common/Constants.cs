@@ -19,7 +19,9 @@
 
         public static class Issue
         {
+            public const int TitleMinLength = 3;
             public const int TitleMaxLength = 50;
+            public const int DescriptionMinLength = 3;
             public const int DescriptionMaxLength = 500;
         }
 
