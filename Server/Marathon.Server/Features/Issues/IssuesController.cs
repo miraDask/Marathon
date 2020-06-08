@@ -1,9 +1,8 @@
 ﻿namespace Marathon.Server.Features.Issues
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
+
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Infrastructure.Extensions;
@@ -48,7 +47,7 @@
         /// </summary>
         /// <param name="issueId"></param>
         /// <param name="projectId"></param>
-        /// <response code="201"> Successfully return details for current issue.</response>
+        /// <response code="200"> Successfully return details for current issue.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
@@ -67,6 +66,29 @@
             }
 
             return this.Ok(detailsRequest.Result);
+        }
+
+        /// <summary>
+        /// Get all issues for current project - creator.
+        /// </summary>
+        /// <response code="200">Returns all projects for current user.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpGet]
+        [Route(Issues.GetAllForProject)]
+        public async Task<ActionResult<IEnumerable<IssueListingServiceModel>>> GetAll(int projectId)
+        {
+            var getAllReaquest = await this.issuesService.GetAllByProjecIdAsync(projectId);
+
+            if (!getAllReaquest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = getAllReaquest.Errors,
+                });
+            }
+
+            return this.Ok(getAllReaquest.Result);
         }
     }
 }
