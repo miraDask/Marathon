@@ -41,7 +41,7 @@
 
         public int StatusId { get; set; }
 
-        public virtual Status Satus { get; set; }
+        public virtual Status Status { get; set; }
 
         public int? SprintId { get; set; }
 

@@ -32,5 +32,14 @@
             public const string AddTeam = Root + ProjectRoute + "/{teamId}";
             public const string RemoveTeam = Root + ProjectRoute + "/{teamId}";
         }
+
+        public static class Issues
+        {
+            public const string Create = Root + ProjectRoute + "/issues";
+            public const string GetAllForProject = Root + ProjectRoute + "/issues";
+            public const string Update = Root + ProjectRoute + "/issues/{issueId}";
+            public const string GetDetails = Root + ProjectRoute + "/issues/{issueId}";
+            public const string Delete = Root + ProjectRoute + "/issues/{issueId}";
+        }
     }
 }

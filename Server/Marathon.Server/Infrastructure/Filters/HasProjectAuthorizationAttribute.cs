@@ -8,7 +8,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
 
-    using static Marathon.Server.Features.Common.Constants.Claims;
+    using static Marathon.Server.Features.Common.Constants;
 
     public class HasProjectAuthorizationAttribute : IAsyncActionFilter
     {
@@ -28,10 +28,10 @@
                     var claimValue = value.ToString();
                     var user = await this.userManager.GetUserAsync(context.HttpContext.User);
                     var claims = await this.userManager.GetClaimsAsync(user);
-                    var hasClaim = claims.Any(c => c.Type == Admin && c.Value == claimValue);
+                    var hasClaim = claims.Any(c => c.Type == Claims.Admin && c.Value == claimValue);
                     if (!hasClaim)
                     {
-                        context.Result = new BadRequestObjectResult("Unauthorized user");
+                        context.Result = new BadRequestObjectResult(Errors.UnuthorizedUser);
                     }
                     else
                     {
