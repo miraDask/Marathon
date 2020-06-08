@@ -16,6 +16,6 @@
 
         Task<ResultModel<IEnumerable<IssueListingServiceModel>>> GetAllByProjecIdAsync(int id);
 
-        Task<ResultModel<IssueDetailsServiceModel>> GetDetailsAsync(int id);
+        Task<ResultModel<IssueDetailsServiceModel>> GetDetailsAsync(int id, int projectId);
     }
 }

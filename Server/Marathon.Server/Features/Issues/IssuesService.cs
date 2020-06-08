@@ -74,7 +74,7 @@
 
         public async Task<ResultModel<IEnumerable<IssueListingServiceModel>>> GetAllByProjecIdAsync(int id)
         {
-            var getAllUssuesResult = await this.dbContext
+            var getAllIssuesResult = await this.dbContext
                 .Issues
                 .Where(x => x.ProjectId == id)
                 .Select(x => new IssueListingServiceModel()
@@ -86,7 +86,7 @@
                 })
                 .ToListAsync();
 
-            if (getAllUssuesResult == null)
+            if (getAllIssuesResult == null)
             {
                 return new ResultModel<IEnumerable<IssueListingServiceModel>>
                 {
@@ -97,15 +97,15 @@
             return new ResultModel<IEnumerable<IssueListingServiceModel>>
             {
                 Success = true,
-                Result = getAllUssuesResult,
+                Result = getAllIssuesResult,
             };
         }
 
-        public async Task<ResultModel<IssueDetailsServiceModel>> GetDetailsAsync(int id)
+        public async Task<ResultModel<IssueDetailsServiceModel>> GetDetailsAsync(int id, int projectId)
         {
             var issue = await this.dbContext
                 .Issues
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == id && x.ProjectId == projectId)
                 .Select(x => new IssueDetailsServiceModel
                 {
                     Id = x.Id,
@@ -113,8 +113,8 @@
                     Description = x.Description,
                     IsResolved = x.IsResolved,
                     StoryPoins = x.StoryPoins,
-                    Priority = x.Priority,
-                    Type = x.Type,
+                    Priority = x.Priority.ToString(),
+                    Type = x.Type.ToString(),
                     Status = x.Status.Name,
                     Sprint = new SprintListingServiceModel
                     {
@@ -123,10 +123,10 @@
                     },
                     ParentIssue = new IssueListingServiceModel
                     {
-                        Id = x.Id,
-                        Title = x.Title,
-                        StatusId = x.StatusId,
-                        StatusName = x.Status.Name,
+                        Id = x.ParentIssue.Id,
+                        Title = x.ParentIssue.Title,
+                        StatusId = x.ParentIssue.StatusId,
+                        StatusName = x.ParentIssue.Status.Name,
                     },
                     Reporter = new UserListingServerModel
                     {
@@ -154,7 +154,7 @@
             {
                 return new ResultModel<IssueDetailsServiceModel>
                 {
-                    Errors = new string[] { InvalidProjectId },
+                    Errors = new string[] { InvalidIssueId },
                 };
             }
 
@@ -173,7 +173,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidProjectId },
+                    Errors = new string[] { InvalidIssueId },
                 };
             }
 

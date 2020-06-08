@@ -21,7 +21,7 @@
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (context.ActionArguments.TryGetValue("projectId", out object value))
+            if (context.RouteData.Values.TryGetValue("projectId", out object value))
             {
                 if (context.Controller is ControllerBase controller)
                 {

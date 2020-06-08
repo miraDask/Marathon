@@ -18,9 +18,9 @@
 
         public int? StoryPoins { get; set; }
 
-        public Priority Priority { get; set; }
+        public string Priority { get; set; }
 
-        public Type Type { get; set; }
+        public string Type { get; set; }
 
         public UserListingServerModel Reporter { get; set; }
 

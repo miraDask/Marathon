@@ -3,7 +3,7 @@
     public static class ApiRoutes
     {
         public const string Root = "api";
-        public const string ProjectRoute = "/projects/{projectId}";
+        public const string Base = Root + "/projects/{projectId}";
 
         public static class Identity
         {
@@ -13,33 +13,33 @@
 
         public static class Teams
         {
-            public const string Create = Root + ProjectRoute + "/teams";
-            public const string Update = Root + ProjectRoute + "/teams/{teamId}";
-            public const string GetAllInProject = Root + ProjectRoute + "/teams";
-            public const string Delete = Root + ProjectRoute + "/teams/{teamId}";
-            public const string AddUser = Root + ProjectRoute + "/teams/{teamId}";
-            public const string GetDetails = Root + ProjectRoute + "/teams/{teamId}";
-            public const string RemoveUser = Root + ProjectRoute + "/teams/{teamId}/{userId}";
+            public const string Create = Base + "/teams";
+            public const string Update = Base + "/teams/{teamId}";
+            public const string GetAllInProject = Base + "/teams";
+            public const string Delete = Base + "/teams/{teamId}";
+            public const string AddUser = Base + "/teams/{teamId}";
+            public const string GetDetails = Base + "/teams/{teamId}";
+            public const string RemoveUser = Base + "/teams/{teamId}/{userId}";
         }
 
         public static class Projects
         {
             public const string Create = Root + "/projects";
             public const string GetAllForUser = Root + "/projects";
-            public const string Update = Root + ProjectRoute;
-            public const string GetDetails = Root + ProjectRoute;
-            public const string Delete = Root + ProjectRoute;
-            public const string AddTeam = Root + ProjectRoute + "/{teamId}";
-            public const string RemoveTeam = Root + ProjectRoute + "/{teamId}";
+            public const string Update = Base;
+            public const string GetDetails = Base;
+            public const string Delete = Base;
+            public const string AddTeam = Base + "/{teamId}";
+            public const string RemoveTeam = Base + "/{teamId}";
         }
 
         public static class Issues
         {
-            public const string Create = Root + ProjectRoute + "/issues";
-            public const string GetAllForProject = Root + ProjectRoute + "/issues";
-            public const string Update = Root + ProjectRoute + "/issues/{issueId}";
-            public const string GetDetails = Root + ProjectRoute + "/issues/{issueId}";
-            public const string Delete = Root + ProjectRoute + "/issues/{issueId}";
+            public const string Create = Base + "/issues";
+            public const string GetAllForProject = Base + "/issues";
+            public const string Update = Base + "/issues/{issueId}";
+            public const string GetDetails = Base + "/issues/{issueId}";
+            public const string Delete = Base + "/issues/{issueId}";
         }
     }
 }
