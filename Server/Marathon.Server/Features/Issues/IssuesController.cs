@@ -43,6 +43,59 @@
         }
 
         /// <summary>
+        /// Update current issue.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="projectId"></param>
+        /// <param name="issueId"></param>
+        /// <response code="200">Successfully updated.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpPut]
+        [Route(Issues.Update)]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        public async Task<ActionResult> Update(int projectId, int issueId, UpdateIssueRequestModel input)
+        {
+            var updateRequest = await this.issuesService.UpdateAsync(issueId, projectId, input);
+
+            if (!updateRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = updateRequest.Errors,
+                });
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// Delete current issue.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="issueId"></param>
+        /// <response code="200">Successfully deleted.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpDelete]
+        [Route(Issues.Delete)]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        public async Task<ActionResult> Delete(int projectId, int issueId)
+        {
+            var updateRequest = await this.issuesService.DeleteAsync(issueId, projectId);
+
+            if (!updateRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = updateRequest.Errors,
+                });
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
         /// Get details for current issue.
         /// </summary>
         /// <param name="issueId"></param>
@@ -71,7 +124,7 @@
         /// <summary>
         /// Get all issues for current project - creator.
         /// </summary>
-        /// <response code="200">Returns all projects for current user.</response>
+        /// <response code="200">Returns all issues for current project.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]

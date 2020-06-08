@@ -10,9 +10,9 @@
     {
         Task<int> CreateAsync(int projectId, string userId, CreateIssueRequestModel createIssueRequestModel);
 
-        Task<ResultModel<bool>> UpdateAsync(int id, UpdateIssueRequestModel updateIssueRequestModel);
+        Task<ResultModel<bool>> UpdateAsync(int issueId, int projectId, UpdateIssueRequestModel updateIssueRequestModel);
 
-        Task<ResultModel<bool>> DeleteAsync(int id);
+        Task<ResultModel<bool>> DeleteAsync(int issueId, int projectId);
 
         Task<ResultModel<IEnumerable<IssueListingServiceModel>>> GetAllByProjecIdAsync(int id);
 

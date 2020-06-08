@@ -47,9 +47,9 @@
             return issue.Id;
         }
 
-        public async Task<ResultModel<bool>> DeleteAsync(int id)
+        public async Task<ResultModel<bool>> DeleteAsync(int issueId, int projectId)
         {
-            var issue = await this.GetByIdAsync(id);
+            var issue = await this.GetByIdAndProjectIdAsync(issueId, projectId);
 
             if (issue == null)
             {
@@ -165,9 +165,9 @@
             };
         }
 
-        public async Task<ResultModel<bool>> UpdateAsync(int id, UpdateIssueRequestModel model)
+        public async Task<ResultModel<bool>> UpdateAsync(int issueId, int projectId, UpdateIssueRequestModel model)
         {
-            var issue = await this.GetByIdAsync(id);
+            var issue = await this.GetByIdAndProjectIdAsync(issueId, projectId);
 
             if (issue == null)
             {
@@ -196,6 +196,7 @@
             };
         }
 
-        private async Task<Issue> GetByIdAsync(int id) => await this.dbContext.Issues.FirstOrDefaultAsync(x => x.Id == id);
+        private async Task<Issue> GetByIdAndProjectIdAsync(int issueId, int projectId)
+            => await this.dbContext.Issues.FirstOrDefaultAsync(x => x.Id == issueId && x.ProjectId == projectId);
     }
 }
