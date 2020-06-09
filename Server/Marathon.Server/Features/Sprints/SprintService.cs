@@ -8,6 +8,11 @@
 
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
+    using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Sprints.Models;
+    using Microsoft.EntityFrameworkCore;
+
+    using static Marathon.Server.Features.Common.Constants.Errors;
 
     public class SprintService : ISprintService
     {
@@ -37,6 +42,35 @@
             await this.dbContext.SaveChangesAsync();
 
             return sprint.Id;
+        }
+
+        public async Task<ResultModel<IEnumerable<SprintListingServiceModel>>> GetAllByProjecIdAsync(int projectId)
+        {
+            var getAllSprintsResult = await this.dbContext
+                .Sprints
+                .Where(x => x.ProjectId == projectId)
+                .Select(x => new SprintListingServiceModel()
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                })
+                .ToListAsync();
+
+            if (getAllSprintsResult == null)
+            {
+                return new ResultModel<IEnumerable<SprintListingServiceModel>>
+                {
+                    Errors = new string[] { InvalidProjectId },
+                };
+            }
+
+            return new ResultModel<IEnumerable<SprintListingServiceModel>>
+            {
+                Success = true,
+                Result = getAllSprintsResult,
+            };
         }
     }
 }
