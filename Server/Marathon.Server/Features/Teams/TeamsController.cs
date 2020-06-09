@@ -140,7 +140,7 @@
         /// </summary>
         /// <param name="input"></param>
         /// <param name="teamId"></param>
-        /// <response code="201"> Successfully assigned user to team.</response>
+        /// <response code="200"> Successfully assigned user to team.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
@@ -166,7 +166,7 @@
         /// </summary>
         /// <param name="teamId"></param>
         /// <param name="userId"></param>
-        /// <response code="201"> Successfully removed user from team.</response>
+        /// <response code="200"> Successfully removed user from team.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
@@ -191,7 +191,7 @@
         /// Get details for current team.
         /// </summary>
         /// <param name="teamId"></param>
-        /// <response code="201"> Successfully return details for current ream.</response>
+        /// <response code="200"> Successfully return details for current ream.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]

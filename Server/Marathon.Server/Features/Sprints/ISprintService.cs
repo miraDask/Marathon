@@ -12,5 +12,7 @@
         Task<int> CreateAsync(int projectId, string title, string goal, int weeks, DateTime startDate);
 
         Task<ResultModel<IEnumerable<SprintListingServiceModel>>> GetAllByProjecIdAsync(int projectId);
+
+        Task<ResultModel<SprintDetailsServiceModel>> GetDetailsAsync(int sprintId, int projectId);
     }
 }

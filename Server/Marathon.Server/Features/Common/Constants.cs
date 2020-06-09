@@ -11,6 +11,7 @@
             public const string InvalidPassword = "Invalid password.";
             public const string InvalidProjectId = "Invalid project id.";
             public const string InvalidTeamId = "Invalid team id.";
+            public const string InvalidSprintId = "Invalid sprint id.";
             public const string InvalidTeamIdOrUserId = "Invalid user or team id.";
             public const string InvalidUserOrEmail = "Invalid user or email";
             public const string InvalidIssueId = "Invalid issue Id";

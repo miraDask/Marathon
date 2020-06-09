@@ -9,6 +9,7 @@
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Features.Sprints.Models;
     using Microsoft.EntityFrameworkCore;
 
@@ -70,6 +71,44 @@
             {
                 Success = true,
                 Result = getAllSprintsResult,
+            };
+        }
+
+        public async Task<ResultModel<SprintDetailsServiceModel>> GetDetailsAsync(int sprintId, int projectId)
+        {
+            var sprint = await this.dbContext
+                .Sprints
+                .Where(x => x.Id == sprintId && x.ProjectId == projectId)
+                .Select(x => new SprintDetailsServiceModel
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Goal = x.Goal,
+                    DurationInWeeks = x.DurationInWeeks,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                    Issues = x.Issues.Select(x => new IssueListingServiceModel
+                    {
+                        Id = x.Id,
+                        Title = x.Title,
+                        StatusId = x.StatusId,
+                        StatusName = x.Status.Name,
+                    }),
+                })
+                .FirstOrDefaultAsync();
+
+            if (sprint == null)
+            {
+                return new ResultModel<SprintDetailsServiceModel>
+                {
+                    Errors = new string[] { InvalidSprintId },
+                };
+            }
+
+            return new ResultModel<SprintDetailsServiceModel>
+            {
+                Success = true,
+                Result = sprint,
             };
         }
     }

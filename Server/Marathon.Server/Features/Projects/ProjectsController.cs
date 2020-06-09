@@ -118,7 +118,7 @@
         /// Get details for current project.
         /// </summary>
         /// <param name="projectId"></param>
-        /// <response code="201"> Successfully return details for current project.</response>
+        /// <response code="200"> Successfully return details for current project.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
@@ -144,7 +144,7 @@
         /// </summary>
         /// <param name="projectId"></param>
         /// <param name="teamId"></param>
-        /// <response code="201"> Successfully assigned team to project.</response>
+        /// <response code="200"> Successfully assigned team to project.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
@@ -170,7 +170,7 @@
         /// </summary>
         /// <param name="teamId"></param>
         /// <param name="projectId"></param>
-        /// <response code="201"> Successfully removed team from project.</response>
+        /// <response code="200"> Successfully removed team from project.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]

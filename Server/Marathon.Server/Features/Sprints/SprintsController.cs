@@ -68,5 +68,31 @@
 
             return this.Ok(getAllReaquest.Result);
         }
+
+        /// <summary>
+        /// Get details for current sprint.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="sprintId"></param>
+        /// <response code="200"> Successfully return details for current sprint.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpGet]
+        [Route(Sprints.GetDetails)]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        public async Task<ActionResult<SprintDetailsServiceModel>> Details(int projectId, int sprintId)
+        {
+            var detailsRequest = await this.sprintService.GetDetailsAsync(sprintId, projectId);
+
+            if (!detailsRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = detailsRequest.Errors,
+                });
+            }
+
+            return this.Ok(detailsRequest.Result);
+        }
     }
 }
