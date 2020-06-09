@@ -3,17 +3,17 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using Marathon.Server.Features.Common;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Infrastructure.Extensions;
     using Marathon.Server.Infrastructure.Filters;
-    using Microsoft.AspNetCore.Authorization;
+
     using Microsoft.AspNetCore.Mvc;
 
     using static Marathon.Server.Infrastructure.ApiRoutes;
 
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    public class IssuesController : ControllerBase
+    public class IssuesController : ApiController
     {
         private readonly IIssuesService issuesService;
 

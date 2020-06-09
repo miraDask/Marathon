@@ -33,6 +33,17 @@
             public const string RemoveTeam = Base + "/{teamId}";
         }
 
+        public static class Sprints
+        {
+            public const string Create = Base + "/sprints";
+            public const string GetAllForProject = Base + "/sprints";
+            public const string Update = Base + "/sprints/{sprintId}";
+            public const string GetDetails = Base + "/sprints/{sprintId}";
+            public const string Delete = Base + "/sprints/{sprintId}";
+            public const string AddIssue = Base + "/sprints/{sprintId}/{issueId}";
+            public const string RemoveIssue = Base + "/sprints/{sprintId}/{issueId}";
+        }
+
         public static class Issues
         {
             public const string Create = Base + "/issues";
