@@ -24,6 +24,38 @@
             this.dbContext = dbContext;
         }
 
+        public async Task<ResultModel<bool>> AssignIssueToSprintAsync(int projectId, int sprintId, int issueId)
+        {
+            var sprint = await this.GetByIdAndProjectIdAsync(sprintId, projectId);
+
+            if (sprint == null)
+            {
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { InvalidSprintId },
+                };
+            }
+
+            var issue = await this.dbContext.Issues.FirstOrDefaultAsync(x => x.Id == issueId && x.ProjectId == projectId);
+
+            if (issue == null)
+            {
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { InvalidIssueId },
+                };
+            }
+
+            issue.SprintId = sprintId;
+            this.dbContext.Update(issue);
+            await this.dbContext.SaveChangesAsync();
+
+            return new ResultModel<bool>
+            {
+                Success = true,
+            };
+        }
+
         public async Task<int> CreateAsync(int projectId, string title, string goal, int weeks, DateTime startDate)
         {
             var duration = TimeSpan.FromDays(weeks * DaysInWeek);
@@ -135,6 +167,28 @@
             {
                 Success = true,
                 Result = sprint,
+            };
+        }
+
+        public async Task<ResultModel<bool>> RemoveIssueFromSprintAsync(int sprintId, int issueId)
+        {
+            var issue = await this.dbContext.Issues.FirstOrDefaultAsync(x => x.Id == issueId && x.SprintId == sprintId);
+
+            if (issue == null)
+            {
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { InvalidIssueId },
+                };
+            }
+
+            issue.SprintId = null;
+            this.dbContext.Update(issue);
+            await this.dbContext.SaveChangesAsync();
+
+            return new ResultModel<bool>
+            {
+                Success = true,
             };
         }
 
