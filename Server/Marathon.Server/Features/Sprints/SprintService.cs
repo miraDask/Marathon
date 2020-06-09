@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -43,6 +42,31 @@
             await this.dbContext.SaveChangesAsync();
 
             return sprint.Id;
+        }
+
+        public async Task<ResultModel<bool>> DeleteAsync(int sprintId, int projectId)
+        {
+            var sprint = await this.GetByIdAndProjectIdAsync(sprintId, projectId);
+
+            if (sprint == null)
+            {
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { InvalidSprintId },
+                };
+            }
+
+            sprint.IsDeleted = true;
+            sprint.DeletedOn = DateTime.UtcNow;
+
+            this.dbContext.Sprints.Update(sprint);
+
+            await this.dbContext.SaveChangesAsync();
+
+            return new ResultModel<bool>
+            {
+                Success = true,
+            };
         }
 
         public async Task<ResultModel<IEnumerable<SprintListingServiceModel>>> GetAllByProjecIdAsync(int projectId)
@@ -91,9 +115,11 @@
                     {
                         Id = x.Id,
                         Title = x.Title,
+                        StoryPoints = x.StoryPoints,
                         StatusId = x.StatusId,
                         StatusName = x.Status.Name,
                     }),
+                    Estimate = x.Issues.Sum(x => x.StoryPoints),
                 })
                 .FirstOrDefaultAsync();
 
@@ -111,5 +137,35 @@
                 Result = sprint,
             };
         }
+
+        public async Task<ResultModel<bool>> UpdateAsync(int sprintId, int projectId, string title, string goal, int weeks, DateTime startDate)
+        {
+            var sprint = await this.GetByIdAndProjectIdAsync(sprintId, projectId);
+
+            if (sprint == null)
+            {
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { InvalidSprintId },
+                };
+            }
+
+            sprint.Title = title;
+            sprint.Goal = goal;
+            sprint.DurationInWeeks = weeks;
+            sprint.StartDate = startDate;
+            sprint.EndDate = startDate.Add(TimeSpan.FromDays(weeks * DaysInWeek)).ToUniversalTime();
+            sprint.ModifiedOn = DateTime.UtcNow;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return new ResultModel<bool>
+            {
+                Success = true,
+            };
+        }
+
+        private async Task<Sprint> GetByIdAndProjectIdAsync(int sprintId, int projectId)
+          => await this.dbContext.Sprints.FirstOrDefaultAsync(x => x.Id == sprintId && x.ProjectId == projectId);
     }
 }

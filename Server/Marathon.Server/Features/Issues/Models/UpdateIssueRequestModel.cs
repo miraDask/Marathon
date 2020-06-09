@@ -19,7 +19,7 @@
         [MaxLength(DescriptionMaxLength)]
         public string Description { get; set; }
 
-        public int? StoryPoins { get; set; }
+        public int? StoryPoints { get; set; }
 
         public Priority Priority { get; set; }
 

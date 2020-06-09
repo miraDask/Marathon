@@ -11,6 +11,10 @@
     {
         Task<int> CreateAsync(int projectId, string title, string goal, int weeks, DateTime startDate);
 
+        Task<ResultModel<bool>> UpdateAsync(int sprintId, int projectId, string title, string goal, int weeks, DateTime startDate);
+
+        Task<ResultModel<bool>> DeleteAsync(int sprintId, int projectId);
+
         Task<ResultModel<IEnumerable<SprintListingServiceModel>>> GetAllByProjecIdAsync(int projectId);
 
         Task<ResultModel<SprintDetailsServiceModel>> GetDetailsAsync(int sprintId, int projectId);
