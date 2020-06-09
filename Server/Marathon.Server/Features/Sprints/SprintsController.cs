@@ -153,5 +153,58 @@
 
             return this.Ok();
         }
+
+        /// <summary>
+        /// Assign current Issue to current Sprint.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="sprintId"></param>
+        /// <param name="issueId"></param>
+        /// <response code="200"> Successfully assigned issue to sprint.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpPost]
+        [Route(Sprints.AssignIssue)]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        public async Task<ActionResult> AssignIssueToSprint(int projectId, int sprintId, int issueId)
+        {
+            var assignIssueRequest = await this.sprintService.AssignIssueToSprintAsync(projectId, sprintId, issueId);
+
+            if (!assignIssueRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = assignIssueRequest.Errors,
+                });
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// Remove current Issue from current Sprint.
+        /// </summary>
+        /// <param name="sprintId"></param>
+        /// <param name="issueId"></param>
+        /// <response code="200"> Successfully removed issue from sprint.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpDelete]
+        [Route(Sprints.RemoveIssue)]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        public async Task<ActionResult<int>> RemoveTeamFromProject(int sprintId, int issueId)
+        {
+            var removeIssueRequest = await this.sprintService.RemoveIssueFromSprintAsync(sprintId, issueId);
+
+            if (!removeIssueRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = removeIssueRequest.Errors,
+                });
+            }
+
+            return this.Ok();
+        }
     }
 }
