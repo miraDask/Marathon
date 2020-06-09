@@ -94,5 +94,64 @@
 
             return this.Ok(detailsRequest.Result);
         }
+
+        /// <summary>
+        /// Update current sprint.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="projectId"></param>
+        /// <param name="sprintId"></param>
+        /// <response code="200">Successfully updated.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpPut]
+        [Route(Sprints.Update)]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        public async Task<ActionResult> Update(int projectId, int sprintId, UpdateSprintRequestModel input)
+        {
+            var updateRequest = await this.sprintService.UpdateAsync(
+                sprintId,
+                projectId,
+                input.Title,
+                input.Goal,
+                input.DurationInWeeks,
+                input.StartDate);
+
+            if (!updateRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = updateRequest.Errors,
+                });
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// Delete current sprint.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="sprintId"></param>
+        /// <response code="200">Successfully deleted.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpDelete]
+        [Route(Sprints.Delete)]
+        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        public async Task<ActionResult> Delete(int projectId, int sprintId)
+        {
+            var updateRequest = await this.sprintService.DeleteAsync(sprintId, projectId);
+
+            if (!updateRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = updateRequest.Errors,
+                });
+            }
+
+            return this.Ok();
+        }
     }
 }

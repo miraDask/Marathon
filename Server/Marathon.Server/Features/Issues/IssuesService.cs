@@ -30,7 +30,7 @@
             {
                 Title = model.Title,
                 Description = model.Description,
-                StoryPoins = model.StoryPoins,
+                StoryPoints = model.StoryPoints,
                 Priority = model.Priority,
                 Type = model.Type,
                 ReporterId = userId,
@@ -83,6 +83,7 @@
                     Title = x.Title,
                     StatusId = x.StatusId,
                     StatusName = x.Status.Name,
+                    StoryPoints = x.StoryPoints,
                 })
                 .ToListAsync();
 
@@ -112,7 +113,7 @@
                     Title = x.Title,
                     Description = x.Description,
                     IsResolved = x.IsResolved,
-                    StoryPoins = x.StoryPoins,
+                    StoryPoins = x.StoryPoints,
                     Priority = x.Priority.ToString(),
                     Type = x.Type.ToString(),
                     Status = x.Status.Name,
@@ -144,6 +145,7 @@
                     {
                         Id = x.Id,
                         Title = x.Title,
+                        StoryPoints = x.StoryPoints,
                         StatusId = x.StatusId,
                         StatusName = x.Status.Name,
                     }),
@@ -179,7 +181,7 @@
 
             issue.Title = model.Title;
             issue.Description = model.Description;
-            issue.StoryPoins = model.StoryPoins;
+            issue.StoryPoints = model.StoryPoints;
             issue.Priority = model.Priority;
             issue.Type = model.Type;
             issue.StatusId = model.StatusId;

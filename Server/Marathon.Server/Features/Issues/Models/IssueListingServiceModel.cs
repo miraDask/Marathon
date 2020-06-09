@@ -8,6 +8,8 @@
 
         public int StatusId { get; set; }
 
+        public int? StoryPoints { get; set; }
+
         public string StatusName { get; set; }
     }
 }
