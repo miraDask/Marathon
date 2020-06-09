@@ -23,8 +23,11 @@
         [MaxLength(GoalMaxLength)]
         public string Goal { get; set; }
 
-        // weeks: 1, 2, 3, 4
-        public TimeSpan Duration { get; set; }
+        public int ProjectId { get; set; }
+
+        public virtual Project Project { get; set; }
+
+        public int DurationInWeeks { get; set; }
 
         public DateTime StartDate { get; set; }
 

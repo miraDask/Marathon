@@ -4,17 +4,17 @@
     using System.Threading.Tasks;
 
     using Marathon.Server.Data.Models;
+    using Marathon.Server.Features.Common;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Teams.Models;
     using Marathon.Server.Infrastructure.Filters;
-    using Microsoft.AspNetCore.Authorization;
+
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     using static Marathon.Server.Infrastructure.ApiRoutes;
 
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    public class TeamsController : ControllerBase
+    public class TeamsController : ApiController
     {
         private readonly ITeamService teamService;
         private readonly UserManager<User> userManager;

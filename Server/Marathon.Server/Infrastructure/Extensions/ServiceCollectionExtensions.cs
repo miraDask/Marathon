@@ -10,6 +10,7 @@
     using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Issues;
     using Marathon.Server.Features.Projects;
+    using Marathon.Server.Features.Sprints;
     using Marathon.Server.Features.Teams;
     using Marathon.Server.Infrastructure.Filters;
 
@@ -91,7 +92,8 @@
                 .AddTransient<IIdentityService, IdentityService>()
                 .AddTransient<IProjectsService, ProjectsService>()
                 .AddTransient<ITeamService, TeamService>()
-                .AddTransient<IIssuesService, IssuesService>();
+                .AddTransient<IIssuesService, IssuesService>()
+                .AddTransient<ISprintService, SprintService>();
 
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {

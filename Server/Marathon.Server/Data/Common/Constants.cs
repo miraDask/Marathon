@@ -27,12 +27,15 @@
 
         public static class Sprint
         {
+            public const int TitleMinLength = 3;
             public const int TitleMaxLength = 25;
+            public const int GoalMinLength = 2;
             public const int GoalMaxLength = 500;
         }
 
         public static class Status
         {
+            public const int NameMinLength = 2;
             public const int NameMaxLength = 25;
         }
 
@@ -46,7 +49,7 @@
         {
             public const int NameMinLength = 3;
             public const int NameMaxLength = 80;
-            public const int KeyMinLength = 3;
+            public const int KeyMinLength = 2;
             public const int KeyMaxLength = 10;
         }
     }
