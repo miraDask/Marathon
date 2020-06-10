@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Marathon.Server.Data.Migrations;
+
     using Marathon.Server.Features.Common;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity;

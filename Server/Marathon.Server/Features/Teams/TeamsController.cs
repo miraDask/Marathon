@@ -120,6 +120,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Teams.GetAllInProject)]
+        [HasProjectTeamAuthorizationAttribute]
         public async Task<ActionResult<IEnumerable<TeamListingServiceModel>>> GetAll(int projectId)
         {
             var getAllRequest = await this.teamService.GetAllByProjectIdAsync(projectId);
@@ -178,7 +179,7 @@
 
             if (!removeRequest.Success)
             {
-                return this.BadRequest(new ErrorsResponseModel 
+                return this.BadRequest(new ErrorsResponseModel
                 {
                     Errors = removeRequest.Errors,
                 });
@@ -196,6 +197,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Teams.GetDetails)]
+        [HasProjectTeamAuthorizationAttribute]
         public async Task<ActionResult<TeamDetailsServiceModel>> Details(int teamId)
         {
             var detailsRequest = await this.teamService.GetDetailsAsync(teamId);

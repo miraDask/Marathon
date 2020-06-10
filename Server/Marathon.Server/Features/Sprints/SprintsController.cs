@@ -53,7 +53,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Sprints.GetAllForProject)]
-        [HasProjectAdminAuthorization]
+        [HasProjectTeamAuthorization]
         public async Task<ActionResult<IEnumerable<SprintListingServiceModel>>> GetAll(int projectId)
         {
             var getAllReaquest = await this.sprintService.GetAllByProjecIdAsync(projectId);
@@ -79,7 +79,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Sprints.GetDetails)]
-        [HasProjectAdminAuthorization]
+        [HasProjectTeamAuthorization]
         public async Task<ActionResult<SprintDetailsServiceModel>> Details(int projectId, int sprintId)
         {
             var detailsRequest = await this.sprintService.GetDetailsAsync(sprintId, projectId);
@@ -192,7 +192,7 @@
         [HttpDelete]
         [Route(Sprints.RemoveIssue)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult<int>> RemoveTeamFromProject(int sprintId, int issueId)
+        public async Task<ActionResult<int>> RemoveIssueFromProject(int sprintId, int issueId)
         {
             var removeIssueRequest = await this.sprintService.RemoveIssueFromSprintAsync(sprintId, issueId);
 
