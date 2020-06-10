@@ -40,7 +40,7 @@
             this.dbContext.Projects.Add(project);
 
             await this.dbContext.SaveChangesAsync();
-            await this.identityService.AddClaimToUserAsync(userId, project.Id.ToString());
+
             return project.Id;
         }
 

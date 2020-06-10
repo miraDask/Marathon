@@ -35,7 +35,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Teams.Create)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult<int>> Create(int projectId, CreateTeamRequestModel input)
         {
             var teamCreationResult = await this.teamService.CreateAsync(
@@ -66,7 +66,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPut]
         [Route(Teams.Update)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult> Update(int projectId, int teamId, UpdateTeamRequestModel input)
         {
             var updateRequest = await this.teamService.UpdateAsync(
@@ -95,7 +95,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Teams.Delete)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult> Delete(int teamId)
         {
             var deleteRequest = await this.teamService.DeleteAsync(teamId);
@@ -145,7 +145,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Teams.AddUser)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult<int>> AssignUserToTeam(int teamId, AddUserToTeamRequestModel input)
         {
             var assignUserRequest = await this.teamService.AddUserToTeamAsync(input.Email, teamId);
@@ -171,7 +171,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Teams.RemoveUser)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult<int>> RemoveUserFromTeam(int teamId, string userId)
         {
             var removeRequest = await this.teamService.RemoveUserFromTeamAsync(userId, teamId);

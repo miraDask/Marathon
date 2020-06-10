@@ -32,7 +32,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Issues.Create)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult<int>> Create(int projectId, CreateIssueRequestModel input)
         {
             var userId = this.User.GetId();
@@ -53,7 +53,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPut]
         [Route(Issues.Update)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult> Update(int projectId, int issueId, UpdateIssueRequestModel input)
         {
             var updateRequest = await this.issuesService.UpdateAsync(issueId, projectId, input);
@@ -79,7 +79,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Issues.Delete)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult> Delete(int projectId, int issueId)
         {
             var updateRequest = await this.issuesService.DeleteAsync(issueId, projectId);
@@ -105,7 +105,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Issues.GetDetails)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult<IssueDetailsServiceModel>> Details(int projectId, int issueId)
         {
             var detailsRequest = await this.issuesService.GetDetailsAsync(issueId, projectId);

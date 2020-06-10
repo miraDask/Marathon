@@ -2,24 +2,34 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
+    using Marathon.Server.Data.Migrations;
     using Marathon.Server.Features.Common;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Projects.Models;
     using Marathon.Server.Infrastructure.Extensions;
     using Marathon.Server.Infrastructure.Filters;
 
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
 
+    using static Marathon.Server.Features.Common.Constants;
     using static Marathon.Server.Infrastructure.ApiRoutes;
 
     public class ProjectsController : ApiController
     {
         private readonly IProjectsService projectsService;
+        private readonly IIdentityService identityService;
+        private readonly AppSettings appSettings;
 
-        public ProjectsController(IProjectsService projectsService)
+        public ProjectsController(
+            IProjectsService projectsService,
+            IIdentityService identityService,
+            IOptions<AppSettings> appSettings)
         {
             this.projectsService = projectsService;
+            this.identityService = identityService;
+            this.appSettings = appSettings.Value;
         }
 
         /// <summary>
@@ -46,17 +56,19 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Projects.Create)]
-        public async Task<ActionResult<int>> Create(CreateProjectRequestModel input)
+        public async Task<ActionResult<CreateProjectResponseModel>> Create(CreateProjectRequestModel input)
         {
             var userId = this.User.GetId();
 
-            var id = await this.projectsService.CreateAsync(
+            var projectId = await this.projectsService.CreateAsync(
                 input.Name,
                 input.Key,
                 input.ImageUrl,
                 userId);
 
-            return this.Created(nameof(this.Create), id);
+            var newToken = await this.identityService.AddClaimToUserAsync(userId, Claims.Admin, projectId.ToString(), this.appSettings.Secret);
+
+            return this.Created(nameof(this.Create), new CreateProjectResponseModel { Id = projectId, Token = newToken });
         }
 
         /// <summary>
@@ -69,7 +81,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPut]
         [Route(Projects.Update)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult> Update(int projectId, UpdateProjectRequestModel input)
         {
             var updateRequest = await this.projectsService.UpdateAsync(
@@ -98,7 +110,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Projects.Delete)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult> Delete(int projectId)
         {
             var deleteRequest = await this.projectsService.DeleteAsync(projectId);
@@ -123,7 +135,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Projects.GetDetails)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult<ProjectDetailsServiceModel>> Details(int projectId)
         {
             var detailsRequest = await this.projectsService.GetDetailsAsync(projectId);
@@ -149,7 +161,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Projects.AddTeam)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult> AssignTeamToProject(int projectId, int teamId)
         {
             var assignTeamRequest = await this.projectsService.AddTeamToProjectAsync(projectId, teamId);
@@ -175,7 +187,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Projects.RemoveTeam)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult<int>> RemoveTeamFromProject(int projectId, int teamId)
         {
             var removeTeamRequest = await this.projectsService.RemoveTeamFromProjectAsync(projectId, teamId);
