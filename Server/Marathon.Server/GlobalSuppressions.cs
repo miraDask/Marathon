@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1412:Store files as UTF-8 with byte order mark", Justification = "<Pending>", Scope = "namespace", Target = "~N:Marathon.Server")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1412:Store files as UTF-8 with byte order mark", Justification = "Because I said so!", Scope = "namespace", Target = "~N:Marathon.Server")]

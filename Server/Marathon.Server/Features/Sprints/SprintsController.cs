@@ -32,7 +32,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Sprints.Create)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult<int>> Create(int projectId, CreateSprintRequestModel input)
         {
             var id = await this.sprintService.CreateAsync(
@@ -53,7 +53,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Sprints.GetAllForProject)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectTeamAuthorization]
         public async Task<ActionResult<IEnumerable<SprintListingServiceModel>>> GetAll(int projectId)
         {
             var getAllReaquest = await this.sprintService.GetAllByProjecIdAsync(projectId);
@@ -79,7 +79,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Sprints.GetDetails)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectTeamAuthorization]
         public async Task<ActionResult<SprintDetailsServiceModel>> Details(int projectId, int sprintId)
         {
             var detailsRequest = await this.sprintService.GetDetailsAsync(sprintId, projectId);
@@ -106,7 +106,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPut]
         [Route(Sprints.Update)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult> Update(int projectId, int sprintId, UpdateSprintRequestModel input)
         {
             var updateRequest = await this.sprintService.UpdateAsync(
@@ -138,7 +138,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Sprints.Delete)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult> Delete(int projectId, int sprintId)
         {
             var updateRequest = await this.sprintService.DeleteAsync(sprintId, projectId);
@@ -165,7 +165,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Sprints.AssignIssue)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult> AssignIssueToSprint(int projectId, int sprintId, int issueId)
         {
             var assignIssueRequest = await this.sprintService.AssignIssueToSprintAsync(projectId, sprintId, issueId);
@@ -191,8 +191,8 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Sprints.RemoveIssue)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
-        public async Task<ActionResult<int>> RemoveTeamFromProject(int sprintId, int issueId)
+        [HasProjectAdminAuthorization]
+        public async Task<ActionResult<int>> RemoveIssueFromProject(int sprintId, int issueId)
         {
             var removeIssueRequest = await this.sprintService.RemoveIssueFromSprintAsync(sprintId, issueId);
 

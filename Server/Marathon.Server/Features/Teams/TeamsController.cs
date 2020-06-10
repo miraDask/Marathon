@@ -35,7 +35,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Teams.Create)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult<int>> Create(int projectId, CreateTeamRequestModel input)
         {
             var teamCreationResult = await this.teamService.CreateAsync(
@@ -66,7 +66,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPut]
         [Route(Teams.Update)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult> Update(int projectId, int teamId, UpdateTeamRequestModel input)
         {
             var updateRequest = await this.teamService.UpdateAsync(
@@ -95,7 +95,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Teams.Delete)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult> Delete(int teamId)
         {
             var deleteRequest = await this.teamService.DeleteAsync(teamId);
@@ -120,6 +120,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Teams.GetAllInProject)]
+        [HasProjectTeamAuthorizationAttribute]
         public async Task<ActionResult<IEnumerable<TeamListingServiceModel>>> GetAll(int projectId)
         {
             var getAllRequest = await this.teamService.GetAllByProjectIdAsync(projectId);
@@ -145,7 +146,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Teams.AddUser)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult<int>> AssignUserToTeam(int teamId, AddUserToTeamRequestModel input)
         {
             var assignUserRequest = await this.teamService.AddUserToTeamAsync(input.Email, teamId);
@@ -171,14 +172,14 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Teams.RemoveUser)]
-        [TypeFilter(typeof(HasProjectAuthorizationAttribute))]
+        [HasProjectAdminAuthorization]
         public async Task<ActionResult<int>> RemoveUserFromTeam(int teamId, string userId)
         {
             var removeRequest = await this.teamService.RemoveUserFromTeamAsync(userId, teamId);
 
             if (!removeRequest.Success)
             {
-                return this.BadRequest(new ErrorsResponseModel 
+                return this.BadRequest(new ErrorsResponseModel
                 {
                     Errors = removeRequest.Errors,
                 });
@@ -196,6 +197,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Teams.GetDetails)]
+        [HasProjectTeamAuthorizationAttribute]
         public async Task<ActionResult<TeamDetailsServiceModel>> Details(int teamId)
         {
             var detailsRequest = await this.teamService.GetDetailsAsync(teamId);

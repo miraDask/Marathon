@@ -1,6 +1,7 @@
 ﻿namespace Marathon.Server.Features.Identity
 {
     using System;
+    using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
     using System.Security.Claims;
@@ -23,10 +24,15 @@
             this.userManager = userManager;
         }
 
-        public async Task AddClaimToUserAsync(string userId, string projectId)
+        public async Task<string> AddClaimToUserAsync(string userId, string claimKey, string claimValue, string secret)
         {
             var user = await this.userManager.FindByIdAsync(userId);
-            await this.userManager.AddClaimAsync(user, new Claim(Claims.Admin, projectId));
+            var claim = new Claim(claimKey, claimValue);
+            await this.userManager.AddClaimAsync(user, claim);
+
+            var token = this.GenerateJwtToken(user.Id, user.UserName, secret, new List<Claim> { claim });
+
+            return token;
         }
 
         public async Task<ResultModel<string>> LoginAsync(string username, string password, string secret)
@@ -49,7 +55,8 @@
                 };
             }
 
-            var token = this.GenerateJwtToken(user.Id, user.UserName, secret);
+            var claims = await this.userManager.GetClaimsAsync(user);
+            var token = this.GenerateJwtToken(user.Id, user.UserName, secret, claims);
 
             return new ResultModel<string>
             {
@@ -95,18 +102,24 @@
             };
         }
 
-        private string GenerateJwtToken(string userId, string userName, string secret)
+        private string GenerateJwtToken(string userId, string userName, string secret, IList<Claim> claims = null)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secret);
+            var identityClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId),
+                new Claim(ClaimTypes.Name, userName),
+            };
+
+            if (claims != null)
+            {
+                identityClaims.AddRange(claims);
+            }
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, userId),
-                    new Claim(ClaimTypes.Name, userName),
-                }),
+                Subject = new ClaimsIdentity(identityClaims),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
             };
