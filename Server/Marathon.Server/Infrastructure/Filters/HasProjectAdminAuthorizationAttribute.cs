@@ -3,7 +3,7 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Marathon.Server.Features.Common.Models;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -22,7 +22,7 @@
                     var hasClaim = claims.Any(c => c.Type == Claims.Admin && c.Value == claimValue);
                     if (!hasClaim)
                     {
-                        context.Result = new BadRequestObjectResult(Errors.UnuthorizedUser);
+                        context.Result = new BadRequestObjectResult(new ErrorsResponseModel { Errors = new string[] { Errors.UnuthorizedUser } });
                     }
                     else
                     {

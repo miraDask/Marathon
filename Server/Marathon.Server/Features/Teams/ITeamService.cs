@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Teams.Models;
 
@@ -19,7 +18,7 @@
 
         Task<ResultModel<TeamDetailsServiceModel>> GetDetailsAsync(int id);
 
-        Task<ResultModel<string>> AddUserToTeamAsync(string userEmail, int teamId, int projectId, string secret);
+        Task<ResultModel<string>> AddUserToTeamAsync(string userId, int teamId, int projectId, string secret);
 
         Task<ResultModel<bool>> RemoveUserFromTeamAsync(string userId, int teamId, int projectId);
     }

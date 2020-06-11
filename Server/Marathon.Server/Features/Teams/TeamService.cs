@@ -32,15 +32,15 @@
             this.identityService = identityService;
         }
 
-        public async Task<ResultModel<string>> AddUserToTeamAsync(string userEmail, int teamId, int projectId, string secret)
+        public async Task<ResultModel<string>> AddUserToTeamAsync(string userId, int teamId, int projectId, string secret)
         {
-            var user = await this.userManager.FindByEmailAsync(userEmail);
+            var user = await this.userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
                 return new ResultModel<string>
                 {
-                    Errors = new string[] { Errors.InvalidUserOrEmail },
+                    Errors = new string[] { Errors.InvalidUserId },
                 };
             }
 

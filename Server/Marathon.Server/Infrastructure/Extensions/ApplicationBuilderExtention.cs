@@ -22,7 +22,7 @@
 
         public static IApplicationBuilder UseTokenCheckMiddleware(this IApplicationBuilder app)
             => app.UseWhen(
-                httpContext => !httpContext.Request.Path.StartsWithSegments(Identity.IdentityRoute),
+                httpContext => !httpContext.Request.Path.StartsWithSegments('/' + Identity.IdentityRoute),
                 subApp => subApp.UseMiddleware<TokenManagerMiddleware>());
 
         public static void ApplyMigrations(this IApplicationBuilder app)
