@@ -2,6 +2,8 @@
 {
     public static class Constants
     {
+        public const string DeactivatedTokenString = "token: {0} deactivated";
+
         public static class Errors
         {
             public const string UnuthorizedUser = "Unauthorized user or invalid project id";
@@ -21,6 +23,13 @@
         {
             public const string Admin = "Admin";
             public const string Team = "Team";
+        }
+
+        public static class Redis
+        {
+            public const string Connection = "localhost";
+            public const int Port = 6379;
+            public const string Channel = "marathon";
         }
     }
 }

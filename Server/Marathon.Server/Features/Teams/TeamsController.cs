@@ -6,11 +6,13 @@
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Teams.Models;
     using Marathon.Server.Infrastructure.Filters;
 
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
 
     using static Marathon.Server.Infrastructure.ApiRoutes;
 
@@ -18,11 +20,16 @@
     {
         private readonly ITeamService teamService;
         private readonly UserManager<User> userManager;
+        private readonly AppSettings appSettings;
 
-        public TeamsController(ITeamService teamService, UserManager<User> userManager)
+        public TeamsController(
+            ITeamService teamService,
+            UserManager<User> userManager,
+            IOptions<AppSettings> appSettings)
         {
             this.teamService = teamService;
             this.userManager = userManager;
+            this.appSettings = appSettings.Value;
         }
 
         /// <summary>
@@ -140,6 +147,7 @@
         /// Assign current User to current Team.
         /// </summary>
         /// <param name="input"></param>
+        /// <param name="projectId"></param>
         /// <param name="teamId"></param>
         /// <response code="200"> Successfully assigned user to team.</response>
         /// <response code="400"> Bad Reaquest.</response>
@@ -147,9 +155,9 @@
         [HttpPost]
         [Route(Teams.AddUser)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult<int>> AssignUserToTeam(int teamId, AddUserToTeamRequestModel input)
+        public async Task<ActionResult<AuthResponseModel>> AssignUserToTeam(int projectId, int teamId, AddUserToTeamRequestModel input)
         {
-            var assignUserRequest = await this.teamService.AddUserToTeamAsync(input.Email, teamId);
+            var assignUserRequest = await this.teamService.AddUserToTeamAsync(input.Email, teamId, projectId, this.appSettings.Secret);
 
             if (!assignUserRequest.Success)
             {
@@ -159,13 +167,14 @@
                 });
             }
 
-            return this.Ok();
+            return this.Ok(new AuthResponseModel { Token = assignUserRequest.Result });
         }
 
         /// <summary>
         /// Remove current User from current Team.
         /// </summary>
         /// <param name="teamId"></param>
+        /// <param name="projectId"></param>
         /// <param name="userId"></param>
         /// <response code="200"> Successfully removed user from team.</response>
         /// <response code="400"> Bad Reaquest.</response>
@@ -173,9 +182,9 @@
         [HttpDelete]
         [Route(Teams.RemoveUser)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult<int>> RemoveUserFromTeam(int teamId, string userId)
+        public async Task<ActionResult<int>> RemoveUserFromTeam(int projectId, int teamId, string userId)
         {
-            var removeRequest = await this.teamService.RemoveUserFromTeamAsync(userId, teamId);
+            var removeRequest = await this.teamService.RemoveUserFromTeamAsync(userId, teamId, projectId);
 
             if (!removeRequest.Success)
             {

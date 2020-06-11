@@ -1,27 +1,27 @@
 ﻿namespace Marathon.Server.Features.Identity
 {
-    using System;
     using System.Collections.Generic;
-    using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
     using System.Security.Claims;
-    using System.Text;
     using System.Threading.Tasks;
 
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Tokens;
+
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.IdentityModel.Tokens;
 
     using static Marathon.Server.Features.Common.Constants;
 
     public class IdentityService : IIdentityService
     {
         private readonly UserManager<User> userManager;
+        private readonly ITokenService tokenService;
 
-        public IdentityService(UserManager<User> userManager)
+        public IdentityService(UserManager<User> userManager, ITokenService tokenService)
         {
             this.userManager = userManager;
+            this.tokenService = tokenService;
         }
 
         public async Task<string> AddClaimToUserAsync(string userId, string claimKey, string claimValue, string secret)
@@ -30,7 +30,7 @@
             var claim = new Claim(claimKey, claimValue);
             await this.userManager.AddClaimAsync(user, claim);
 
-            var token = this.GenerateJwtToken(user.Id, user.UserName, secret, new List<Claim> { claim });
+            var token = await this.tokenService.GenerateJwtToken(user.Id, user.UserName, secret, new List<Claim> { claim });
 
             return token;
         }
@@ -56,7 +56,7 @@
             }
 
             var claims = await this.userManager.GetClaimsAsync(user);
-            var token = this.GenerateJwtToken(user.Id, user.UserName, secret, claims);
+            var token = await this.tokenService.GenerateJwtToken(user.Id, user.UserName, secret, claims);
 
             return new ResultModel<string>
             {
@@ -93,7 +93,7 @@
                 };
             }
 
-            var token = this.GenerateJwtToken(user.Id, username, secret);
+            var token = await this.tokenService.GenerateJwtToken(user.Id, username, secret);
 
             return new ResultModel<string>
             {
@@ -102,31 +102,14 @@
             };
         }
 
-        private string GenerateJwtToken(string userId, string userName, string secret, IList<Claim> claims = null)
+        public async Task RemoveClaimFromUserAsync(string userId, string claimType, string claimValue)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(secret);
-            var identityClaims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, userId),
-                new Claim(ClaimTypes.Name, userName),
-            };
+            var user = await this.userManager.FindByIdAsync(userId);
+            var claims = await this.userManager.GetClaimsAsync(user);
+            var claim = claims.Where(x => x.Type == claimType && x.Value == claimValue).FirstOrDefault();
+            await this.userManager.RemoveClaimAsync(user, claim);
 
-            if (claims != null)
-            {
-                identityClaims.AddRange(claims);
-            }
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(identityClaims),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var encryptedToken = tokenHandler.WriteToken(token);
-
-            return encryptedToken;
+            await this.tokenService.DeactivateJwtToken(user.Id);
         }
     }
 }

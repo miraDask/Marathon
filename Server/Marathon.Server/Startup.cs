@@ -2,6 +2,7 @@ namespace Marathon.Server
 {
     using Marathon.Server.Infrastructure.Extensions;
     using Marathon.Server.Infrastructure.Extentions;
+    using Marathon.Server.Infrastructure.Middlewares;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -23,6 +24,7 @@ namespace Marathon.Server
             services
                  .AddDatabase(this.Configuration)
                  .AddIdentity()
+                 .AddRedisEasyCaching()
                  .AddJwtAuthentication(services.GetApplicationSettings(this.Configuration))
                  .AddApplicationServices()
                  .AddSwagger()
@@ -40,6 +42,7 @@ namespace Marathon.Server
                 .UseSwaggerUI()
                 .UseRouting()
                 .UseAuthorization()
+                .UseTokenCheckMiddleware()
                 .UseCors(options => options
                     .AllowAnyOrigin()
                     .AllowAnyHeader()
