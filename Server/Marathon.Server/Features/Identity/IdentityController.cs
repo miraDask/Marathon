@@ -22,6 +22,13 @@
             this.appSettings = appSettings.Value;
         }
 
+        /// <summary>
+        /// Register new User.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <response code="201"> Successfully registered user.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Identity.Register)]
         public async Task<ActionResult<AuthResponseModel>> Register(RegisterUserRequestModel input)
@@ -43,6 +50,13 @@
             };
         }
 
+        /// <summary>
+        /// Logg in User.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <response code="200"> Successfully logged in user.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Identity.Login)]
         public async Task<ActionResult<AuthResponseModel>> Login(LoginRequestModel input)

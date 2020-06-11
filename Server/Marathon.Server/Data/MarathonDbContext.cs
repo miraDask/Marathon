@@ -36,6 +36,8 @@
 
         public DbSet<TeamUser> TeamsUsers { get; set; }
 
+        public DbSet<ProjectAdmin> ProjectsAdmins { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)

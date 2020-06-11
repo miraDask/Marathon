@@ -146,18 +146,18 @@
         /// <summary>
         /// Assign current User to current Team.
         /// </summary>
-        /// <param name="input"></param>
         /// <param name="projectId"></param>
         /// <param name="teamId"></param>
+        /// <param name="userId"></param>
         /// <response code="200"> Successfully assigned user to team.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Teams.AddUser)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult<AuthResponseModel>> AssignUserToTeam(int projectId, int teamId, AddUserToTeamRequestModel input)
+        public async Task<ActionResult<AuthResponseModel>> AssignUserToTeam(int projectId, int teamId, string userId)
         {
-            var assignUserRequest = await this.teamService.AddUserToTeamAsync(input.Email, teamId, projectId, this.appSettings.Secret);
+            var assignUserRequest = await this.teamService.AddUserToTeamAsync(userId, teamId, projectId, this.appSettings.Secret);
 
             if (!assignUserRequest.Success)
             {

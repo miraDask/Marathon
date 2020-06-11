@@ -6,6 +6,7 @@
     using Marathon.Server.Features.Common;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity;
+    using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Projects.Models;
     using Marathon.Server.Infrastructure.Extensions;
     using Marathon.Server.Infrastructure.Filters;
@@ -197,6 +198,58 @@
                 return this.BadRequest(new ErrorsResponseModel
                 {
                     Errors = removeTeamRequest.Errors,
+                });
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// Assign current User to current Project as Admin.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="userId"></param>
+        /// <response code="200"> Successfully assigned admin to project.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpPost]
+        [Route(Projects.AssignAdmin)]
+        [HasProjectAdminAuthorization]
+        public async Task<ActionResult<AuthResponseModel>> AssignAdminToProject(int projectId, string userId)
+        {
+            var assignAdminRequest = await this.projectsService.AddAdminToProjectAsync(userId, projectId, this.appSettings.Secret);
+
+            if (!assignAdminRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = assignAdminRequest.Errors,
+                });
+            }
+
+            return this.Ok(new AuthResponseModel { Token = assignAdminRequest.Result });
+        }
+
+        /// <summary>
+        /// Remove current User from current Project as Admin.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="userId"></param>
+        /// <response code="200"> Successfully removed team from project.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpDelete]
+        [Route(Projects.RemoveAdmin)]
+        [HasProjectAdminAuthorization]
+        public async Task<ActionResult> RemoveAdminFromProject(int projectId, string userId)
+        {
+            var removeAdminRequest = await this.projectsService.RemoveAdminFromProjectAsync(userId, projectId);
+
+            if (!removeAdminRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = removeAdminRequest.Errors,
                 });
             }
 

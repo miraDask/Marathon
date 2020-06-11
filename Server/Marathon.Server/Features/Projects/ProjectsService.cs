@@ -12,19 +12,25 @@
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Projects.Models;
     using Marathon.Server.Features.Teams.Models;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
-    using static Marathon.Server.Features.Common.Constants.Errors;
+    using static Marathon.Server.Features.Common.Constants;
 
     public class ProjectsService : IProjectsService
     {
         private readonly MarathonDbContext dbContext;
         private readonly IIdentityService identityService;
+        private readonly UserManager<User> userManager;
 
-        public ProjectsService(MarathonDbContext dbContext, IIdentityService identityService)
+        public ProjectsService(
+            MarathonDbContext dbContext,
+            IIdentityService identityService,
+            UserManager<User> userManager)
         {
             this.dbContext = dbContext;
             this.identityService = identityService;
+            this.userManager = userManager;
         }
 
         public async Task<int> CreateAsync(string name, string key, string imageUrl, string userId)
@@ -52,7 +58,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidProjectId },
+                    Errors = new string[] { Errors.InvalidProjectId },
                 };
             }
 
@@ -77,7 +83,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidProjectId },
+                    Errors = new string[] { Errors.InvalidProjectId },
                 };
             }
 
@@ -97,7 +103,9 @@
         public async Task<IEnumerable<ProjectListingServiceModel>> GetAllByUserIdAsync(string id)
         => await this.dbContext
                 .Projects
-                .Where(x => x.CreatorId == id || x.Teams.Any(x => x.TeamsUsers.Any(x => x.UserId == id)))
+                .Where(x => x.CreatorId == id
+                         || x.ProjectsAdmins.Any(x => x.UserId == id)
+                         || x.Teams.Any(x => x.TeamsUsers.Any(x => x.UserId == id)))
                 .Select(x => new ProjectListingServiceModel()
                 {
                     Id = x.Id,
@@ -138,7 +146,7 @@
             {
                 return new ResultModel<ProjectDetailsServiceModel>
                 {
-                    Errors = new string[] { InvalidProjectId },
+                    Errors = new string[] { Errors.InvalidProjectId },
                 };
             }
 
@@ -157,7 +165,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidProjectId },
+                    Errors = new string[] { Errors.InvalidProjectId },
                 };
             }
 
@@ -167,7 +175,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidTeamId },
+                    Errors = new string[] { Errors.InvalidTeamId },
                 };
             }
 
@@ -189,7 +197,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidProjectId },
+                    Errors = new string[] { Errors.InvalidProjectId },
                 };
             }
 
@@ -199,7 +207,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidTeamId },
+                    Errors = new string[] { Errors.InvalidTeamId },
                 };
             }
 
@@ -213,10 +221,71 @@
             };
         }
 
+        public async Task<ResultModel<string>> AddAdminToProjectAsync(string userId, int projectId, string secret)
+        {
+            var user = await this.userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return new ResultModel<string>
+                {
+                    Errors = new string[] { Errors.InvalidUserId },
+                };
+            }
+
+            var project = await this.GetByIdAsync(projectId);
+
+            if (project == null)
+            {
+                return new ResultModel<string>
+                {
+                    Errors = new string[] { Errors.InvalidProjectId },
+                };
+            }
+
+            var projectAdmin = new ProjectAdmin()
+            {
+                User = user,
+                Project = project,
+            };
+
+            await this.dbContext.ProjectsAdmins.AddAsync(projectAdmin);
+            await this.dbContext.SaveChangesAsync();
+
+            var newToken = await this.identityService.AddClaimToUserAsync(user.Id, Claims.Admin, projectId.ToString(), secret);
+
+            return new ResultModel<string>
+            {
+                Success = true,
+                Result = newToken,
+            };
+        }
+
+        public async Task<ResultModel<bool>> RemoveAdminFromProjectAsync(string userId, int projectId)
+        {
+            var projectAdmin = await this.dbContext.ProjectsAdmins.FirstOrDefaultAsync(x => x.UserId == userId && x.ProjectId == projectId);
+            if (projectAdmin == null)
+            {
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { Errors.InvalidUserOrProjectId },
+                };
+            }
+
+            this.dbContext.ProjectsAdmins.Remove(projectAdmin);
+            await this.dbContext.SaveChangesAsync();
+
+            await this.identityService.RemoveClaimFromUserAsync(userId, Claims.Admin, projectId.ToString());
+            return new ResultModel<bool>
+            {
+                Success = true,
+            };
+        }
+
         private async Task<Project> GetByIdAsync(int id)
-        => await this.dbContext
-                     .Projects
-                     .Where(x => x.Id == id)
-                     .FirstOrDefaultAsync();
+     => await this.dbContext
+                  .Projects
+                  .Where(x => x.Id == id)
+                  .FirstOrDefaultAsync();
     }
 }

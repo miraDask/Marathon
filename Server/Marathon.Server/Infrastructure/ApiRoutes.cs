@@ -7,9 +7,9 @@
 
         public static class Identity
         {
-            public const string IdentityRoute = "/identity";
-            public const string Login = Root + IdentityRoute + "/login";
-            public const string Register = Root + IdentityRoute + "/register";
+            public const string IdentityRoute = Root + "/identity";
+            public const string Login = IdentityRoute + "/login";
+            public const string Register = IdentityRoute + "/register";
         }
 
         public static class Teams
@@ -18,8 +18,8 @@
             public const string Update = Base + "/teams/{teamId}";
             public const string GetAllInProject = Base + "/teams";
             public const string Delete = Base + "/teams/{teamId}";
-            public const string AddUser = Base + "/teams/{teamId}";
             public const string GetDetails = Base + "/teams/{teamId}";
+            public const string AddUser = Base + "/teams/{teamId}/{userId}";
             public const string RemoveUser = Base + "/teams/{teamId}/{userId}";
         }
 
@@ -30,6 +30,8 @@
             public const string Update = Base;
             public const string GetDetails = Base;
             public const string Delete = Base;
+            public const string AssignAdmin = Base + "/administration/{userId}";
+            public const string RemoveAdmin = Base + "/administration/{userId}";
             public const string AddTeam = Base + "/{teamId}";
             public const string RemoveTeam = Base + "/{teamId}";
         }
