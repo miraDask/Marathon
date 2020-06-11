@@ -7,8 +7,9 @@
 
         public static class Identity
         {
-            public const string Login = Root + "/identity/login";
-            public const string Register = Root + "/identity/register";
+            public const string IdentityRoute = "/identity";
+            public const string Login = Root + IdentityRoute + "/login";
+            public const string Register = Root + IdentityRoute + "/register";
         }
 
         public static class Teams

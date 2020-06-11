@@ -2,9 +2,12 @@
 {
     using Marathon.Server.Data;
     using Marathon.Server.Data.Common;
+    using Marathon.Server.Infrastructure.Middlewares;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
+
+    using static Marathon.Server.Infrastructure.ApiRoutes;
 
     public static class ApplicationBuilderExtention
     {
@@ -16,6 +19,11 @@
                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Marathon API");
                     options.RoutePrefix = string.Empty;
                 });
+
+        public static IApplicationBuilder UseTokenCheckMiddleware(this IApplicationBuilder app)
+            => app.UseWhen(
+                httpContext => !httpContext.Request.Path.StartsWithSegments(Identity.IdentityRoute),
+                subApp => subApp.UseMiddleware<TokenManagerMiddleware>());
 
         public static void ApplyMigrations(this IApplicationBuilder app)
         {

@@ -5,15 +5,19 @@
     using System.Reflection;
     using System.Text;
 
+    using EasyCaching.Core.Configurations;
+
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
+    using Marathon.Server.Features.Cache;
     using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Issues;
     using Marathon.Server.Features.Projects;
     using Marathon.Server.Features.Sprints;
     using Marathon.Server.Features.Teams;
+    using Marathon.Server.Features.Tokens;
     using Marathon.Server.Infrastructure.Filters;
-
+    using Marathon.Server.Infrastructure.Middlewares;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -22,8 +26,11 @@
     using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
 
+    using static Marathon.Server.Features.Common.Constants;
+
     public static class ServiceCollectionExtensions
     {
+
         public static AppSettings GetApplicationSettings(
             this IServiceCollection services,
             IConfiguration configuration)
@@ -52,6 +59,32 @@
                     options.Password.RequireUppercase = false;
                 })
                 .AddEntityFrameworkStores<MarathonDbContext>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddRedisEasyCaching(this IServiceCollection services)
+        {
+            services.AddEasyCaching(options =>
+            {
+                // use redis cache
+                options.UseRedis(
+                    redisConfig =>
+                {
+                    // Setup Endpoint
+                    redisConfig.DBConfig.Endpoints.Add(new ServerEndPoint(Redis.Connection, Redis.Port));
+
+                    // Setup password if applicable
+                    // if (!string.IsNullOrEmpty(serverPassword))
+                    // {
+                    //    redisConfig.DBConfig.Password = serverPassword;
+                    // }
+
+                    // Allow admin operations
+                    redisConfig.DBConfig.AllowAdmin = true;
+                },
+                    Redis.Channel);
+            });
 
             return services;
         }
@@ -93,7 +126,10 @@
                 .AddTransient<IProjectsService, ProjectsService>()
                 .AddTransient<ITeamService, TeamService>()
                 .AddTransient<IIssuesService, IssuesService>()
-                .AddTransient<ISprintService, SprintService>();
+                .AddTransient<ISprintService, SprintService>()
+                .AddTransient<ICacheService, CacheService>()
+                .AddTransient<ITokenService, TokenService>()
+                .AddTransient<TokenManagerMiddleware>();
 
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {

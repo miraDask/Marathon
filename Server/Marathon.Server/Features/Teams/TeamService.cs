@@ -8,33 +8,39 @@
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Teams.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
-    using static Marathon.Server.Features.Common.Constants.Errors;
+    using static Marathon.Server.Features.Common.Constants;
 
     public class TeamService : ITeamService
     {
         private readonly MarathonDbContext dbContext;
         private readonly UserManager<User> userManager;
+        private readonly IIdentityService identityService;
 
-        public TeamService(MarathonDbContext dbContext, UserManager<User> userManager)
+        public TeamService(
+            MarathonDbContext dbContext,
+            UserManager<User> userManager,
+            IIdentityService identityService)
         {
             this.dbContext = dbContext;
             this.userManager = userManager;
+            this.identityService = identityService;
         }
 
-        public async Task<ResultModel<bool>> AddUserToTeamAsync(string userEmail, int teamId)
+        public async Task<ResultModel<string>> AddUserToTeamAsync(string userEmail, int teamId, int projectId, string secret)
         {
             var user = await this.userManager.FindByEmailAsync(userEmail);
 
             if (user == null)
             {
-                return new ResultModel<bool>
+                return new ResultModel<string>
                 {
-                    Errors = new string[] { InvalidUserOrEmail },
+                    Errors = new string[] { Errors.InvalidUserOrEmail },
                 };
             }
 
@@ -42,9 +48,9 @@
 
             if (team == null)
             {
-                return new ResultModel<bool>
+                return new ResultModel<string>
                 {
-                    Errors = new string[] { InvalidTeamId },
+                    Errors = new string[] { Errors.InvalidTeamId },
                 };
             }
 
@@ -57,9 +63,12 @@
             await this.dbContext.TeamsUsers.AddAsync(teamUser);
             await this.dbContext.SaveChangesAsync();
 
-            return new ResultModel<bool>
+            var newToken = await this.identityService.AddClaimToUserAsync(user.Id, Claims.Team, projectId.ToString(), secret);
+
+            return new ResultModel<string>
             {
                 Success = true,
+                Result = newToken,
             };
         }
 
@@ -71,7 +80,7 @@
             {
                 return new ResultModel<int>
                 {
-                    Errors = new string[] { InvalidProjectId },
+                    Errors = new string[] { Errors.InvalidProjectId },
                 };
             }
 
@@ -101,7 +110,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidTeamId },
+                    Errors = new string[] { Errors.InvalidTeamId },
                 };
             }
 
@@ -135,7 +144,7 @@
             {
                 return new ResultModel<IEnumerable<TeamListingServiceModel>>
                 {
-                    Errors = new string[] { InvalidProjectId },
+                    Errors = new string[] { Errors.InvalidProjectId },
                 };
             }
 
@@ -168,7 +177,7 @@
             {
                 return new ResultModel<TeamDetailsServiceModel>
                 {
-                    Errors = new string[] { InvalidTeamId },
+                    Errors = new string[] { Errors.InvalidTeamId },
                 };
             }
 
@@ -179,20 +188,21 @@
             };
         }
 
-        public async Task<ResultModel<bool>> RemoveUserFromTeamAsync(string userId, int teamId)
+        public async Task<ResultModel<bool>> RemoveUserFromTeamAsync(string userId, int teamId, int projectId)
         {
             var teamUser = await this.dbContext.TeamsUsers.FirstOrDefaultAsync(x => x.UserId == userId && x.TeamId == teamId);
             if (teamUser == null)
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidTeamIdOrUserId },
+                    Errors = new string[] { Errors.InvalidTeamIdOrUserId },
                 };
             }
 
             this.dbContext.TeamsUsers.Remove(teamUser);
             await this.dbContext.SaveChangesAsync();
 
+            await this.identityService.RemoveClaimFromUserAsync(userId, Claims.Team, projectId.ToString());
             return new ResultModel<bool>
             {
                 Success = true,
@@ -207,7 +217,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidTeamId },
+                    Errors = new string[] { Errors.InvalidTeamId },
                 };
             }
 

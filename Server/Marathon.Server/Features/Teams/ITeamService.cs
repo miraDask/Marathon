@@ -19,8 +19,8 @@
 
         Task<ResultModel<TeamDetailsServiceModel>> GetDetailsAsync(int id);
 
-        Task<ResultModel<bool>> AddUserToTeamAsync(string userEmail, int teamId);
+        Task<ResultModel<string>> AddUserToTeamAsync(string userEmail, int teamId, int projectId, string secret);
 
-        Task<ResultModel<bool>> RemoveUserFromTeamAsync(string userId, int teamId);
+        Task<ResultModel<bool>> RemoveUserFromTeamAsync(string userId, int teamId, int projectId);
     }
 }
