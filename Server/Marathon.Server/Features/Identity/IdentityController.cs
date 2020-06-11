@@ -4,6 +4,7 @@
 
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
+    using Marathon.Server.Infrastructure.Extensions;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
 
@@ -51,7 +52,7 @@
         }
 
         /// <summary>
-        /// Logg in User.
+        /// Log in User.
         /// </summary>
         /// <param name="input"></param>
         /// <response code="200"> Successfully logged in user.</response>
@@ -75,6 +76,22 @@
             {
                 Token = loginResult.Result,
             };
+        }
+
+
+        /// <summary>
+        /// Logout User.
+        /// </summary>
+        /// <response code="200"> Successfully logged out user.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpPost]
+        [Route(Identity.Logout)]
+        public async Task<ActionResult> Logout()
+        {
+            var userId = this.User.GetId();
+            await this.identityService.LoguotAsync(userId);
+            return this.Ok();
         }
     }
 }

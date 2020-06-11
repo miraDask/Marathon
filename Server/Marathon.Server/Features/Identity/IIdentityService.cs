@@ -10,6 +10,8 @@
 
         Task<ResultModel<string>> LoginAsync(string username, string password, string secret);
 
+        Task LoguotAsync(string userId);
+
         Task<string> AddClaimToUserAsync(string userId, string claimKey, string claimValue, string secret);
 
         Task RemoveClaimFromUserAsync(string userId, string claimType, string claimValue);

@@ -65,6 +65,11 @@
             };
         }
 
+        public async Task LoguotAsync(string userId)
+        {
+            await this.tokenService.DeactivateJwtToken(userId);
+        }
+
         public async Task<ResultModel<string>> RegisterAsync(string username, string email, string password, string secret)
         {
             var existingUser = await this.userManager.FindByEmailAsync(email);
