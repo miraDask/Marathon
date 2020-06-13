@@ -9,11 +9,11 @@
 
     using static Marathon.Server.Infrastructure.ApiRoutes;
 
-    public class StatusController : ApiController
+    public class StatusesController : ApiController
     {
         private readonly IStatusesService statusService;
 
-        public StatusController(IStatusesService statusService)
+        public StatusesController(IStatusesService statusService)
         {
             this.statusService = statusService;
         }
