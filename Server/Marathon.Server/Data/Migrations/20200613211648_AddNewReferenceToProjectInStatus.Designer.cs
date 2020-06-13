@@ -4,14 +4,16 @@ using Marathon.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Marathon.Server.Data.Migrations
 {
     [DbContext(typeof(MarathonDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200613211648_AddNewReferenceToProjectInStatus")]
+    partial class AddNewReferenceToProjectInStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,6 +206,21 @@ namespace Marathon.Server.Data.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("Sprints");
+                });
+
+            modelBuilder.Entity("Marathon.Server.Data.Models.SprintStatus", b =>
+                {
+                    b.Property<int>("SprintId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SprintId", "StatusId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("SprintsStatuses");
                 });
 
             modelBuilder.Entity("Marathon.Server.Data.Models.Status", b =>
@@ -567,6 +584,21 @@ namespace Marathon.Server.Data.Migrations
                     b.HasOne("Marathon.Server.Data.Models.Project", "Project")
                         .WithMany("Sprints")
                         .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Marathon.Server.Data.Models.SprintStatus", b =>
+                {
+                    b.HasOne("Marathon.Server.Data.Models.Sprint", "Sprint")
+                        .WithMany("SprintsStatuses")
+                        .HasForeignKey("SprintId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Marathon.Server.Data.Models.Status", "Status")
+                        .WithMany("SprintsStatuses")
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

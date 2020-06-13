@@ -15,12 +15,12 @@
 
     using static Marathon.Server.Features.Common.Constants;
 
-    public class TokenService : ITokenService
+    public class TokensService : ITokensService
     {
         private readonly ICacheService cacheService;
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public TokenService(ICacheService cacheService, IHttpContextAccessor httpContextAccessor)
+        public TokensService(ICacheService cacheService, IHttpContextAccessor httpContextAccessor)
         {
             this.cacheService = cacheService;
             this.httpContextAccessor = httpContextAccessor;

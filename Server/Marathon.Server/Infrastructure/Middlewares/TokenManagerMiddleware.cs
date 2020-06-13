@@ -8,9 +8,9 @@
 
     public class TokenManagerMiddleware : IMiddleware
     {
-        private readonly ITokenService tokenService;
+        private readonly ITokensService tokenService;
 
-        public TokenManagerMiddleware(ITokenService tokenService)
+        public TokenManagerMiddleware(ITokensService tokenService)
         {
             this.tokenService = tokenService;
         }

@@ -7,7 +7,7 @@
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Sprints.Models;
 
-    public interface ISprintService
+    public interface ISprintsService
     {
         Task<int> CreateAsync(int projectId, string title, string goal, int weeks, DateTime startDate);
 

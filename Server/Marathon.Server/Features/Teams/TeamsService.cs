@@ -16,13 +16,13 @@
 
     using static Marathon.Server.Features.Common.Constants;
 
-    public class TeamService : ITeamService
+    public class TeamsService : ITeamsService
     {
         private readonly MarathonDbContext dbContext;
         private readonly UserManager<User> userManager;
         private readonly IIdentityService identityService;
 
-        public TeamService(
+        public TeamsService(
             MarathonDbContext dbContext,
             UserManager<User> userManager,
             IIdentityService identityService)

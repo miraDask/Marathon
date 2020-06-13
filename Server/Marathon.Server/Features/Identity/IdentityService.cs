@@ -16,9 +16,9 @@
     public class IdentityService : IIdentityService
     {
         private readonly UserManager<User> userManager;
-        private readonly ITokenService tokenService;
+        private readonly ITokensService tokenService;
 
-        public IdentityService(UserManager<User> userManager, ITokenService tokenService)
+        public IdentityService(UserManager<User> userManager, ITokensService tokenService)
         {
             this.userManager = userManager;
             this.tokenService = tokenService;

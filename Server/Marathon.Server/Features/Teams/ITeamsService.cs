@@ -6,7 +6,7 @@
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Teams.Models;
 
-    public interface ITeamService
+    public interface ITeamsService
     {
         Task<ResultModel<int>> CreateAsync(string title, string imageUrl, int projectId);
 

@@ -4,14 +4,16 @@ using Marathon.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Marathon.Server.Data.Migrations
 {
     [DbContext(typeof(MarathonDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200613150653_AddNewMappingTableSprintStatus")]
+    partial class AddNewMappingTableSprintStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,6 +208,21 @@ namespace Marathon.Server.Data.Migrations
                     b.ToTable("Sprints");
                 });
 
+            modelBuilder.Entity("Marathon.Server.Data.Models.SprintStatus", b =>
+                {
+                    b.Property<int>("SprintId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SprintId", "StatusId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("SprintsStatuses");
+                });
+
             modelBuilder.Entity("Marathon.Server.Data.Models.Status", b =>
                 {
                     b.Property<int>("Id")
@@ -230,14 +247,9 @@ namespace Marathon.Server.Data.Migrations
                         .HasColumnType("nvarchar(25)")
                         .HasMaxLength(25);
 
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IsDeleted");
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("Statuses");
                 });
@@ -571,11 +583,17 @@ namespace Marathon.Server.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Marathon.Server.Data.Models.Status", b =>
+            modelBuilder.Entity("Marathon.Server.Data.Models.SprintStatus", b =>
                 {
-                    b.HasOne("Marathon.Server.Data.Models.Project", "Project")
-                        .WithMany("Statuses")
-                        .HasForeignKey("ProjectId")
+                    b.HasOne("Marathon.Server.Data.Models.Sprint", "Sprint")
+                        .WithMany("SprintsStatuses")
+                        .HasForeignKey("SprintId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Marathon.Server.Data.Models.Status", "Status")
+                        .WithMany("SprintsStatuses")
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

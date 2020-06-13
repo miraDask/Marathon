@@ -4,7 +4,7 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
 
-    public interface ITokenService
+    public interface ITokensService
     {
         Task<bool> IsCurrentActiveToken();
 

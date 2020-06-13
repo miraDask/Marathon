@@ -11,6 +11,7 @@
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Features.Sprints.Models;
+    using Marathon.Server.Features.Status.Models;
     using Microsoft.EntityFrameworkCore;
 
     using static Marathon.Server.Features.Common.Constants.Errors;
@@ -81,8 +82,11 @@
                 {
                     Id = x.Id,
                     Title = x.Title,
-                    StatusId = x.StatusId,
-                    StatusName = x.Status.Name,
+                    Status = new StatusListingModel
+                    {
+                        Id = x.Status.Id,
+                        Name = x.Status.Name,
+                    },
                     StoryPoints = x.StoryPoints,
                 })
                 .ToListAsync();
@@ -126,8 +130,11 @@
                     {
                         Id = x.ParentIssue.Id,
                         Title = x.ParentIssue.Title,
-                        StatusId = x.ParentIssue.StatusId,
-                        StatusName = x.ParentIssue.Status.Name,
+                        Status = new StatusListingModel
+                        {
+                            Id = x.ParentIssue.Status.Id,
+                            Name = x.ParentIssue.Status.Name,
+                        },
                     },
                     Reporter = new UserListingServerModel
                     {
@@ -146,8 +153,11 @@
                         Id = x.Id,
                         Title = x.Title,
                         StoryPoints = x.StoryPoints,
-                        StatusId = x.StatusId,
-                        StatusName = x.Status.Name,
+                        Status = new StatusListingModel
+                        {
+                            Id = x.Status.Id,
+                            Name = x.Status.Name,
+                        },
                     }),
                 })
                 .FirstOrDefaultAsync();
