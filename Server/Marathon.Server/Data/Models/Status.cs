@@ -12,6 +12,7 @@
         public Status()
         {
             this.Issues = new HashSet<Issue>();
+            this.SprintsStatuses = new HashSet<SprintStatus>();
         }
 
         [Required]
@@ -19,5 +20,7 @@
         public string Name { get; set; }
 
         public virtual ICollection<Issue> Issues { get; set; }
+
+        public virtual ICollection<SprintStatus> SprintsStatuses { get; set; }
     }
 }

@@ -50,5 +50,8 @@
   <ItemGroup>
     <None Include=".\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Features\Status\Models\" />
+  </ItemGroup>
 
 </Project>
