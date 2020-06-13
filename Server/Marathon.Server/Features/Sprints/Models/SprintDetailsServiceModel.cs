@@ -25,6 +25,6 @@
 
         public virtual IEnumerable<IssueListingServiceModel> Issues { get; set; }
 
-        public IEnumerable<StatusListingModel> Statuses { get; set; }
+        public IEnumerable<int> Statuses { get; set; }
     }
 }
