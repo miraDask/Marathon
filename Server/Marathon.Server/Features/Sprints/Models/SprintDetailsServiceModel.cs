@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations;
 
     using Marathon.Server.Features.Issues.Models;
+    using Marathon.Server.Features.Status.Models;
 
     public class SprintDetailsServiceModel
     {
@@ -23,5 +24,7 @@
         public int? Estimate { get; set; }
 
         public virtual IEnumerable<IssueListingServiceModel> Issues { get; set; }
+
+        public IEnumerable<StatusListingModel> Statuses { get; set; }
     }
 }

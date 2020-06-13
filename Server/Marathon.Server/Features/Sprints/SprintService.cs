@@ -10,6 +10,7 @@
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Features.Sprints.Models;
+    using Marathon.Server.Features.Status.Models;
     using Microsoft.EntityFrameworkCore;
 
     using static Marathon.Server.Features.Common.Constants.Errors;
@@ -17,6 +18,7 @@
     public class SprintService : ISprintService
     {
         private const int DaysInWeek = 7;
+        private const int NumberOfDefaultStatuses = 3;
         private readonly MarathonDbContext dbContext;
 
         public SprintService(MarathonDbContext dbContext)
@@ -72,6 +74,7 @@
 
             await this.dbContext.AddAsync(sprint);
             await this.dbContext.SaveChangesAsync();
+            await this.AssignDefaultStatuses(sprint.Id);
 
             return sprint.Id;
         }
@@ -151,6 +154,11 @@
                         StatusId = x.StatusId,
                         StatusName = x.Status.Name,
                     }),
+                    Statuses = x.SprintsStatuses.Select(x => new StatusListingModel
+                    {
+                        Id = x.Status.Id,
+                        Name = x.Status.Name,
+                    }),
                     Estimate = x.Issues.Sum(x => x.StoryPoints),
                 })
                 .FirstOrDefaultAsync();
@@ -221,5 +229,20 @@
 
         private async Task<Sprint> GetByIdAndProjectIdAsync(int sprintId, int projectId)
           => await this.dbContext.Sprints.FirstOrDefaultAsync(x => x.Id == sprintId && x.ProjectId == projectId);
+
+        private async Task AssignDefaultStatuses(int sprintId)
+        {
+            for (int i = 1; i <= NumberOfDefaultStatuses; i++)
+            {
+                var sprintStatus = new SprintStatus
+                {
+                    SprintId = sprintId,
+                    StatusId = i,
+                };
+
+                await this.dbContext.AddAsync(sprintStatus);
+                await this.dbContext.SaveChangesAsync();
+            }
+        }
     }
 }
