@@ -120,7 +120,11 @@
                     StoryPoins = x.StoryPoints,
                     Priority = x.Priority.ToString(),
                     Type = x.Type.ToString(),
-                    Status = x.Status.Name,
+                    Status = new StatusListingModel
+                    {
+                        Id = x.Status.Id,
+                        Name = x.Status.Name,
+                    },
                     Sprint = new SprintListingServiceModel
                     {
                         Id = x.Sprint.Id,
