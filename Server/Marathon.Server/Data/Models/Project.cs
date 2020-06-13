@@ -37,6 +37,8 @@
 
         public virtual ICollection<Issue> Issues { get; set; }
 
+        public virtual ICollection<Status> Statuses { get; set; }
+
         public virtual ICollection<ProjectAdmin> ProjectsAdmins { get; set; }
     }
 }

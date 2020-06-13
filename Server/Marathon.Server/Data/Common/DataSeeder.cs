@@ -22,16 +22,6 @@
             {
                 await CreateUser(userManager, UserName, Email);
             }
-
-            // creating initial issue statuses;
-            var statusCollection = await dbContext.Statuses.AnyAsync();
-
-            if (!statusCollection)
-            {
-                await CreateStatus(ToDoStatus, dbContext);
-                await CreateStatus(InProgressStatus, dbContext);
-                await CreateStatus(DoneStatus, dbContext);
-            }
         }
 
         private static async Task<string> CreateUser(
@@ -48,17 +38,6 @@
             var password = Password;
             await userManager.CreateAsync(user, password);
             return user.Id;
-        }
-
-        private static async Task CreateStatus(string name, MarathonDbContext dbContext)
-        {
-            var status = new Status
-            {
-                Name = name,
-            };
-
-            await dbContext.Statuses.AddAsync(status);
-            await dbContext.SaveChangesAsync();
         }
     }
 }

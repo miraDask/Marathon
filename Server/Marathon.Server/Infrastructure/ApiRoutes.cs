@@ -56,5 +56,15 @@
             public const string GetDetails = Base + "/issues/{issueId}";
             public const string Delete = Base + "/issues/{issueId}";
         }
+
+        public static class Statuses
+        {
+            public const string Create = Base + "/statuses";
+            public const string GetAllForProject = Base + "/statuses";
+            public const string Update = Base + "/statuses/{statusId}";
+            public const string Delete = Base + "/statuses/{statusId}";
+            public const string AssignIssue = Base + "/statuses/{statusId}/{issueId}";
+            public const string RemoveIssue = Base + "/statuses/{statusId}/{issueId}";
+        }
     }
 }

@@ -78,7 +78,6 @@
             };
         }
 
-
         /// <summary>
         /// Logout User.
         /// </summary>

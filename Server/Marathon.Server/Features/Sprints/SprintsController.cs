@@ -15,9 +15,9 @@
 
     public class SprintsController : ApiController
     {
-        private readonly ISprintService sprintService;
+        private readonly ISprintsService sprintService;
 
-        public SprintsController(ISprintService sprintService)
+        public SprintsController(ISprintsService sprintService)
         {
             this.sprintService = sprintService;
         }

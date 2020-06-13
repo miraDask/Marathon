@@ -14,6 +14,7 @@
     using Marathon.Server.Features.Issues;
     using Marathon.Server.Features.Projects;
     using Marathon.Server.Features.Sprints;
+    using Marathon.Server.Features.Statuses;
     using Marathon.Server.Features.Teams;
     using Marathon.Server.Features.Tokens;
     using Marathon.Server.Infrastructure.Filters;
@@ -30,7 +31,6 @@
 
     public static class ServiceCollectionExtensions
     {
-
         public static AppSettings GetApplicationSettings(
             this IServiceCollection services,
             IConfiguration configuration)
@@ -124,11 +124,12 @@
             => services
                 .AddTransient<IIdentityService, IdentityService>()
                 .AddTransient<IProjectsService, ProjectsService>()
-                .AddTransient<ITeamService, TeamService>()
+                .AddTransient<ITeamsService, TeamsService>()
                 .AddTransient<IIssuesService, IssuesService>()
-                .AddTransient<ISprintService, SprintService>()
+                .AddTransient<ISprintsService, SprinstService>()
+                .AddTransient<IStatusesService, StatusesService>()
                 .AddTransient<ICacheService, CacheService>()
-                .AddTransient<ITokenService, TokenService>()
+                .AddTransient<ITokensService, TokensService>()
                 .AddTransient<TokenManagerMiddleware>();
 
         public static IServiceCollection AddSwagger(this IServiceCollection services)

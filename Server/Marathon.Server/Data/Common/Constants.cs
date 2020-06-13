@@ -11,10 +11,6 @@
             public const string Password = "123456";
 
             public const string ToDoStatus = "ToDo";
-
-            public const string InProgressStatus = "In Progress";
-
-            public const string DoneStatus = "Done";
         }
 
         public static class Issue

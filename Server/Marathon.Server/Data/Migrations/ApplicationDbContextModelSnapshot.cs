@@ -245,9 +245,14 @@ namespace Marathon.Server.Data.Migrations
                         .HasColumnType("nvarchar(25)")
                         .HasMaxLength(25);
 
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IsDeleted");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Statuses");
                 });
@@ -592,6 +597,15 @@ namespace Marathon.Server.Data.Migrations
                     b.HasOne("Marathon.Server.Data.Models.Status", "Status")
                         .WithMany("SprintsStatuses")
                         .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Marathon.Server.Data.Models.Status", b =>
+                {
+                    b.HasOne("Marathon.Server.Data.Models.Project", "Project")
+                        .WithMany("Statuses")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

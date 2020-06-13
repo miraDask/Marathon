@@ -18,12 +18,12 @@
 
     public class TeamsController : ApiController
     {
-        private readonly ITeamService teamService;
+        private readonly ITeamsService teamService;
         private readonly UserManager<User> userManager;
         private readonly AppSettings appSettings;
 
         public TeamsController(
-            ITeamService teamService,
+            ITeamsService teamService,
             UserManager<User> userManager,
             IOptions<AppSettings> appSettings)
         {
