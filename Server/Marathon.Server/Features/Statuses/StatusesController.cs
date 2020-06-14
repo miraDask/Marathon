@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
 
     using Marathon.Server.Features.Common;
+    using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Statuses.Models;
     using Marathon.Server.Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,31 @@
             var id = await this.statusService.CreateAsync(input.Name, projectId);
 
             return this.Created(nameof(this.Create), id);
+        }
+
+        /// <summary>
+        /// Delete current status.
+        /// </summary>
+        /// <param name="statusId"></param>
+        /// <response code="200">Successfully deleted.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpDelete]
+        [Route(Statuses.Delete)]
+        [HasProjectAdminAuthorization]
+        public async Task<ActionResult> Delete(int statusId)
+        {
+            var deleteRequest = await this.statusService.DeleteAsync(statusId);
+
+            if (!deleteRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = deleteRequest.Errors,
+                });
+            }
+
+            return this.Ok();
         }
     }
 }
