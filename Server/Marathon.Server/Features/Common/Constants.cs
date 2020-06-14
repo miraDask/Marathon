@@ -17,6 +17,7 @@
             public const string InvalidTeamIdOrUserId = "Invalid user or team id.";
             public const string InvalidUserOrEmail = "Invalid user or email";
             public const string InvalidIssueId = "Invalid issue Id";
+            public const string InvalidStatusId = "Invalid status Id";
             public const string InvalidUserOrProjectId = "Invalid user or project Id";
         }
 

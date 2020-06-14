@@ -11,6 +11,7 @@
     using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Projects.Models;
+    using Marathon.Server.Features.Status.Models;
     using Marathon.Server.Features.Statuses;
     using Marathon.Server.Features.Teams.Models;
     using Microsoft.AspNetCore.Identity;
@@ -144,6 +145,11 @@
                         Id = x.Id,
                         Title = x.Title,
                         ImageUrl = x.ImageUrl,
+                    }),
+                    Statuses = x.Statuses.Select(x => new StatusListingModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
                     }),
                 })
                 .FirstOrDefaultAsync();

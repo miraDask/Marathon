@@ -3,6 +3,7 @@
     using System.Collections.Generic;
 
     using Marathon.Server.Features.Identity.Models;
+    using Marathon.Server.Features.Status.Models;
     using Marathon.Server.Features.Teams.Models;
 
     public class ProjectDetailsServiceModel
@@ -18,5 +19,7 @@
         public UserListingServerModel Creator { get; set; }
 
         public IEnumerable<TeamListingServiceModel> Teams { get; set; }
+
+        public IEnumerable<StatusListingModel> Statuses { get; set; }
     }
 }

@@ -141,13 +141,13 @@
         [HasProjectAdminAuthorization]
         public async Task<ActionResult> Delete(int projectId, int sprintId)
         {
-            var updateRequest = await this.sprintService.DeleteAsync(sprintId, projectId);
+            var deleteRequest = await this.sprintService.DeleteAsync(sprintId, projectId);
 
-            if (!updateRequest.Success)
+            if (!deleteRequest.Success)
             {
                 return this.BadRequest(new ErrorsResponseModel
                 {
-                    Errors = updateRequest.Errors,
+                    Errors = deleteRequest.Errors,
                 });
             }
 

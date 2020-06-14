@@ -8,6 +8,8 @@
     {
         Task<int> CreateAsync(string name, int projectId);
 
+        Task<ResultModel<bool>> DeleteAsync(int statusId);
+
         Task CreateInitialToDoStatusAsync(int projectId);
     }
 }
