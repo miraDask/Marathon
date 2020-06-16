@@ -46,6 +46,8 @@
             public const string Delete = Base + "/sprints/{sprintId}";
             public const string AssignIssue = Base + "/sprints/{sprintId}/{issueId}";
             public const string RemoveIssue = Base + "/sprints/{sprintId}/{issueId}";
+            public const string AddStatus = Base + "/sprints/{sprintId}/statuses";
+            public const string RemoveStatus = Base + "/sprints/{sprintId}/statuses/{statusId}";
         }
 
         public static class Issues

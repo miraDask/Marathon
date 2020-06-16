@@ -8,6 +8,8 @@
     using Marathon.Server.Features.Common;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Sprints.Models;
+    using Marathon.Server.Features.Statuses;
+    using Marathon.Server.Features.Statuses.Models;
     using Marathon.Server.Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
 
@@ -16,10 +18,12 @@
     public class SprintsController : ApiController
     {
         private readonly ISprintsService sprintService;
+        private readonly IStatusesService statusesService;
 
-        public SprintsController(ISprintsService sprintService)
+        public SprintsController(ISprintsService sprintService, IStatusesService statusesService)
         {
             this.sprintService = sprintService;
+            this.statusesService = statusesService;
         }
 
         /// <summary>
@@ -192,7 +196,7 @@
         [HttpDelete]
         [Route(Sprints.RemoveIssue)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult<int>> RemoveIssueFromProject(int sprintId, int issueId)
+        public async Task<ActionResult<int>> RemoveIssueFromSprint(int sprintId, int issueId)
         {
             var removeIssueRequest = await this.sprintService.RemoveIssueFromSprintAsync(sprintId, issueId);
 
@@ -201,6 +205,61 @@
                 return this.BadRequest(new ErrorsResponseModel
                 {
                     Errors = removeIssueRequest.Errors,
+                });
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// Add current Status to current Sprint.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="sprintId"></param>
+        /// <param name="input"></param>
+        /// <response code="200"> Successfully added status to sprint.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpPost]
+        [Route(Sprints.AddStatus)]
+        [HasProjectAdminAuthorization]
+        public async Task<ActionResult<int>> AddStatusToSprint(int projectId, int sprintId, CreateStatusRequestModel input)
+        {
+            var statusId = await this.statusesService.CreateAsync(input.Name, projectId);
+
+            var addStatusRequest = await this.sprintService.AddStatusAsync(sprintId, statusId);
+
+            if (!addStatusRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = addStatusRequest.Errors,
+                });
+            }
+
+            return this.Ok(statusId);
+        }
+
+        /// <summary>
+        /// Remove current Status from current Sprint.
+        /// </summary>
+        /// <param name="sprintId"></param>
+        /// <param name="statusId"></param>
+        /// <response code="200"> Successfully removed status from sprint.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpDelete]
+        [Route(Sprints.RemoveStatus)]
+        [HasProjectAdminAuthorization]
+        public async Task<ActionResult> RemoveStatusFromSprint(int sprintId, int statusId)
+        {
+            var removeStatusRequest = await this.sprintService.RemoveStatusAsync(sprintId, statusId);
+
+            if (!removeStatusRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = removeStatusRequest.Errors,
                 });
             }
 

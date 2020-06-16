@@ -22,5 +22,9 @@
         Task<ResultModel<bool>> AssignIssueToSprintAsync(int projectId, int sprintId, int issueId);
 
         Task<ResultModel<bool>> RemoveIssueFromSprintAsync(int sprintId, int issueId);
+
+        Task<ResultModel<bool>> AddStatusAsync(int sprintId, int statusId);
+
+        Task<ResultModel<bool>> RemoveStatusAsync(int sprintId, int statusId);
     }
 }

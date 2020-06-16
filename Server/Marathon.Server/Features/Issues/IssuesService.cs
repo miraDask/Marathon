@@ -7,6 +7,7 @@
 
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
+    using Marathon.Server.Features.Cache;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
@@ -19,14 +20,18 @@
     public class IssuesService : IIssuesService
     {
         private readonly MarathonDbContext dbContext;
+        private readonly ICacheService cacheService;
 
-        public IssuesService(MarathonDbContext dbContext)
+        public IssuesService(MarathonDbContext dbContext, ICacheService cacheService)
         {
             this.dbContext = dbContext;
+            this.cacheService = cacheService;
         }
 
         public async Task<int> CreateAsync(int projectId, string userId, CreateIssueRequestModel model)
         {
+            var statusId = model.StatusId == null ? int.Parse(await this.cacheService.GetAsync(projectId.ToString())) : (int)model.StatusId;
+
             var issue = new Issue
             {
                 Title = model.Title,
@@ -36,7 +41,7 @@
                 Type = model.Type,
                 ReporterId = userId,
                 AssigneeId = model.IsAssignedToCreator == true ? userId : null,
-                StatusId = model.StatusId,
+                StatusId = statusId,
                 SprintId = model.SprintId,
                 ParentIssueId = model.ParentIssueId,
                 ProjectId = projectId,

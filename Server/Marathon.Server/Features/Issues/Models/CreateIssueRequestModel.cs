@@ -24,7 +24,7 @@
 
         public Type Type { get; set; }
 
-        public int StatusId { get; set; }
+        public int? StatusId { get; set; }
 
         public bool IsAssignedToCreator { get; set; }
 

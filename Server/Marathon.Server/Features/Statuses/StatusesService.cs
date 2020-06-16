@@ -5,6 +5,7 @@
 
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
+    using Marathon.Server.Features.Cache;
     using Marathon.Server.Features.Common.Models;
     using Microsoft.EntityFrameworkCore;
 
@@ -14,10 +15,12 @@
     public class StatusesService : IStatusesService
     {
         private readonly MarathonDbContext dbContext;
+        private readonly ICacheService cacheService;
 
-        public StatusesService(MarathonDbContext dbContext)
+        public StatusesService(MarathonDbContext dbContext, ICacheService cacheService)
         {
             this.dbContext = dbContext;
+            this.cacheService = cacheService;
         }
 
         public async Task<int> CreateAsync(string name, int projectId)
@@ -59,9 +62,11 @@
             };
         }
 
-
         public async Task CreateInitialToDoStatusAsync(int projectId)
-            => await this.CreateAsync(ToDoStatus, projectId);
+        {
+            var toDoStatusId = await this.CreateAsync(ToDoStatus, projectId);
+            await this.cacheService.SetAsync(projectId.ToString(), toDoStatusId.ToString());
+        }
 
         private async Task<Status> GetByIdAsync(int statusId)
         => await this.dbContext.Statuses.FirstOrDefaultAsync(x => x.Id == statusId);
