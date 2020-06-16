@@ -217,6 +217,29 @@
             };
         }
 
+        public async Task<ResultModel<bool>> ChangeStatusAsync(int issueId, int statusId, int projectId)
+        {
+            var issue = await this.GetByIdAndProjectIdAsync(issueId, projectId);
+
+            if (issue == null)
+            {
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { InvalidIssueId },
+                };
+            }
+
+            issue.StatusId = statusId;
+            issue.ModifiedOn = DateTime.UtcNow;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return new ResultModel<bool>
+            {
+                Success = true,
+            };
+        }
+
         private async Task<Issue> GetByIdAndProjectIdAsync(int issueId, int projectId)
             => await this.dbContext.Issues.FirstOrDefaultAsync(x => x.Id == issueId && x.ProjectId == projectId);
     }

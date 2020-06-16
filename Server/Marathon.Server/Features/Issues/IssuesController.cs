@@ -144,5 +144,32 @@
 
             return this.Ok(getAllReaquest.Result);
         }
+
+        /// <summary>
+        /// Change status of current issue.
+        /// </summary>
+        /// <param name="statusId"></param>
+        /// <param name="issueId"></param>
+        /// <param name="projectId"></param>
+        /// <response code="200">Successfully updated.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpPatch]
+        [Route(Issues.ChangeStatus)]
+        [HasProjectTeamAuthorizationAttribute]
+        public async Task<ActionResult> ChangeStatus(int issueId, int statusId, int projectId)
+        {
+            var updateRequest = await this.issuesService.ChangeStatusAsync(issueId, statusId, projectId);
+
+            if (!updateRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = updateRequest.Errors,
+                });
+            }
+
+            return this.Ok();
+        }
     }
 }

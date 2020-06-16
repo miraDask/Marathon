@@ -12,6 +12,8 @@
 
         Task<ResultModel<bool>> UpdateAsync(int issueId, int projectId, UpdateIssueRequestModel updateIssueRequestModel);
 
+        Task<ResultModel<bool>> ChangeStatusAsync(int issueId, int statusId, int projectId);
+
         Task<ResultModel<bool>> DeleteAsync(int issueId, int projectId);
 
         Task<ResultModel<IEnumerable<IssueListingServiceModel>>> GetAllByProjecIdAsync(int id);
