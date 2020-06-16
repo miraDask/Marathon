@@ -64,10 +64,10 @@
         {
             public const string Create = Base + "/statuses";
             public const string GetAllForProject = Base + "/statuses";
-
-            // ToDo
             public const string Update = Base + "/statuses/{statusId}";
             public const string Delete = Base + "/statuses/{statusId}";
+            
+            // ToDo
             public const string AssignIssue = Base + "/statuses/{statusId}/{issueId}";
             public const string RemoveIssue = Base + "/statuses/{statusId}/{issueId}";
         }

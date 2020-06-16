@@ -72,7 +72,7 @@
             };
         }
 
-        public async Task<ResultModel<AllStatusesResponseModel>> GetAllForSprint(int sprintId)
+        public async Task<ResultModel<AllStatusesResponseModel>> GetAllForSprintAsync(int sprintId)
         {
             var statuses = await this.dbContext
                 .Statuses
@@ -103,7 +103,7 @@
             };
         }
 
-        public async Task<ResultModel<AllStatusesResponseModel>> GetAllForProject(int projectId)
+        public async Task<ResultModel<AllStatusesResponseModel>> GetAllForProjectAsync(int projectId)
         {
             var statuses = await this.dbContext
                 .Statuses
@@ -131,6 +131,28 @@
                     Id = projectId,
                     Statuses = statuses,
                 },
+            };
+        }
+
+        public async Task<ResultModel<bool>> UpdateAsync(int statusId, string name)
+        {
+            var status = await this.GetByIdAsync(statusId);
+
+            if (status == null)
+            {
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { Errors.InvalidStatusId },
+                };
+            }
+
+            status.Name = name;
+            this.dbContext.Update(status);
+            await this.dbContext.SaveChangesAsync();
+
+            return new ResultModel<bool>
+            {
+                Success = true,
             };
         }
 

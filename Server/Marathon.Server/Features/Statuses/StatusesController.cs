@@ -38,6 +38,32 @@
         }
 
         /// <summary>
+        /// Update current status.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="statusId"></param>
+        /// <response code="200">Successfully updated.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpPut]
+        [Route(Statuses.Update)]
+        [HasProjectAdminAuthorization]
+        public async Task<ActionResult> Update(int statusId, UpdateStatusRequestModel input)
+        {
+            var updateRequest = await this.statusService.UpdateAsync(statusId, input.Name);
+
+            if (!updateRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = updateRequest.Errors,
+                });
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
         /// Delete current status.
         /// </summary>
         /// <param name="statusId"></param>
@@ -73,7 +99,7 @@
         [HasProjectTeamAuthorization]
         public async Task<ActionResult<AllStatusesResponseModel>> GetAll(int projectId)
         {
-            var getAllReaquest = await this.statusService.GetAllForProject(projectId);
+            var getAllReaquest = await this.statusService.GetAllForProjectAsync(projectId);
 
             if (!getAllReaquest.Success)
             {

@@ -278,7 +278,7 @@
         [HasProjectTeamAuthorization]
         public async Task<ActionResult<AllStatusesResponseModel>> GetAllStatuses(int sprintId)
         {
-            var getAllReaquest = await this.statusesService.GetAllForSprint(sprintId);
+            var getAllReaquest = await this.statusesService.GetAllForSprintAsync(sprintId);
 
             if (!getAllReaquest.Success)
             {

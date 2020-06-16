@@ -11,10 +11,12 @@
 
         Task<ResultModel<bool>> DeleteAsync(int statusId);
 
+        Task<ResultModel<bool>> UpdateAsync(int statusId, string name);
+
         Task CreateInitialToDoStatusAsync(int projectId);
 
-        Task<ResultModel<AllStatusesResponseModel>> GetAllForSprint(int sprintId);
+        Task<ResultModel<AllStatusesResponseModel>> GetAllForSprintAsync(int sprintId);
 
-        Task<ResultModel<AllStatusesResponseModel>> GetAllForProject(int projectId);
+        Task<ResultModel<AllStatusesResponseModel>> GetAllForProjectAsync(int projectId);
     }
 }
