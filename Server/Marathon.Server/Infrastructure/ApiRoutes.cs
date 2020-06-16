@@ -47,6 +47,7 @@
             public const string AssignIssue = Base + "/sprints/{sprintId}/{issueId}";
             public const string RemoveIssue = Base + "/sprints/{sprintId}/{issueId}";
             public const string AddStatus = Base + "/sprints/{sprintId}/statuses";
+            public const string GetAllStatuses = Base + "/sprints/{sprintId}/statuses";
             public const string RemoveStatus = Base + "/sprints/{sprintId}/statuses/{statusId}";
         }
 
@@ -63,6 +64,8 @@
         {
             public const string Create = Base + "/statuses";
             public const string GetAllForProject = Base + "/statuses";
+
+            // ToDo
             public const string Update = Base + "/statuses/{statusId}";
             public const string Delete = Base + "/statuses/{statusId}";
             public const string AssignIssue = Base + "/statuses/{statusId}/{issueId}";

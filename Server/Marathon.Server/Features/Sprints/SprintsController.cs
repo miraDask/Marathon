@@ -265,5 +265,30 @@
 
             return this.Ok();
         }
+
+        /// <summary>
+        /// Get all statuses for current sprint.
+        /// </summary>
+        /// <param name="sprintId"></param>
+        /// <response code="200">Returns all statuses for current sprint.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpGet]
+        [Route(Sprints.GetAllStatuses)]
+        [HasProjectTeamAuthorization]
+        public async Task<ActionResult<AllStatusesResponseModel>> GetAllStatuses(int sprintId)
+        {
+            var getAllReaquest = await this.statusesService.GetAllForSprint(sprintId);
+
+            if (!getAllReaquest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = getAllReaquest.Errors,
+                });
+            }
+
+            return this.Ok(getAllReaquest.Result);
+        }
     }
 }
