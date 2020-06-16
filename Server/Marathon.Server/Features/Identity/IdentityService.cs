@@ -1,6 +1,5 @@
 ﻿namespace Marathon.Server.Features.Identity
 {
-    using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -30,7 +29,8 @@
             var claim = new Claim(claimKey, claimValue);
             await this.userManager.AddClaimAsync(user, claim);
 
-            var token = await this.tokenService.GenerateJwtToken(user.Id, user.UserName, secret, new List<Claim> { claim });
+            var claims = await this.userManager.GetClaimsAsync(user);
+            var token = await this.tokenService.GenerateJwtToken(user.Id, user.UserName, secret, claims);
 
             return token;
         }

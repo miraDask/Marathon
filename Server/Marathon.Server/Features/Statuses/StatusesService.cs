@@ -1,12 +1,15 @@
 ﻿namespace Marathon.Server.Features.Statuses
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Cache;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Status.Models;
+    using Marathon.Server.Features.Statuses.Models;
     using Microsoft.EntityFrameworkCore;
 
     using static Marathon.Server.Data.Common.Constants.Seeding;
@@ -25,6 +28,13 @@
 
         public async Task<int> CreateAsync(string name, int projectId)
         {
+            var existingStatus = await this.dbContext.Statuses.FirstOrDefaultAsync(x => x.Name == name && x.ProjectId == projectId);
+
+            if (existingStatus != null)
+            {
+                return existingStatus.Id;
+            }
+
             var status = new Status
             {
                 Name = name,
@@ -59,6 +69,68 @@
             return new ResultModel<bool>
             {
                 Success = true,
+            };
+        }
+
+        public async Task<ResultModel<AllStatusesResponseModel>> GetAllForSprint(int sprintId)
+        {
+            var statuses = await this.dbContext
+                .Statuses
+                .Where(x => x.SprintsStatuses.Any(x => x.SprintId == sprintId))
+                .Select(x => new StatusListingModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                })
+                .ToListAsync();
+
+            if (statuses == null)
+            {
+                return new ResultModel<AllStatusesResponseModel>
+                {
+                    Errors = new string[] { Errors.InvalidSprintId },
+                };
+            }
+
+            return new ResultModel<AllStatusesResponseModel>
+            {
+                Success = true,
+                Result = new AllStatusesResponseModel
+                {
+                    Id = sprintId,
+                    Statuses = statuses,
+                },
+            };
+        }
+
+        public async Task<ResultModel<AllStatusesResponseModel>> GetAllForProject(int projectId)
+        {
+            var statuses = await this.dbContext
+                .Statuses
+                .Where(x => x.ProjectId == projectId)
+                .Select(x => new StatusListingModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                })
+                .ToListAsync();
+
+            if (statuses == null)
+            {
+                return new ResultModel<AllStatusesResponseModel>
+                {
+                    Errors = new string[] { Errors.InvalidProjectId },
+                };
+            }
+
+            return new ResultModel<AllStatusesResponseModel>
+            {
+                Success = true,
+                Result = new AllStatusesResponseModel
+                {
+                    Id = projectId,
+                    Statuses = statuses,
+                },
             };
         }
 

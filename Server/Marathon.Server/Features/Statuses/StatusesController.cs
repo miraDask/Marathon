@@ -61,5 +61,29 @@
 
             return this.Ok();
         }
+
+        /// <summary>
+        /// Get all statuses for current project.
+        /// </summary>
+        /// <response code="200">Returns all statuses for current project.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpGet]
+        [Route(Statuses.GetAllForProject)]
+        [HasProjectTeamAuthorization]
+        public async Task<ActionResult<AllStatusesResponseModel>> GetAll(int projectId)
+        {
+            var getAllReaquest = await this.statusService.GetAllForProject(projectId);
+
+            if (!getAllReaquest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = getAllReaquest.Errors,
+                });
+            }
+
+            return this.Ok(getAllReaquest.Result);
+        }
     }
 }
