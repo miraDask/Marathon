@@ -12,7 +12,6 @@
 
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Options;
 
     using static Marathon.Server.Infrastructure.ApiRoutes;
 
@@ -20,16 +19,13 @@
     {
         private readonly ITeamsService teamService;
         private readonly UserManager<User> userManager;
-        private readonly AppSettings appSettings;
 
         public TeamsController(
             ITeamsService teamService,
-            UserManager<User> userManager,
-            IOptions<AppSettings> appSettings)
+            UserManager<User> userManager)
         {
             this.teamService = teamService;
             this.userManager = userManager;
-            this.appSettings = appSettings.Value;
         }
 
         /// <summary>
@@ -157,7 +153,7 @@
         [HasProjectAdminAuthorization]
         public async Task<ActionResult<AuthResponseModel>> AssignUserToTeam(int projectId, int teamId, string userId)
         {
-            var assignUserRequest = await this.teamService.AddUserToTeamAsync(userId, teamId, projectId, this.appSettings.Secret);
+            var assignUserRequest = await this.teamService.AddUserToTeamAsync(userId, teamId, projectId);
 
             if (!assignUserRequest.Success)
             {
@@ -167,7 +163,7 @@
                 });
             }
 
-            return this.Ok(new AuthResponseModel { Token = assignUserRequest.Result });
+            return this.Ok();
         }
 
         /// <summary>

@@ -25,14 +25,19 @@
 
         public async Task<string> AddClaimToUserAsync(string userId, string claimKey, string claimValue, string secret)
         {
-            var user = await this.userManager.FindByIdAsync(userId);
-            var claim = new Claim(claimKey, claimValue);
-            await this.userManager.AddClaimAsync(user, claim);
+            var user = await this.AddNewClaimToUserAsync(userId, claimKey, claimValue);
 
             var claims = await this.userManager.GetClaimsAsync(user);
             var token = await this.tokenService.GenerateJwtToken(user.Id, user.UserName, secret, claims);
 
+            await this.tokenService.DeactivateJwtToken(user.Id);
             return token;
+        }
+
+        public async Task AddClaimToUserAsync(string userId, string claimKey, string claimValue)
+        {
+            var user = await this.AddNewClaimToUserAsync(userId, claimKey, claimValue);
+            await this.tokenService.DeactivateJwtToken(user.Id);
         }
 
         public async Task<ResultModel<string>> LoginAsync(string username, string password, string secret)
@@ -115,6 +120,15 @@
             await this.userManager.RemoveClaimAsync(user, claim);
 
             await this.tokenService.DeactivateJwtToken(user.Id);
+        }
+
+        private async Task<User> AddNewClaimToUserAsync(string userId, string claimKey, string claimValue)
+        {
+            var user = await this.userManager.FindByIdAsync(userId);
+            var claim = new Claim(claimKey, claimValue);
+            await this.userManager.AddClaimAsync(user, claim);
+
+            return user;
         }
     }
 }

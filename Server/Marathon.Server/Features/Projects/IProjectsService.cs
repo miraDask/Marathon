@@ -22,7 +22,7 @@
 
         Task<ResultModel<bool>> RemoveTeamFromProjectAsync(int projectId, int teamId);
 
-        Task<ResultModel<string>> AddAdminToProjectAsync(string userId, int projectId, string secret);
+        Task<ResultModel<bool>> AddAdminToProjectAsync(string userId, int projectId);
 
         Task<ResultModel<bool>> RemoveAdminFromProjectAsync(string userId, int projectId);
     }

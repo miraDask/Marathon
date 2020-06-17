@@ -14,6 +14,8 @@
 
         Task<string> AddClaimToUserAsync(string userId, string claimKey, string claimValue, string secret);
 
+        Task AddClaimToUserAsync(string userId, string claimKey, string claimValue);
+
         Task RemoveClaimFromUserAsync(string userId, string claimType, string claimValue);
     }
 }

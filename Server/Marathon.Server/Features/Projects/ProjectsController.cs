@@ -217,7 +217,7 @@
         [HasProjectAdminAuthorization]
         public async Task<ActionResult<AuthResponseModel>> AssignAdminToProject(int projectId, string userId)
         {
-            var assignAdminRequest = await this.projectsService.AddAdminToProjectAsync(userId, projectId, this.appSettings.Secret);
+            var assignAdminRequest = await this.projectsService.AddAdminToProjectAsync(userId, projectId);
 
             if (!assignAdminRequest.Success)
             {
@@ -227,7 +227,7 @@
                 });
             }
 
-            return this.Ok(new AuthResponseModel { Token = assignAdminRequest.Result });
+            return this.Ok();
         }
 
         /// <summary>

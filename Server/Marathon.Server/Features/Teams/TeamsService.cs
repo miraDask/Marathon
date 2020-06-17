@@ -32,13 +32,13 @@
             this.identityService = identityService;
         }
 
-        public async Task<ResultModel<string>> AddUserToTeamAsync(string userId, int teamId, int projectId, string secret)
+        public async Task<ResultModel<bool>> AddUserToTeamAsync(string userId, int teamId, int projectId)
         {
             var user = await this.userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
-                return new ResultModel<string>
+                return new ResultModel<bool>
                 {
                     Errors = new string[] { Errors.InvalidUserId },
                 };
@@ -48,7 +48,7 @@
 
             if (team == null)
             {
-                return new ResultModel<string>
+                return new ResultModel<bool>
                 {
                     Errors = new string[] { Errors.InvalidTeamId },
                 };
@@ -63,12 +63,11 @@
             await this.dbContext.TeamsUsers.AddAsync(teamUser);
             await this.dbContext.SaveChangesAsync();
 
-            var newToken = await this.identityService.AddClaimToUserAsync(user.Id, Claims.Team, projectId.ToString(), secret);
+            await this.identityService.AddClaimToUserAsync(user.Id, Claims.Team, projectId.ToString());
 
-            return new ResultModel<string>
+            return new ResultModel<bool>
             {
                 Success = true,
-                Result = newToken,
             };
         }
 
