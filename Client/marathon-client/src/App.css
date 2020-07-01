@@ -1,0 +1,13 @@
+body {
+	font-family: Akzidenz Grotesk BQ Light, Helvetica;
+	color: #42494f;
+	font-size: 16px;
+	line-height: 1.5;
+	padding: 20px 60px;
+	background-color: #fafbfc;
+}
+
+a {
+	text-decoration: none;
+	color: #373a3cc7;
+}
