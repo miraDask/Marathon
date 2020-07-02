@@ -32,7 +32,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Identity.Register)]
-        public async Task<ActionResult<AuthResponseModel>> Register(RegisterUserRequestModel input)
+        public async Task<ActionResult<AuthResponseModel>> Register([FromBody]RegisterUserRequestModel input)
         {
             var registerResult = await this.identityService.RegisterAsync(input.UserName, input.Email, input.Password, this.appSettings.Secret);
 
@@ -60,7 +60,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Identity.Login)]
-        public async Task<ActionResult<AuthResponseModel>> Login(LoginRequestModel input)
+        public async Task<ActionResult<AuthResponseModel>> Login([FromBody]LoginRequestModel input)
         {
             var loginResult = await this.identityService.LoginAsync(input.UserName, input.Password, this.appSettings.Secret);
 

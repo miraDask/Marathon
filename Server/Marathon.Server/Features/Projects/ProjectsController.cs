@@ -57,7 +57,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Projects.Create)]
-        public async Task<ActionResult<CreateProjectResponseModel>> Create(CreateProjectRequestModel input)
+        public async Task<ActionResult<CreateProjectResponseModel>> Create([FromBody]CreateProjectRequestModel input)
         {
             var userId = this.User.GetId();
 
@@ -83,7 +83,7 @@
         [HttpPut]
         [Route(Projects.Update)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult> Update(int projectId, UpdateProjectRequestModel input)
+        public async Task<ActionResult> Update(int projectId, [FromBody]UpdateProjectRequestModel input)
         {
             var updateRequest = await this.projectsService.UpdateAsync(
                 projectId,

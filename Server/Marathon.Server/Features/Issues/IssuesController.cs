@@ -33,7 +33,7 @@
         [HttpPost]
         [Route(Issues.Create)]
         [HasProjectTeamAuthorizationAttribute]
-        public async Task<ActionResult<int>> Create(int projectId, CreateIssueRequestModel input)
+        public async Task<ActionResult<int>> Create(int projectId, [FromBody]CreateIssueRequestModel input)
         {
             var userId = this.User.GetId();
 
@@ -54,7 +54,7 @@
         [HttpPut]
         [Route(Issues.Update)]
         [HasProjectTeamAuthorizationAttribute]
-        public async Task<ActionResult> Update(int projectId, int issueId, UpdateIssueRequestModel input)
+        public async Task<ActionResult> Update(int projectId, int issueId, [FromBody]UpdateIssueRequestModel input)
         {
             var updateRequest = await this.issuesService.UpdateAsync(issueId, projectId, input);
 

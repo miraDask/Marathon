@@ -39,7 +39,7 @@
         [HttpPost]
         [Route(Teams.Create)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult<int>> Create(int projectId, CreateTeamRequestModel input)
+        public async Task<ActionResult<int>> Create(int projectId, [FromBody]CreateTeamRequestModel input)
         {
             var teamCreationResult = await this.teamService.CreateAsync(
                 input.Title,
@@ -70,7 +70,7 @@
         [HttpPut]
         [Route(Teams.Update)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult> Update(int projectId, int teamId, UpdateTeamRequestModel input)
+        public async Task<ActionResult> Update(int projectId, int teamId, [FromBody]UpdateTeamRequestModel input)
         {
             var updateRequest = await this.teamService.UpdateAsync(
                 teamId,

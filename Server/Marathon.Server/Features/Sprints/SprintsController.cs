@@ -37,7 +37,7 @@
         [HttpPost]
         [Route(Sprints.Create)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult<int>> Create(int projectId, CreateSprintRequestModel input)
+        public async Task<ActionResult<int>> Create(int projectId, [FromBody]CreateSprintRequestModel input)
         {
             var id = await this.sprintService.CreateAsync(
                 projectId,
@@ -111,7 +111,7 @@
         [HttpPut]
         [Route(Sprints.Update)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult> Update(int projectId, int sprintId, UpdateSprintRequestModel input)
+        public async Task<ActionResult> Update(int projectId, int sprintId, [FromBody]UpdateSprintRequestModel input)
         {
             var updateRequest = await this.sprintService.UpdateAsync(
                 sprintId,
@@ -223,7 +223,7 @@
         [HttpPost]
         [Route(Sprints.AddStatus)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult<int>> AddStatusToSprint(int projectId, int sprintId, CreateStatusRequestModel input)
+        public async Task<ActionResult<int>> AddStatusToSprint(int projectId, int sprintId, [FromBody]CreateStatusRequestModel input)
         {
             var statusId = await this.statusesService.CreateAsync(input.Name, projectId);
 
