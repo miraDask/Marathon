@@ -30,7 +30,7 @@
         [HttpPost]
         [Route(Statuses.Create)]
         [HasProjectTeamAuthorizationAttribute]
-        public async Task<ActionResult<int>> Create(int projectId, CreateStatusRequestModel input)
+        public async Task<ActionResult<int>> Create(int projectId, [FromBody]CreateStatusRequestModel input)
         {
             var id = await this.statusService.CreateAsync(input.Name, projectId);
 
@@ -48,7 +48,7 @@
         [HttpPut]
         [Route(Statuses.Update)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult> Update(int statusId, UpdateStatusRequestModel input)
+        public async Task<ActionResult> Update(int statusId, [FromBody]UpdateStatusRequestModel input)
         {
             var updateRequest = await this.statusService.UpdateAsync(statusId, input.Name);
 

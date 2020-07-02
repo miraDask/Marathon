@@ -8,6 +8,7 @@
 		"@testing-library/user-event": "^7.1.2",
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",
+		"react-hooks": "^1.0.1",
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "3.4.1",
 		"styled-components": "^5.1.1"
@@ -25,7 +26,15 @@
 		"styled-components": "^5"
 	},
 	"browserslist": {
-		"production": [ ">0.2%", "not dead", "not op_mini all" ],
-		"development": [ "last 1 chrome version", "last 1 firefox version", "last 1 safari version" ]
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
 	}
 }
