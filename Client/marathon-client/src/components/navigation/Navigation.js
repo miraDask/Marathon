@@ -1,12 +1,18 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import logo from '../../assets/logo.png';
 import { Context } from '../../providers/GlobalContextProvider';
+import { fetchLogoutUser } from '../../utils/user';
 //import { ReactComponent as Logo } from '../../assets/logo.png';
 
 import { NavContainer, LogoContainer, OptionsContainer, OptionLink } from './navigation.styles';
 
 const Navigation = () => {
-	const { isLoggedIn } = useContext(Context);
+	const { isLoggedIn, user, toggleLoggedIn, token } = useContext(Context);
+
+	const handleSignOut = async (e) => {
+		await fetchLogoutUser(token);
+		toggleLoggedIn();
+	};
 
 	return (
 		<NavContainer>
@@ -15,9 +21,15 @@ const Navigation = () => {
 			</LogoContainer>
 			<OptionsContainer>
 				{isLoggedIn ? (
-					<OptionLink to="/contact">SIGN OUT</OptionLink>
+					<div>
+						<div>Hello, {user.username}</div>
+						<OptionLink onClick={handleSignOut}>SIGN OUT</OptionLink>
+					</div>
 				) : (
-					<OptionLink to="/signin"> SIGN IN</OptionLink>
+					<div>
+						<OptionLink to="/signin"> SIGN IN</OptionLink>
+						<OptionLink to="/signup"> SIGN UP</OptionLink>
+					</div>
 				)}
 			</OptionsContainer>
 		</NavContainer>

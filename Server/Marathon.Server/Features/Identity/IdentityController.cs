@@ -86,10 +86,9 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Identity.Logout)]
-        public async Task<ActionResult> Logout()
+        public async Task<ActionResult> Logout([FromBody]string token)
         {
-            var userId = this.User.GetId();
-            await this.identityService.LoguotAsync(userId);
+            await this.identityService.LoguotAsync(token);
             return this.Ok();
         }
     }

@@ -70,9 +70,9 @@
             };
         }
 
-        public async Task LoguotAsync(string userId)
+        public async Task LoguotAsync(string token)
         {
-            await this.tokenService.DeactivateJwtToken(userId);
+            await this.tokenService.DeactivateJwtToken(null, token);
         }
 
         public async Task<ResultModel<string>> RegisterAsync(string username, string email, string password, string secret)
