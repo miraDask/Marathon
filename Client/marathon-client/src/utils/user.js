@@ -1,14 +1,14 @@
 const API_URL = 'https://localhost:44391/api/identity/';
 
-export const fetchRegisterUser = async (data) => {
+export const registerUser = async (data) => {
 	return fetchUser(data, API_URL + 'register');
 };
 
-export const fetchLoginUser = async (data) => {
+export const loginUser = async (data) => {
 	return fetchUser(data, API_URL + 'login');
 };
 
-export const fetchLogoutUser = async (data) => {
+export const logoutUser = async (data) => {
 	return fetchUser(data, API_URL + 'logout');
 };
 

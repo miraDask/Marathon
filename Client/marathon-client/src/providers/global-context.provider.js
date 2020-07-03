@@ -1,55 +1,45 @@
 import React, { useState, createContext } from 'react';
 const isLogged = localStorage.getItem('isLoggedIn') !== null ? true : false;
-const username = localStorage.getItem('username');
-const userObj = {
-	username: username !== null ? username : ''
-};
+const name = localStorage.getItem('username') ? localStorage.getItem('username') : '';
 
 const initialState = {
 	token: '',
-	user: userObj,
+	username: name,
 	isLoggedIn: isLogged,
-	errors: '',
 	toggleLoggedIn: () => {},
-	setError: () => {},
-	saveToken: () => {},
-	saveUser: () => {}
+	saveToken: () => {}
 };
 
 export const Context = createContext(initialState);
 
 const GlobalContextProvider = (props) => {
 	const [ token, setToken ] = useState('');
-	const [ user, setUser ] = useState(userObj);
+	const [ username, setUsername ] = useState(name);
 	const [ isLoggedIn, setLoggedIn ] = useState(isLogged);
-	const [ errors, setErrors ] = useState('');
 
-	const saveErrors = (value) => setErrors(value);
 	const toggleLoggedIn = (username = null) => {
 		if (!isLoggedIn) {
 			localStorage.setItem('isLoggedIn', 'true');
 			localStorage.setItem('username', username);
+			setUsername(username);
 		} else {
 			localStorage.removeItem('isLoggedIn');
 			localStorage.removeItem('username');
+			setUsername('');
 		}
 		setLoggedIn(!isLoggedIn);
 	};
 
 	const saveToken = (newToken) => setToken(newToken);
-	const saveUser = (value) => setUser(value);
 
 	return (
 		<Context.Provider
 			value={{
 				token,
-				user,
-				errors,
-				toggleLoggedIn,
+				username,
 				isLoggedIn,
-				saveErrors,
-				saveToken,
-				saveUser
+				toggleLoggedIn,
+				saveToken
 			}}
 		>
 			{props.children}

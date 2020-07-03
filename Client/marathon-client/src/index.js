@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GlobalContextProvider from '../src/providers/GlobalContextProvider';
+import GlobalContextProvider from '../src/providers/global-context.provider';
 import { BrowserRouter } from 'react-router-dom';
 
 import './index.css';

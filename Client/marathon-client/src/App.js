@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import Main from './components/main/Main';
-import Navigation from './components/navigation/Navigation';
+import Main from './components/main/main.component';
+import Navigation from './components/navigation/navigation.component';
 
 function App() {
 	return (
