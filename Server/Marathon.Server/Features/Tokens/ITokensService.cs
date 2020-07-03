@@ -10,6 +10,6 @@
 
         Task<string> GenerateJwtToken(string userId, string userName, string secret, IList<Claim> claims = null);
 
-        Task DeactivateJwtToken(string userId);
+        Task DeactivateJwtToken(string userId, string token = null);
     }
 }

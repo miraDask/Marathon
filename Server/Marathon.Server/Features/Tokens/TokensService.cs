@@ -54,9 +54,12 @@
             return encryptedToken;
         }
 
-        public async Task DeactivateJwtToken(string userId)
+        public async Task DeactivateJwtToken(string userId, string token = null)
         {
-            var token = await this.cacheService.GetAsync(userId);
+            if (token == null)
+            {
+                token = await this.cacheService.GetAsync(userId);
+            }
 
             await this.cacheService.SetAsync(this.GetKey(token), " ");
         }
