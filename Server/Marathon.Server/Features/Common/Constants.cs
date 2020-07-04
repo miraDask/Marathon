@@ -8,6 +8,7 @@
         {
             public const string UnuthorizedUser = "Unauthorized user or invalid project id";
             public const string AlreadyRegisteredUser = "User with email: {0} is alredy registered.";
+            public const string AlreadyRegisteredUserName = "User with username: {0} is alredy registered.";
             public const string InvalidUserName = "Invalid username.";
             public const string InvalidUserId = "Invalid user id.";
             public const string InvalidPassword = "Invalid password.";

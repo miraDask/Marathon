@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../../providers/global-context.provider';
 import { loginUser } from '../../utils/user';
+
 import { SignInContainer, TitleContainer, ButtonsContainer } from './sign-in.styles';
 import FormInput from '../../components/form-input/form-input.component';
 import CustomButton from '../../components/custom-button/custom-button.component';
@@ -13,14 +14,15 @@ const SignInPage = () => {
 	const handleChange = (event) => {
 		const { value, name } = event.target;
 		setUser({ ...user, [name]: value });
+		setError('');
 	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-
+		if (error) {
+			return;
+		}
 		const result = await loginUser({ ...user });
-
-		console.log(result);
 		if (result.token) {
 			toggleLoggedIn(user.username);
 			saveToken(result.token);

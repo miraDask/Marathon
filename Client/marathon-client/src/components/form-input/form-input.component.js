@@ -7,7 +7,7 @@ const FormInput = ({ handleOnBlur, handleOnChange, label, ...otherProps }) => {
 		<InputContainer>
 			<Input onBlur={handleOnBlur} onChange={handleOnChange} {...otherProps} />
 			{label ? <Label className={value ? 'shrink' : ''}>{label}</Label> : null}
-			{error ? <ErrorContainer>* {error}</ErrorContainer> : null}
+			{error ? <ErrorContainer>&lowast; {error}</ErrorContainer> : null}
 		</InputContainer>
 	);
 };

@@ -10,11 +10,23 @@ import { SignUpContainer, TitleContainer, ButtonsContainer } from './sign-up.sty
 const SignUpPage = () => {
 	const { toggleLoggedIn, saveToken } = useContext(Context);
 	const [ user, setUser ] = useState('');
-	const [ serverErrors, setServerErrors ] = useState('');
 	const [ usernameError, setUsernameError ] = useState('');
 	const [ emailError, setEmailError ] = useState('');
 	const [ passwordError, setPasswordError ] = useState('');
 	const [ passwordConfirmError, setPasswordConfirmError ] = useState('');
+
+	const displayServerErrors = (errors) => {
+		Object.keys(errors).forEach((key) => {
+			const message = errors[key][0];
+			if (message.toLowerCase().includes('username')) {
+				setUsernameError(message);
+			} else if (message.toLowerCase().includes('password')) {
+				setPasswordError(message);
+			} else if (message.toLowerCase().includes('email')) {
+				setEmailError(message);
+			}
+		});
+	};
 
 	const handleOnChange = (event) => {
 		const { value, name } = event.target;
@@ -43,9 +55,8 @@ const SignUpPage = () => {
 		if (result.token) {
 			toggleLoggedIn(user.username);
 			saveToken(result.token);
-			setServerErrors(null);
 		} else {
-			setServerErrors(result);
+			displayServerErrors(result);
 		}
 	};
 
@@ -105,7 +116,6 @@ const SignUpPage = () => {
 						SIGN UP{' '}
 					</CustomButton>
 				</ButtonsContainer>
-				{serverErrors ? Object.keys(serverErrors).map((x) => <div>{serverErrors[x]}</div>) : null}
 			</form>
 		</SignUpContainer>
 	);

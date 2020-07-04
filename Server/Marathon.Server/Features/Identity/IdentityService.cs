@@ -77,13 +77,23 @@
 
         public async Task<ResultModel<string>> RegisterAsync(string username, string email, string password, string secret)
         {
-            var existingUser = await this.userManager.FindByEmailAsync(email);
+            var existingEmail = await this.userManager.FindByEmailAsync(email);
 
-            if (existingUser != null)
+            if (existingEmail != null)
             {
                 return new ResultModel<string>
                 {
                     Errors = new string[] { string.Format(Errors.AlreadyRegisteredUser, email) },
+                };
+            }
+
+            var existingUserName = await this.userManager.FindByNameAsync(username);
+
+            if (existingUserName != null)
+            {
+                return new ResultModel<string>
+                {
+                    Errors = new string[] { string.Format(Errors.AlreadyRegisteredUserName, username) },
                 };
             }
 
