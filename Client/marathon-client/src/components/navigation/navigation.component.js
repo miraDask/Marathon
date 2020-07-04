@@ -10,6 +10,7 @@ const Navigation = () => {
 	const { isLoggedIn, username, toggleLoggedIn, token } = useContext(Context);
 
 	const handleSignOut = async (e) => {
+		e.preventDefault();
 		await logoutUser(token);
 		toggleLoggedIn();
 	};
@@ -27,11 +28,13 @@ const Navigation = () => {
 					{isLoggedIn ? (
 						<div>
 							<span>Hello, {username}</span>
-							<NavLink onClick={handleSignOut}>SIGN OUT</NavLink>
+							<NavLink handleSignOut={handleSignOut} to="/">
+								SIGN OUT
+							</NavLink>
 						</div>
 					) : (
 						<div>
-							<NavLink to="/">ABOUT</NavLink>
+							<NavLink to="/#about">ABOUT</NavLink>
 							<NavLink to="/signin">SIGN IN</NavLink>
 						</div>
 					)}

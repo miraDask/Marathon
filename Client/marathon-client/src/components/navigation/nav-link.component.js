@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Link } from 'react-router-dom';
+import { HashLink as Link } from 'react-router-hash-link';
 
 const NavLink = ({ children, to, handleSignOut, inverted }) => {
 	const hover = inverted ? '' : 'hover:';
