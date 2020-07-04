@@ -13,6 +13,12 @@
             public const string ToDoStatus = "ToDo";
         }
 
+        public static class User
+        {
+            public const int UserNameMinLength = 6;
+            public const int UserNameMaxLength = 25;
+        }
+
         public static class Issue
         {
             public const int TitleMinLength = 3;

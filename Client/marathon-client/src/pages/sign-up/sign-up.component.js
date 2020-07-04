@@ -1,37 +1,51 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../../providers/global-context.provider';
 import { registerUser } from '../../utils/user';
-import { SignUpContainer, TitleContainer, ButtonsContainer } from './sign-up.styles';
+import { validatePassword, validatePasswordsMatch, validateUsername, validateEmail } from '../../utils/validator';
+
 import FormInput from '../../components/form-input/form-input.component';
 import CustomButton from '../../components/custom-button/custom-button.component';
+import { SignUpContainer, TitleContainer, ButtonsContainer } from './sign-up.styles';
 
 const SignUpPage = () => {
 	const { toggleLoggedIn, saveToken } = useContext(Context);
 	const [ user, setUser ] = useState('');
-	const [ errors, setErrors ] = useState('');
+	const [ serverErrors, setServerErrors ] = useState('');
+	const [ usernameError, setUsernameError ] = useState('');
+	const [ emailError, setEmailError ] = useState('');
+	const [ passwordError, setPasswordError ] = useState('');
+	const [ passwordConfirmError, setPasswordConfirmError ] = useState('');
 
-	const handleChange = (event) => {
+	const handleOnChange = (event) => {
 		const { value, name } = event.target;
-
 		setUser({ ...user, [name]: value });
+	};
+
+	const handleOnBlur = (validationFunc, data, setFunc) => {
+		const { error } = validationFunc(data);
+
+		if (error) {
+			return setFunc(error);
+		}
+
+		setFunc('');
 	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-
-		if (user.password !== user.confirmPassword) {
-			setErrors([ 'Passwords should match' ]);
+		if (passwordConfirmError || passwordError || emailError || usernameError) {
 			return;
 		}
 
-		const result = await registerUser({ ...user });
+		const { username, email, password } = user;
+		const result = await registerUser({ username, email, password });
 
 		if (result.token) {
 			toggleLoggedIn(user.username);
 			saveToken(result.token);
-			setErrors(null);
+			setServerErrors(null);
 		} else {
-			setErrors(result);
+			setServerErrors(result);
 		}
 	};
 
@@ -46,7 +60,9 @@ const SignUpPage = () => {
 					value={user.username}
 					label="Username"
 					required
-					handleOnChange={handleChange}
+					error={usernameError}
+					handleOnBlur={() => handleOnBlur(validateUsername, { username: user.username }, setUsernameError)}
+					handleOnChange={handleOnChange}
 				/>
 				<FormInput
 					type="email"
@@ -54,7 +70,9 @@ const SignUpPage = () => {
 					value={user.email}
 					label="Email"
 					required
-					handleOnChange={handleChange}
+					error={emailError}
+					handleOnBlur={() => handleOnBlur(validateEmail, { email: user.email }, setEmailError)}
+					handleOnChange={handleOnChange}
 				/>
 				<FormInput
 					type="password"
@@ -62,7 +80,9 @@ const SignUpPage = () => {
 					value={user.password}
 					label="Password"
 					required
-					handleOnChange={handleChange}
+					error={passwordError}
+					handleOnBlur={() => handleOnBlur(validatePassword, { password: user.password }, setPasswordError)}
+					handleOnChange={handleOnChange}
 				/>
 				<FormInput
 					type="password"
@@ -70,7 +90,14 @@ const SignUpPage = () => {
 					value={user.confirmPassword}
 					label="Confirm Password"
 					required
-					handleOnChange={handleChange}
+					error={passwordConfirmError}
+					handleOnBlur={() =>
+						handleOnBlur(
+							validatePasswordsMatch,
+							{ password: user.password, confirmPassword: user.confirmPassword },
+							setPasswordConfirmError
+						)}
+					handleOnChange={handleOnChange}
 				/>
 				<ButtonsContainer>
 					<CustomButton type="submit" inverted>
@@ -78,8 +105,7 @@ const SignUpPage = () => {
 						SIGN UP{' '}
 					</CustomButton>
 				</ButtonsContainer>
-
-				{errors ? Object.keys(errors).map((x) => <div>{errors[x]}</div>) : null}
+				{serverErrors ? Object.keys(serverErrors).map((x) => <div>{serverErrors[x]}</div>) : null}
 			</form>
 		</SignUpContainer>
 	);

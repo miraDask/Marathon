@@ -2,9 +2,13 @@
 {
     using System.ComponentModel.DataAnnotations;
 
+    using static Marathon.Server.Data.Common.Constants.User;
+
     public class RegisterUserRequestModel
     {
         [Required]
+        [MinLength(UserNameMinLength)]
+        [MaxLength(UserNameMaxLength)]
         public string UserName { get; set; }
 
         [Required]

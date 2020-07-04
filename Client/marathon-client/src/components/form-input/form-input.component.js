@@ -1,12 +1,13 @@
 import React from 'react';
-import { InputContainer, Input, Label } from './form-input.styles';
+import { InputContainer, Input, Label, ErrorContainer } from './form-input.styles';
 
-const FormInput = ({ handleOnChange, label, ...otherProps }) => {
-	const { value } = otherProps;
+const FormInput = ({ handleOnBlur, handleOnChange, label, ...otherProps }) => {
+	const { value, error } = otherProps;
 	return (
 		<InputContainer>
-			<Input onChange={handleOnChange} {...otherProps} />
+			<Input onBlur={handleOnBlur} onChange={handleOnChange} {...otherProps} />
 			{label ? <Label className={value ? 'shrink' : ''}>{label}</Label> : null}
+			{error ? <ErrorContainer>* {error}</ErrorContainer> : null}
 		</InputContainer>
 	);
 };

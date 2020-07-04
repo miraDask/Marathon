@@ -4,7 +4,6 @@
 
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
-    using Marathon.Server.Infrastructure.Extensions;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
 

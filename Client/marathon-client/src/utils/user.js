@@ -25,7 +25,9 @@ const fetchUser = async (data, url) => {
 		try {
 			const dataToReturn = await result.json();
 			return dataToReturn;
-		} catch (error) {}
+		} catch (error) {
+			console.log(error);
+		}
 	} catch (error) {
 		console.log(error);
 		return error;

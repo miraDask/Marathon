@@ -8,11 +8,10 @@ import CustomButton from '../../components/custom-button/custom-button.component
 const SignInPage = () => {
 	const { toggleLoggedIn, saveToken } = useContext(Context);
 	const [ user, setUser ] = useState('');
-	const [ errors, setErrors ] = useState('');
+	const [ error, setError ] = useState('');
 
 	const handleChange = (event) => {
 		const { value, name } = event.target;
-
 		setUser({ ...user, [name]: value });
 	};
 
@@ -25,9 +24,9 @@ const SignInPage = () => {
 		if (result.token) {
 			toggleLoggedIn(user.username);
 			saveToken(result.token);
-			setErrors(null);
+			setError(null);
 		} else {
-			setErrors(result);
+			setError('Invalid username or password');
 		}
 	};
 
@@ -51,14 +50,13 @@ const SignInPage = () => {
 					value={user.password}
 					required
 					handleOnChange={handleChange}
+					error={error}
 				/>
 				<ButtonsContainer>
 					<CustomButton type="submit" inverted>
 						Sign In
 					</CustomButton>
 				</ButtonsContainer>
-
-				{errors ? Object.keys(errors).map((x) => <div>{errors[x]}</div>) : null}
 			</form>
 		</SignInContainer>
 	);

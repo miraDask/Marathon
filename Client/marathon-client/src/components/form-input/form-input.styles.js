@@ -51,3 +51,5 @@ export const Label = styled.label`
 		${shrinkLabelStyles};
 	}
 `;
+
+export const ErrorContainer = styled.div`color: #e88300;`;
