@@ -10,45 +10,45 @@ import { SignUpContainer, TitleContainer, ButtonsContainer } from './sign-up.sty
 const SignUpPage = () => {
 	const { toggleLoggedIn, saveToken } = useContext(Context);
 	const [ user, setUser ] = useState('');
-	const [ usernameError, setUsernameError ] = useState('');
-	const [ emailError, setEmailError ] = useState('');
-	const [ passwordError, setPasswordError ] = useState('');
-	const [ passwordConfirmError, setPasswordConfirmError ] = useState('');
+	const [ errors, setErrors ] = useState({});
 
-	const displayServerErrors = (errors) => {
-		Object.keys(errors).forEach((key) => {
-			const message = errors[key][0];
+	const displayServerErrors = (serverErrors) => {
+		let errorsObject = {};
+		Object.keys(serverErrors).forEach((key) => {
+			const message = serverErrors[key][0];
 			if (message.toLowerCase().includes('username')) {
-				setUsernameError(message);
+				errorsObject = { ...errorsObject, username: message };
 			} else if (message.toLowerCase().includes('password')) {
-				setPasswordError(message);
+				errorsObject = { ...errorsObject, password: message };
 			} else if (message.toLowerCase().includes('email')) {
-				setEmailError(message);
+				errorsObject = { ...errorsObject, email: message };
 			}
 		});
+		setErrors({ ...errors, ...errorsObject });
 	};
 
 	const handleOnChange = (event) => {
 		const { value, name } = event.target;
 		setUser({ ...user, [name]: value });
+		setErrors({ ...errors, [name]: '' });
 	};
 
-	const handleOnBlur = (validationFunc, data, setFunc) => {
+	const handleOnBlur = (event, validationFunc, data) => {
+		const { name } = event.target;
 		const { error } = validationFunc(data);
 
 		if (error) {
-			return setFunc(error);
+			return setErrors({ ...errors, [name]: error });
 		}
-
-		setFunc('');
 	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		if (passwordConfirmError || passwordError || emailError || usernameError) {
+		if (Object.keys(errors).some((key) => errors[key] !== '')) {
 			return;
 		}
 
+		//todo add validation for empty inputs
 		const { username, email, password } = user;
 		const result = await registerUser({ username, email, password });
 
@@ -68,46 +68,45 @@ const SignUpPage = () => {
 				<FormInput
 					type="text"
 					name="username"
-					value={user.username}
+					value={user.username || ''}
 					label="Username"
-					required
-					error={usernameError}
-					handleOnBlur={() => handleOnBlur(validateUsername, { username: user.username }, setUsernameError)}
+					//required
+					error={errors.username || ''}
+					handleOnBlur={(event) => handleOnBlur(event, validateUsername, { username: user.username })}
 					handleOnChange={handleOnChange}
 				/>
 				<FormInput
 					type="email"
 					name="email"
-					value={user.email}
+					value={user.email || ''}
 					label="Email"
-					required
-					error={emailError}
-					handleOnBlur={() => handleOnBlur(validateEmail, { email: user.email }, setEmailError)}
+					//required
+					error={errors.email || ''}
+					handleOnBlur={(event) => handleOnBlur(event, validateEmail, { email: user.email })}
 					handleOnChange={handleOnChange}
 				/>
 				<FormInput
 					type="password"
 					name="password"
-					value={user.password}
+					value={user.password || ''}
 					label="Password"
-					required
-					error={passwordError}
-					handleOnBlur={() => handleOnBlur(validatePassword, { password: user.password }, setPasswordError)}
+					//required
+					error={errors.password || ''}
+					handleOnBlur={(event) => handleOnBlur(event, validatePassword, { password: user.password })}
 					handleOnChange={handleOnChange}
 				/>
 				<FormInput
 					type="password"
 					name="confirmPassword"
-					value={user.confirmPassword}
+					value={user.confirmPassword || ''}
 					label="Confirm Password"
-					required
-					error={passwordConfirmError}
-					handleOnBlur={() =>
-						handleOnBlur(
-							validatePasswordsMatch,
-							{ password: user.password, confirmPassword: user.confirmPassword },
-							setPasswordConfirmError
-						)}
+					//required
+					error={errors.confirmPassword || ''}
+					handleOnBlur={(event) =>
+						handleOnBlur(event, validatePasswordsMatch, {
+							password: user.password,
+							confirmPassword: user.confirmPassword
+						})}
 					handleOnChange={handleOnChange}
 				/>
 				<ButtonsContainer>

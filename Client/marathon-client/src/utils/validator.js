@@ -8,41 +8,49 @@ const USER = {
 const ERROR_MESSAGES = {
 	USER: {
 		USERNAME: `Username should be at least ${USER.USERNAME_MIN_LENGTH}
-         and no more than ${USER.USERNAME_MAX_LENGTH} characters long`,
+		 and no more than ${USER.USERNAME_MAX_LENGTH} characters long`,
+		USERNAME_REQUIRED: 'Field Username is required',
+		PASSWORD_REQUIRED: 'Field Password is required',
 		PASSWORD_LENGTH: `Password should be at least ${USER.PASSWORD_MIN_LENGTH} characters long`,
 		PASSWORDS_NOT_MATCH: 'Passwords should match',
-		EMAIL: 'Invalid email'
+		CONFIRM_PASSWORD_REQUIRED: 'Password confirmation is required',
+		EMAIL: 'Invalid email',
+		EMAIL_REQUIRED: 'Field Email is required'
 	}
 };
 
 export const validateUsername = ({ username }) => {
-	const isValid = !username
-		? false
-		: username.length >= USER.USERNAME_MIN_LENGTH && username.length <= USER.USERNAME_MAX_LENGTH;
-	const message = ERROR_MESSAGES.USER.USERNAME;
+	if (!username) {
+		return getValidationResult(false, ERROR_MESSAGES.USER.USERNAME_REQUIRED);
+	}
 
-	return getValidationResult(isValid, message);
+	const isValid = username.length >= USER.USERNAME_MIN_LENGTH && username.length <= USER.USERNAME_MAX_LENGTH;
+	return getValidationResult(isValid, ERROR_MESSAGES.USER.USERNAME);
 };
 
 export const validateEmail = ({ email }) => {
-	const isValid = !email ? false : !!email.match(USER.EMAIL_PATTERN);
-	const message = ERROR_MESSAGES.USER.EMAIL;
-
-	return getValidationResult(isValid, message);
+	if (!email) {
+		return getValidationResult(false, ERROR_MESSAGES.USER.EMAIL_REQUIRED);
+	}
+	const isValid = !!email.match(USER.EMAIL_PATTERN);
+	return getValidationResult(isValid, ERROR_MESSAGES.USER.EMAIL);
 };
 
 export const validatePassword = ({ password }) => {
-	const isValid = !password ? false : password.length >= USER.PASSWORD_MIN_LENGTH;
-	const message = ERROR_MESSAGES.USER.PASSWORD_LENGTH;
-
-	return getValidationResult(isValid, message);
+	if (!password) {
+		return getValidationResult(false, ERROR_MESSAGES.USER.PASSWORD_REQUIRED);
+	}
+	const isValid = password.length >= USER.PASSWORD_MIN_LENGTH;
+	return getValidationResult(isValid, ERROR_MESSAGES.USER.PASSWORD_LENGTH);
 };
 
 export const validatePasswordsMatch = ({ password, confirmPassword }) => {
-	const isValid = !password ? false : !confirmPassword ? false : password === confirmPassword;
-	const message = ERROR_MESSAGES.USER.PASSWORDS_NOT_MATCH;
+	if (!confirmPassword) {
+		return getValidationResult(false, ERROR_MESSAGES.USER.CONFIRM_PASSWORD_REQUIRED);
+	}
 
-	return getValidationResult(isValid, message);
+	const isValid = !password ? false : password === confirmPassword;
+	return getValidationResult(isValid, ERROR_MESSAGES.USER.PASSWORDS_NOT_MATCH);
 };
 
 const getValidationResult = (isValid, message) => {

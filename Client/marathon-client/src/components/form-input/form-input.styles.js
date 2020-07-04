@@ -1,11 +1,11 @@
 import styled, { css } from 'styled-components';
 
 const subColor = 'grey';
-const mainColor = 'black';
+const mainColor = '#6ab0a0';
 
 const shrinkLabelStyles = css`
-	top: -14px;
-	font-size: 12px;
+	top: -25px;
+	font-size: 14px;
 	color: ${mainColor};
 `;
 
@@ -38,7 +38,7 @@ export const Input = styled.input`
 `;
 
 export const Label = styled.label`
-	color: $sub-color;
+	color: ${subColor};
 	font-size: 16px;
 	font-weight: normal;
 	position: absolute;
