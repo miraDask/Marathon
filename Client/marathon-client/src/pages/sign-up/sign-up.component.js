@@ -1,31 +1,23 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../../providers/global-context.provider';
 import { registerUser } from '../../utils/user';
-import { validatePassword, validatePasswordsMatch, validateUsername, validateEmail } from '../../utils/validator';
-
+import { validatePassword, validateConfirmPassword, validateUsername, validateEmail } from '../../utils/validator';
+import { getServerErrorsObject, getEmptyInputsErrorsObject } from '../../utils/error-messages';
 import FormInput from '../../components/form-input/form-input.component';
 import CustomButton from '../../components/custom-button/custom-button.component';
 import { SignUpContainer, TitleContainer, ButtonsContainer } from './sign-up.styles';
 
+const initialUser = {
+	username: '',
+	email: '',
+	password: '',
+	confirmPassword: ''
+};
+
 const SignUpPage = () => {
 	const { toggleLoggedIn, saveToken } = useContext(Context);
-	const [ user, setUser ] = useState('');
+	const [ user, setUser ] = useState(initialUser);
 	const [ errors, setErrors ] = useState({});
-
-	const displayServerErrors = (serverErrors) => {
-		let errorsObject = {};
-		Object.keys(serverErrors).forEach((key) => {
-			const message = serverErrors[key][0];
-			if (message.toLowerCase().includes('username')) {
-				errorsObject = { ...errorsObject, username: message };
-			} else if (message.toLowerCase().includes('password')) {
-				errorsObject = { ...errorsObject, password: message };
-			} else if (message.toLowerCase().includes('email')) {
-				errorsObject = { ...errorsObject, email: message };
-			}
-		});
-		setErrors({ ...errors, ...errorsObject });
-	};
 
 	const handleOnChange = (event) => {
 		const { value, name } = event.target;
@@ -48,7 +40,10 @@ const SignUpPage = () => {
 			return;
 		}
 
-		//todo add validation for empty inputs
+		const errorsObject = getEmptyInputsErrorsObject({ ...user });
+		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
+			return setErrors({ ...errors, ...errorsObject });
+		}
 		const { username, email, password } = user;
 		const result = await registerUser({ username, email, password });
 
@@ -56,7 +51,8 @@ const SignUpPage = () => {
 			toggleLoggedIn(user.username);
 			saveToken(result.token);
 		} else {
-			displayServerErrors(result);
+			const errorsObject = getServerErrorsObject(result);
+			setErrors({ ...errors, ...errorsObject });
 		}
 	};
 
@@ -68,9 +64,8 @@ const SignUpPage = () => {
 				<FormInput
 					type="text"
 					name="username"
-					value={user.username || ''}
+					value={user.username}
 					label="Username"
-					//required
 					error={errors.username || ''}
 					handleOnBlur={(event) => handleOnBlur(event, validateUsername, { username: user.username })}
 					handleOnChange={handleOnChange}
@@ -78,9 +73,8 @@ const SignUpPage = () => {
 				<FormInput
 					type="email"
 					name="email"
-					value={user.email || ''}
+					value={user.email}
 					label="Email"
-					//required
 					error={errors.email || ''}
 					handleOnBlur={(event) => handleOnBlur(event, validateEmail, { email: user.email })}
 					handleOnChange={handleOnChange}
@@ -88,7 +82,7 @@ const SignUpPage = () => {
 				<FormInput
 					type="password"
 					name="password"
-					value={user.password || ''}
+					value={user.password}
 					label="Password"
 					//required
 					error={errors.password || ''}
@@ -98,12 +92,11 @@ const SignUpPage = () => {
 				<FormInput
 					type="password"
 					name="confirmPassword"
-					value={user.confirmPassword || ''}
+					value={user.confirmPassword}
 					label="Confirm Password"
-					//required
 					error={errors.confirmPassword || ''}
 					handleOnBlur={(event) =>
-						handleOnBlur(event, validatePasswordsMatch, {
+						handleOnBlur(event, validateConfirmPassword, {
 							password: user.password,
 							confirmPassword: user.confirmPassword
 						})}

@@ -44,7 +44,7 @@ export const validatePassword = ({ password }) => {
 	return getValidationResult(isValid, ERROR_MESSAGES.USER.PASSWORD_LENGTH);
 };
 
-export const validatePasswordsMatch = ({ password, confirmPassword }) => {
+export const validateConfirmPassword = ({ password, confirmPassword }) => {
 	if (!confirmPassword) {
 		return getValidationResult(false, ERROR_MESSAGES.USER.CONFIRM_PASSWORD_REQUIRED);
 	}

@@ -1,15 +1,20 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../../providers/global-context.provider';
 import { loginUser } from '../../utils/user';
-import { validatePassword, validateUsername } from '../../utils/validator';
+import { getEmptyInputsErrorsObject } from '../../utils/error-messages';
 
 import { SignInContainer, TitleContainer, ButtonsContainer } from './sign-in.styles';
 import FormInput from '../../components/form-input/form-input.component';
 import CustomButton from '../../components/custom-button/custom-button.component';
 
+const initialUser = {
+	username: '',
+	password: ''
+};
+
 const SignInPage = () => {
 	const { toggleLoggedIn, saveToken } = useContext(Context);
-	const [ user, setUser ] = useState('');
+	const [ user, setUser ] = useState(initialUser);
 	const [ errors, setErrors ] = useState({ username: '', password: '' });
 
 	const handleChange = (event) => {
@@ -20,17 +25,9 @@ const SignInPage = () => {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		let errorsObject = {};
-		if (!user.username) {
-			const { error } = validateUsername(user);
-			errorsObject = { ...errorsObject, username: error };
-		}
 
-		if (!user.password) {
-			const { error } = validatePassword(user);
-			errorsObject = { ...errorsObject, password: error };
-		}
-
+		const { username, password } = user;
+		let errorsObject = getEmptyInputsErrorsObject({ username, password });
 		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
 			return setErrors({ ...errors, ...errorsObject });
 		}
@@ -56,7 +53,7 @@ const SignInPage = () => {
 					value={user.username}
 					label="Username"
 					handleOnChange={handleChange}
-					error={errors.username || ''}
+					error={errors.username}
 				/>
 				<FormInput
 					type="password"
@@ -64,7 +61,7 @@ const SignInPage = () => {
 					label="Password"
 					value={user.password}
 					handleOnChange={handleChange}
-					error={errors.password || ''}
+					error={errors.password}
 				/>
 				<ButtonsContainer>
 					<CustomButton type="submit" inverted>
