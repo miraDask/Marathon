@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { Context } from '../../providers/global-context.provider';
 import HomePage from '../../pages/home/homepage.component';
-import SignUpPage from '../../pages/sign-up/sign-up.component';
-import SignInPage from '../../pages/sign-in/sign-in.component';
+import SignUpPage from '../../pages/sign-up/sign-up-page.component';
+import SignInPage from '../../pages/sign-in/sign-in-page.component';
 const Main = () => {
 	const { isLoggedIn } = useContext(Context);
 

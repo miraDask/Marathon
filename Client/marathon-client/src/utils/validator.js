@@ -9,13 +9,13 @@ const ERROR_MESSAGES = {
 	USER: {
 		USERNAME: `Username should be at least ${USER.USERNAME_MIN_LENGTH}
 		 and no more than ${USER.USERNAME_MAX_LENGTH} characters long`,
-		USERNAME_REQUIRED: 'Field Username is required',
-		PASSWORD_REQUIRED: 'Field Password is required',
+		USERNAME_REQUIRED: 'Username is required',
+		PASSWORD_REQUIRED: 'Password is required',
 		PASSWORD_LENGTH: `Password should be at least ${USER.PASSWORD_MIN_LENGTH} characters long`,
 		PASSWORDS_NOT_MATCH: 'Passwords should match',
 		CONFIRM_PASSWORD_REQUIRED: 'Password confirmation is required',
 		EMAIL: 'Invalid email',
-		EMAIL_REQUIRED: 'Field Email is required'
+		EMAIL_REQUIRED: 'Email is required'
 	}
 };
 
