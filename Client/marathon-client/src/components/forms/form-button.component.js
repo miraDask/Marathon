@@ -4,9 +4,9 @@ const FormButton = ({ children }) => (
 	<button
 		type="submit"
 		className="text-white
- bg-teal-500
+ bg-green-400
  border-0
- py-2 px-8 focus:outline-none hover:bg-teal-600 rounded text-lg mt-4"
+ py-2 px-8 focus:outline-none hover:bg-green-700 rounded text-lg mt-4"
 	>
 		{children}
 	</button>

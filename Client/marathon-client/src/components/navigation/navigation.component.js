@@ -16,13 +16,13 @@ const Navigation = () => {
 	};
 
 	return (
-		<header className="text-gray-700 body-font">
+		<header className="text-gray-700 body-font fixed w-full bg-gray-100">
 			<div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
 				<Link
 					to="/"
 					className="flex order-first lg:order-none lg:w-1/5 title-font font-medium items-center text-gray-900 lg:items-center lg:justify-center mb-4 ml-2 md:mb-0"
 				>
-					<img src={logo} alt="Logo" />
+					<img src={logo} alt="Logo" width="180" />
 				</Link>
 				<nav className="flex lg:w-2/5 flex-wrap items-center text-base lg:justify-end md:ml-auto md:mr-5">
 					{isLoggedIn ? (
@@ -36,6 +36,7 @@ const Navigation = () => {
 						<div>
 							<NavLink to="/#about">ABOUT</NavLink>
 							<NavLink to="/signin">SIGN IN</NavLink>
+							<NavLink to="/signup">SIGN UP</NavLink>
 						</div>
 					)}
 				</nav>

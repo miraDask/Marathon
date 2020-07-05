@@ -1,4 +1,8 @@
 import React from 'react';
 
-const MainWrapper = ({ children }) => <section class="text-gray-700 body-font">{children}</section>;
+const MainWrapper = ({ children, ...otherProps }) => (
+	<section class="text-gray-700 body-font p-16" {...otherProps}>
+		{children}
+	</section>
+);
 export default MainWrapper;
