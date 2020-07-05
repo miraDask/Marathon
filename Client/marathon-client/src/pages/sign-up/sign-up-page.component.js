@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ReactComponent as Logo } from '../../assets/watermelon-pack-illustration-10.svg';
+import { ReactComponent as Image } from '../../assets/watermelon-pack-illustration-10.svg';
 import MainWrapper from '../../components/main/maim-wrapper.component';
 import SignUpForm from '../../components/forms/sign-up-form.component';
 
@@ -9,7 +9,7 @@ const SignUpPage = () => {
 		<MainWrapper>
 			<div className="container px-10 py-16 mx-auto flex flex-wrap">
 				<div className="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0 text-center pt-5">
-					<Logo />
+					<Image />
 				</div>
 				<SignUpForm />
 			</div>

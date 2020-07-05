@@ -16,7 +16,7 @@ const Navigation = () => {
 	};
 
 	return (
-		<header className="text-gray-700 body-font fixed w-full bg-gray-100">
+		<header className="text-gray-700 body-font w-full bg-gray-100 opacity-100">
 			<div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
 				<Link
 					to="/"
@@ -34,7 +34,7 @@ const Navigation = () => {
 						</div>
 					) : (
 						<div>
-							<NavLink to="/#about">ABOUT</NavLink>
+							<NavLink to="/help">HELP</NavLink>
 							<NavLink to="/signin">SIGN IN</NavLink>
 							<NavLink to="/signup">SIGN UP</NavLink>
 						</div>
