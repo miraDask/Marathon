@@ -7,7 +7,7 @@ import SignUpForm from '../../components/forms/sign-up-form.component';
 const SignUpPage = () => {
 	return (
 		<MainWrapper>
-			<div className="container px-10 py-16 mx-auto flex flex-wrap">
+			<div className="container p-16 mx-auto flex flex-wrap">
 				<div className="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0 text-center pt-5">
 					<Image />
 				</div>

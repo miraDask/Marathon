@@ -64,7 +64,6 @@ const SignInForm = () => {
 			/>
 			{errors.password ? <ErrorMessageContainer>{errors.password}</ErrorMessageContainer> : null}
 			<FormButton>SUBMIT</FormButton>
-			{/* <p class="text-xs text-gray-500 mt-3">Literally you probably haven't heard of them jean shorts.</p> */}
 		</form>
 	);
 };
