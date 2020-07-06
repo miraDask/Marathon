@@ -33,7 +33,12 @@
         [Route(Identity.Register)]
         public async Task<ActionResult<AuthResponseModel>> Register([FromBody]RegisterUserRequestModel input)
         {
-            var registerResult = await this.identityService.RegisterAsync(input.UserName, input.Email, input.Password, this.appSettings.Secret);
+            var registerResult = await this.identityService.RegisterAsync(
+                input.FullName,
+                input.UserName,
+                input.Email,
+                input.Password,
+                this.appSettings.Secret);
 
             if (!registerResult.Success)
             {
@@ -61,7 +66,7 @@
         [Route(Identity.Login)]
         public async Task<ActionResult<AuthResponseModel>> Login([FromBody]LoginRequestModel input)
         {
-            var loginResult = await this.identityService.LoginAsync(input.UserName, input.Password, this.appSettings.Secret);
+            var loginResult = await this.identityService.LoginAsync(input.Email, input.Password, this.appSettings.Secret);
 
             if (!loginResult.Success)
             {

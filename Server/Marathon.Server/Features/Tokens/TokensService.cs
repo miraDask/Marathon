@@ -26,14 +26,14 @@
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<string> GenerateJwtToken(string userId, string userName, string secret, IList<Claim> claims = null)
+        public async Task<string> GenerateJwtToken(string userId, string email, string secret, IList<Claim> claims = null)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secret);
             var identityClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, userId),
-                new Claim(ClaimTypes.Name, userName),
+                new Claim(ClaimTypes.Email, email),
             };
 
             if (claims != null)

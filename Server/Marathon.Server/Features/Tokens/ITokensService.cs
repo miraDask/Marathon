@@ -8,7 +8,7 @@
     {
         Task<bool> IsCurrentActiveToken();
 
-        Task<string> GenerateJwtToken(string userId, string userName, string secret, IList<Claim> claims = null);
+        Task<string> GenerateJwtToken(string userId, string email, string secret, IList<Claim> claims = null);
 
         Task DeactivateJwtToken(string userId, string token = null);
     }

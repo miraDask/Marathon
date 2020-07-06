@@ -20,18 +20,20 @@
             var users = await userManager.Users.AnyAsync();
             if (!users)
             {
-                await CreateUser(userManager, UserName, Email);
+                await CreateUser(userManager, FullName, UserName, Email);
             }
         }
 
         private static async Task<string> CreateUser(
             UserManager<User> userManager,
+            string fullName,
             string username,
             string email)
         {
             var user = new User
             {
                 UserName = username,
+                FullName = fullName,
                 Email = email,
             };
 

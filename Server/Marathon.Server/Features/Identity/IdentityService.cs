@@ -1,5 +1,6 @@
 ﻿namespace Marathon.Server.Features.Identity
 {
+    using System;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -40,14 +41,14 @@
             await this.tokenService.DeactivateJwtToken(user.Id);
         }
 
-        public async Task<ResultModel<string>> LoginAsync(string username, string password, string secret)
+        public async Task<ResultModel<string>> LoginAsync(string email, string password, string secret)
         {
-            var user = await this.userManager.FindByNameAsync(username);
+            var user = await this.userManager.FindByEmailAsync(email);
             if (user == null)
             {
                 return new ResultModel<string>
                 {
-                    Errors = new string[] { Errors.InvalidUserName },
+                    Errors = new string[] { Errors.InvalidLoginAttempt },
                 };
             }
 
@@ -56,7 +57,7 @@
             {
                 return new ResultModel<string>
                 {
-                    Errors = new string[] { Errors.InvalidPassword },
+                    Errors = new string[] { Errors.InvalidLoginAttempt },
                 };
             }
 
@@ -75,7 +76,12 @@
             await this.tokenService.DeactivateJwtToken(null, token);
         }
 
-        public async Task<ResultModel<string>> RegisterAsync(string username, string email, string password, string secret)
+        public async Task<ResultModel<string>> RegisterAsync(
+            string fullName,
+            string userName,
+            string email,
+            string password,
+            string secret)
         {
             var existingEmail = await this.userManager.FindByEmailAsync(email);
 
@@ -87,19 +93,10 @@
                 };
             }
 
-            var existingUserName = await this.userManager.FindByNameAsync(username);
-
-            if (existingUserName != null)
-            {
-                return new ResultModel<string>
-                {
-                    Errors = new string[] { string.Format(Errors.AlreadyRegisteredUserName, username) },
-                };
-            }
-
             var user = new User()
             {
-                UserName = username,
+                UserName = userName,
+                FullName = fullName,
                 Email = email,
             };
 
@@ -113,7 +110,7 @@
                 };
             }
 
-            var token = await this.tokenService.GenerateJwtToken(user.Id, username, secret);
+            var token = await this.tokenService.GenerateJwtToken(user.Id, email, secret);
 
             return new ResultModel<string>
             {
