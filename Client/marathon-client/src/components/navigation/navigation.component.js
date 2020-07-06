@@ -7,7 +7,8 @@ import logo from '../../assets/logo.png';
 import NavLink from './nav-link.component';
 
 const Navigation = () => {
-	const { isLoggedIn, username, toggleLoggedIn, token } = useContext(Context);
+	const { isLoggedIn, fullName, toggleLoggedIn, token } = useContext(Context);
+	const initials = fullName.split(' ').map((x) => x.charAt(0)).join('');
 
 	const handleSignOut = async (e) => {
 		e.preventDefault();
@@ -27,7 +28,7 @@ const Navigation = () => {
 				<nav className="flex lg:w-2/5 flex-wrap items-center text-base lg:justify-end md:ml-auto md:mr-5">
 					{isLoggedIn ? (
 						<div>
-							<span>Hello, {username}</span>
+							<span>Hello, {initials}</span>
 							<NavLink handleSignOut={handleSignOut} to="/">
 								SIGN OUT
 							</NavLink>

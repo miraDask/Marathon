@@ -1,4 +1,11 @@
-import { validatePassword, validateConfirmPassword, validateUsername, validateEmail } from '../utils/validator';
+import {
+	validatePassword,
+	validateConfirmPassword,
+	validateUsername,
+	validateEmail,
+	validateFirstName,
+	validateLastName
+} from '../utils/validator';
 
 export const getServerErrorsObject = (serverErrors) => {
 	let errorsObject = {};
@@ -26,6 +33,12 @@ export const getEmptyInputsErrorsObject = (inputsObject) => {
 			} else if (key === 'password') {
 				const { error } = validatePassword({ value });
 				errorsObject = { ...errorsObject, password: error };
+			} else if (key === 'firstName') {
+				const { error } = validateFirstName({ value });
+				errorsObject = { ...errorsObject, firstName: error };
+			} else if (key === 'lastName') {
+				const { error } = validateLastName({ value });
+				errorsObject = { ...errorsObject, lastName: error };
 			} else if (key === 'email') {
 				const { error } = validateEmail({ value });
 				errorsObject = { ...errorsObject, email: error };

@@ -49,10 +49,7 @@
                 });
             }
 
-            return new AuthResponseModel()
-            {
-                Token = registerResult.Result,
-            };
+            return registerResult.Result;
         }
 
         /// <summary>
@@ -76,10 +73,7 @@
                 });
             }
 
-            return new AuthResponseModel()
-            {
-                Token = loginResult.Result,
-            };
+            return loginResult.Result;
         }
 
         /// <summary>

@@ -3,12 +3,13 @@
     using System.Threading.Tasks;
 
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Identity.Models;
 
     public interface IIdentityService
     {
-        Task<ResultModel<string>> RegisterAsync(string fullName, string userName, string email, string password, string secret);
+        Task<ResultModel<AuthResponseModel>> RegisterAsync(string fullName, string userName, string email, string password, string secret);
 
-        Task<ResultModel<string>> LoginAsync(string email, string password, string secret);
+        Task<ResultModel<AuthResponseModel>> LoginAsync(string email, string password, string secret);
 
         Task LoguotAsync(string token);
 

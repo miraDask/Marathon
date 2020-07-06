@@ -7,7 +7,7 @@ import FormInput from './form-input.component';
 import FormButton from './form-button.component';
 
 const initialUser = {
-	username: '',
+	email: '',
 	password: ''
 };
 
@@ -25,15 +25,15 @@ const SignInForm = () => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
-		const { username, password } = user;
-		let errorsObject = getEmptyInputsErrorsObject({ username, password });
+		const { email, password } = user;
+		let errorsObject = getEmptyInputsErrorsObject({ email, password });
 		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
 			return setErrors({ ...errors, ...errorsObject });
 		}
 
 		const result = await loginUser({ ...user });
 		if (result.token) {
-			toggleLoggedIn(user.username);
+			toggleLoggedIn(result.fullName);
 			saveToken(result.token);
 			setErrors(null);
 		} else {
@@ -47,14 +47,8 @@ const SignInForm = () => {
 			className="lg:w-2/6 md:w-1/2 rounded-lg p-8 flex flex-col md:ml-0 w-full mt-10 md:mt-0"
 		>
 			<h2 class="text-gray-900 text-lg font-medium title-font mb-5">SIGN IN</h2>
-			<FormInput
-				handleChange={handleChange}
-				type="text"
-				name="username"
-				value={user.username}
-				placeholder="Username"
-			/>
-			{errors.username ? <ErrorMessageContainer>{errors.username}</ErrorMessageContainer> : null}
+			<FormInput handleChange={handleChange} type="text" name="email" value={user.email} placeholder="Email" />
+			{errors.email ? <ErrorMessageContainer>{errors.email}</ErrorMessageContainer> : null}
 			<FormInput
 				type="password"
 				name="password"

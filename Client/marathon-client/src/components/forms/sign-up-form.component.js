@@ -1,13 +1,22 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../../providers/global-context.provider';
 import { registerUser } from '../../utils/user';
-import { validatePassword, validateConfirmPassword, validateUsername, validateEmail } from '../../utils/validator';
+import {
+	validatePassword,
+	validateConfirmPassword,
+	validateUsername,
+	validateEmail,
+	validateFirstName,
+	validateLastName
+} from '../../utils/validator';
 import { getServerErrorsObject, getEmptyInputsErrorsObject } from '../../utils/error-messages';
 import ErrorMessageContainer from '../../components/messages/form-input-error-message.component';
 import FormInput from './form-input.component';
 import FormButton from './form-button.component';
 
 const initialUser = {
+	firstName: '',
+	lastName: '',
 	username: '',
 	email: '',
 	password: '',
@@ -44,11 +53,12 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
 			return setErrors({ ...errors, ...errorsObject });
 		}
-		const { username, email, password } = user;
-		const result = await registerUser({ username, email, password });
+		const { firstName, lastName, username, email, password } = user;
+		const fullName = `${firstName} ${lastName}`;
+		const result = await registerUser({ fullName, username, email, password });
 
 		if (result.token) {
-			toggleLoggedIn(user.username);
+			toggleLoggedIn(fullName);
 			saveToken(result.token);
 		} else {
 			const errorsObject = getServerErrorsObject(result);
@@ -63,6 +73,26 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 			{...otherProps}
 		>
 			<h2 class="text-gray-900 text-lg font-medium title-font mb-5">SIGN UP</h2>
+			<FormInput
+				type="text"
+				name="firstName"
+				value={user.firstName}
+				placeholder="First Name"
+				handleOnBlur={(event) => handleOnBlur(event, validateFirstName, { firstName: user.firstName })}
+				handleChange={handleChange}
+			/>
+			{errors.firstName ? <ErrorMessageContainer>{errors.firstName}</ErrorMessageContainer> : null}
+
+			<FormInput
+				type="text"
+				name="lastName"
+				value={user.lastName}
+				placeholder="Full Name"
+				handleOnBlur={(event) => handleOnBlur(event, validateLastName, { lastName: user.lastName })}
+				handleChange={handleChange}
+			/>
+			{errors.lastName ? <ErrorMessageContainer>{errors.lastName}</ErrorMessageContainer> : null}
+
 			<FormInput
 				type="text"
 				name="username"

@@ -1,12 +1,12 @@
 ﻿namespace Marathon.Server.Features.Identity
 {
-    using System;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
 
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Tokens;
 
     using Microsoft.AspNetCore.Identity;
@@ -41,12 +41,12 @@
             await this.tokenService.DeactivateJwtToken(user.Id);
         }
 
-        public async Task<ResultModel<string>> LoginAsync(string email, string password, string secret)
+        public async Task<ResultModel<AuthResponseModel>> LoginAsync(string email, string password, string secret)
         {
             var user = await this.userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                return new ResultModel<string>
+                return new ResultModel<AuthResponseModel>
                 {
                     Errors = new string[] { Errors.InvalidLoginAttempt },
                 };
@@ -55,7 +55,7 @@
             var passwordValid = await this.userManager.CheckPasswordAsync(user, password);
             if (!passwordValid)
             {
-                return new ResultModel<string>
+                return new ResultModel<AuthResponseModel>
                 {
                     Errors = new string[] { Errors.InvalidLoginAttempt },
                 };
@@ -64,9 +64,13 @@
             var claims = await this.userManager.GetClaimsAsync(user);
             var token = await this.tokenService.GenerateJwtToken(user.Id, user.UserName, secret, claims);
 
-            return new ResultModel<string>
+            return new ResultModel<AuthResponseModel>
             {
-                Result = token,
+                Result = new AuthResponseModel
+                {
+                    Token = token,
+                    FullName = user.FullName,
+                },
                 Success = true,
             };
         }
@@ -76,7 +80,7 @@
             await this.tokenService.DeactivateJwtToken(null, token);
         }
 
-        public async Task<ResultModel<string>> RegisterAsync(
+        public async Task<ResultModel<AuthResponseModel>> RegisterAsync(
             string fullName,
             string userName,
             string email,
@@ -87,7 +91,7 @@
 
             if (existingEmail != null)
             {
-                return new ResultModel<string>
+                return new ResultModel<AuthResponseModel>
                 {
                     Errors = new string[] { string.Format(Errors.AlreadyRegisteredUser, email) },
                 };
@@ -104,7 +108,7 @@
 
             if (!registerAtempt.Succeeded)
             {
-                return new ResultModel<string>
+                return new ResultModel<AuthResponseModel>
                 {
                     Errors = registerAtempt.Errors.Select(x => x.Description),
                 };
@@ -112,9 +116,13 @@
 
             var token = await this.tokenService.GenerateJwtToken(user.Id, email, secret);
 
-            return new ResultModel<string>
+            return new ResultModel<AuthResponseModel>
             {
-                Result = token,
+                Result = new AuthResponseModel
+                {
+                    Token = token,
+                    FullName = fullName,
+                },
                 Success = true,
             };
         }
