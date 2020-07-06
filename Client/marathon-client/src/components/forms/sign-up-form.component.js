@@ -1,4 +1,6 @@
 import React, { useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import { Context } from '../../providers/global-context.provider';
 import { registerUser } from '../../utils/user';
 import {
@@ -24,6 +26,7 @@ const initialUser = {
 };
 
 const SignUpForm = ({ classes, ...otherProps }) => {
+	const history = useHistory();
 	const { toggleLoggedIn, saveToken } = useContext(Context);
 	const [ user, setUser ] = useState(initialUser);
 	const [ errors, setErrors ] = useState({});
@@ -60,6 +63,7 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 		if (result.token) {
 			toggleLoggedIn(fullName);
 			saveToken(result.token);
+			history.push('/user');
 		} else {
 			const errorsObject = getServerErrorsObject(result);
 			setErrors({ ...errors, ...errorsObject });

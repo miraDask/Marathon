@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import { Context } from '../../providers/global-context.provider';
 import { logoutUser } from '../../utils/user';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import logo from '../../assets/logo.png';
 import NavLink from './nav-link.component';
 
 const Navigation = () => {
+	const history = useHistory();
 	const { isLoggedIn, fullName, toggleLoggedIn, token } = useContext(Context);
 	const initials = fullName.split(' ').map((x) => x.charAt(0)).join('');
 
@@ -14,6 +15,7 @@ const Navigation = () => {
 		e.preventDefault();
 		await logoutUser(token);
 		toggleLoggedIn();
+		history.push('/');
 	};
 
 	return (

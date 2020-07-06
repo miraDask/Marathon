@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Context } from '../../providers/global-context.provider';
 import { loginUser } from '../../utils/user';
 import { getEmptyInputsErrorsObject } from '../../utils/error-messages';
@@ -12,6 +13,7 @@ const initialUser = {
 };
 
 const SignInForm = () => {
+	const history = useHistory();
 	const { toggleLoggedIn, saveToken } = useContext(Context);
 	const [ user, setUser ] = useState(initialUser);
 	const [ errors, setErrors ] = useState({ username: '', password: '' });
@@ -36,6 +38,7 @@ const SignInForm = () => {
 			toggleLoggedIn(result.fullName);
 			saveToken(result.token);
 			setErrors(null);
+			history.push('/user');
 		} else {
 			setErrors({ ...errors, password: 'Invalid username or password' });
 		}
