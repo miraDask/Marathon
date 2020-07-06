@@ -8,11 +8,11 @@ const HomeHero = () => {
 			<div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center">
 				<h1 className="title-font sm:text-4xl text-5xl mb-4 font-medium text-gray-900">
 					Marathon
-					<br className="hidden lg:inline-block" />helps you stay on track with you project management.
+					<br className="hidden lg:inline-block" />helps you stay on track!
 				</h1>
 				<p className="mb-8 leading-relaxed">
-					Our software development tool is designed to be used by agile teams and help them to organize and
-					prioritize their projects in a fun, flexible way.
+					Building good project is not a matter of one sprint, but a whole marathon. Our project management
+					tool is designed for agile teams to organize and prioritize their projects in a fun, flexible way.
 				</p>
 				<div className="flex items-center flex-wrap">
 					<NavLink to="/signup">

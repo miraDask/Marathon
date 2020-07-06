@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { ReactComponent as Image } from '../../assets/watermelon-pack-illustration-10.svg';
 import MainWrapper from '../../components/main/maim-wrapper.component';
 import SignUpForm from '../../components/forms/sign-up-form.component';
 
 const SignUpPage = () => {
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
 	return (
 		<MainWrapper>
 			<div className="container p-16 mx-auto flex flex-wrap">

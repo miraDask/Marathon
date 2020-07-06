@@ -16,7 +16,9 @@ const StepsContainer = () => (
 		</div>
 		<div className="flex relative pb-12">
 			<StepIconContainer name="team" bgColor="green-400" />
-			<StepTextContainer title="TEAM">Create a team. Someone has to do the work.</StepTextContainer>
+			<StepTextContainer title="TEAM">
+				Great projects need great teams Add your teammates to plan, track, and build great project together.
+			</StepTextContainer>
 		</div>
 		<div className="flex relative pb-12">
 			<StepIconContainer name="done" bgColor="green-400" />

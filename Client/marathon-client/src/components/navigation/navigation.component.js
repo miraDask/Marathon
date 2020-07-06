@@ -17,7 +17,7 @@ const Navigation = () => {
 
 	return (
 		<header className="text-gray-700 body-font w-full bg-white opacity-100">
-			<div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+			<div className="container mx-auto flex flex-wrap px-5 py-1 border-b-2 border-gray-300 flex-col md:flex-row items-center">
 				<Link
 					to="/"
 					className="flex order-first lg:order-none lg:w-1/5 title-font font-medium items-center text-gray-900 lg:items-center lg:justify-center mb-4 ml-2 md:mb-0"
