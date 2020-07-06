@@ -5,11 +5,11 @@ import { Link, useHistory } from 'react-router-dom';
 
 import logo from '../../assets/logo.png';
 import NavLink from './nav-link.component';
+import Avatar from '../../components/user/user-avatar.component';
 
 const Navigation = () => {
 	const history = useHistory();
-	const { isLoggedIn, fullName, toggleLoggedIn, token } = useContext(Context);
-	const initials = fullName.split(' ').map((x) => x.charAt(0)).join('');
+	const { isLoggedIn, toggleLoggedIn, token } = useContext(Context);
 
 	const handleSignOut = async (e) => {
 		e.preventDefault();
@@ -27,19 +27,38 @@ const Navigation = () => {
 				>
 					<img src={logo} alt="Logo" width="180" />
 				</Link>
+				{isLoggedIn ? (
+					<div>
+						<NavLink to="/user/dashboard" textColor="teal-600" hoverColor="green-400">
+							Dashboard
+						</NavLink>
+						<NavLink to="/user/projects" textColor="teal-600" hoverColor="green-400">
+							Projects
+						</NavLink>
+						<NavLink to="/user/teams" textColor="teal-600" hoverColor="green-400">
+							Teams
+						</NavLink>
+					</div>
+				) : null}
 				<nav className="flex lg:w-2/5 flex-wrap items-center text-base lg:justify-end md:ml-auto md:mr-5">
 					{isLoggedIn ? (
 						<div>
-							<span>Hello, {initials}</span>
-							<NavLink handleSignOut={handleSignOut} to="/">
+							<NavLink handleSignOut={handleSignOut} to="/" hoverColor="green-400">
 								SIGN OUT
 							</NavLink>
+							<Avatar bgColor="orange-400" />
 						</div>
 					) : (
 						<div>
-							<NavLink to="/help">HELP</NavLink>
-							<NavLink to="/signin">SIGN IN</NavLink>
-							<NavLink to="/signup">SIGN UP</NavLink>
+							<NavLink to="/help" hoverColor="green-400">
+								HELP
+							</NavLink>
+							<NavLink to="/signin" hoverColor="green-400">
+								SIGN IN
+							</NavLink>
+							<NavLink to="/signup" hoverColor="green-400">
+								SIGN UP
+							</NavLink>
 						</div>
 					)}
 				</nav>

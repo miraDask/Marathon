@@ -38,7 +38,7 @@ const SignInForm = () => {
 			toggleLoggedIn(result.fullName);
 			saveToken(result.token);
 			setErrors(null);
-			history.push('/user');
+			history.push('/user/dashboard');
 		} else {
 			setErrors({ ...errors, password: 'Invalid username or password' });
 		}

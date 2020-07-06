@@ -3,6 +3,7 @@ const isLogged = localStorage.getItem('isLoggedIn') !== null ? true : false;
 const name = localStorage.getItem('name') ? localStorage.getItem('name') : '';
 
 const initialState = {
+	projects: [],
 	token: '',
 	fullName: name,
 	isLoggedIn: isLogged,
@@ -14,6 +15,7 @@ export const Context = createContext(initialState);
 
 const GlobalContextProvider = (props) => {
 	const [ token, setToken ] = useState('');
+	const [ projects, setProjects ] = useState([]);
 	const [ fullName, setName ] = useState(name);
 	const [ isLoggedIn, setLoggedIn ] = useState(isLogged);
 
@@ -39,7 +41,8 @@ const GlobalContextProvider = (props) => {
 				fullName,
 				isLoggedIn,
 				toggleLoggedIn,
-				saveToken
+				saveToken,
+				projects
 			}}
 		>
 			{props.children}
