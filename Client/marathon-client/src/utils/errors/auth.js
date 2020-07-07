@@ -5,7 +5,7 @@ import {
 	validateEmail,
 	validateFirstName,
 	validateLastName
-} from '../utils/validator';
+} from '../validations/auth';
 
 export const getServerErrorsObject = (serverErrors) => {
 	let errorsObject = {};

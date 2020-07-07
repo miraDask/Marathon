@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
     using System.Security.Claims;
@@ -61,16 +62,24 @@
                 token = await this.cacheService.GetAsync(userId);
             }
 
-            await this.cacheService.SetAsync(this.GetKey(token), " ");
+            await this.cacheService.SetAsync(this.GetKey(token), "deactivated");
         }
 
         public async Task<bool> IsCurrentActiveToken()
-            => await this.IsActiveAsync(this.GetCurrentAsync());
+        {
+            var currentToken = this.GetCurrentToken();
+            var isActive = await this.IsActiveAsync(currentToken);
+            return isActive;
+        }
 
         private async Task<bool> IsActiveAsync(string token)
-            => await this.cacheService.GetAsync(this.GetKey(token)) == null;
+        {
+            var tokenKey = this.GetKey(token);
+            var result = await this.cacheService.GetAsync(tokenKey);
+            return result == null;
+        }
 
-        private string GetCurrentAsync()
+        private string GetCurrentToken()
         {
             var authorizationHeader = this.httpContextAccessor
                 .HttpContext.Request.Headers["authorization"];

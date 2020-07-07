@@ -1,20 +1,22 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 const isLogged = localStorage.getItem('isLoggedIn') !== null ? true : false;
 const name = localStorage.getItem('name') ? localStorage.getItem('name') : '';
+const lastToken = localStorage.getItem('token') ? localStorage.getItem('token') : '';
 
 const initialState = {
 	projects: [],
-	token: '',
+	token: lastToken,
 	fullName: name,
 	isLoggedIn: isLogged,
 	toggleLoggedIn: () => {},
-	saveToken: () => {}
+	saveToken: () => {},
+	saveProject: () => {}
 };
 
 export const Context = createContext(initialState);
 
 const GlobalContextProvider = (props) => {
-	const [ token, setToken ] = useState('');
+	const [ token, setToken ] = useState(lastToken);
 	const [ projects, setProjects ] = useState([]);
 	const [ fullName, setName ] = useState(name);
 	const [ isLoggedIn, setLoggedIn ] = useState(isLogged);
@@ -27,22 +29,34 @@ const GlobalContextProvider = (props) => {
 		} else {
 			localStorage.removeItem('isLoggedIn');
 			localStorage.removeItem('name');
+			localStorage.removeItem('token');
 			setName('');
 		}
 		setLoggedIn(!isLoggedIn);
 	};
 
-	const saveToken = (newToken) => setToken(newToken);
+	const saveToken = (newToken) => {
+		localStorage.setItem('token', newToken);
+		setToken(newToken);
+	};
 
+	const saveProject = (newProject) => setProjects([ ...projects, newProject ]);
+	useEffect(
+		() => {
+			setToken(token);
+		},
+		[ token ]
+	);
 	return (
 		<Context.Provider
 			value={{
 				token,
 				fullName,
 				isLoggedIn,
+				projects,
 				toggleLoggedIn,
 				saveToken,
-				projects
+				saveProject
 			}}
 		>
 			{props.children}

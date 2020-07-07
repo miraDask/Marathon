@@ -28,6 +28,7 @@ namespace Marathon.Server
                  .AddJwtAuthentication(services.GetApplicationSettings(this.Configuration))
                  .AddApplicationServices()
                  .AddSwagger()
+                 .AddCors()
                  .AddApiControllers();
         }
 
@@ -42,9 +43,10 @@ namespace Marathon.Server
                 .UseSwaggerUI()
                 .UseRouting()
                 .UseAuthorization()
+                .UseOptionsMiddleware()
                 .UseTokenCheckMiddleware()
                 .UseCors(options => options
-                    .AllowAnyOrigin()
+                .AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod())
                 .UseAuthentication()

@@ -1,3 +1,5 @@
+import { getValidationResult } from './index';
+
 const USER = {
 	USERNAME_MIN_LENGTH: 6,
 	USERNAME_MAX_LENGTH: 25,
@@ -65,17 +67,4 @@ const validateName = (name) => {
 	}
 	const isValid = name.length >= USER.NAME_MIN_LENGTH && name.length <= USER.NAME_MAX_LENGTH;
 	return getValidationResult(isValid, ERROR_MESSAGES.USER.NAME);
-};
-
-const getValidationResult = (isValid, message) => {
-	if (isValid === false) {
-		return {
-			isValid: false,
-			error: message
-		};
-	}
-
-	return {
-		isValid
-	};
 };

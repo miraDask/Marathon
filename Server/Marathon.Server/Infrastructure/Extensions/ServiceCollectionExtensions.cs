@@ -130,6 +130,7 @@
                 .AddTransient<IStatusesService, StatusesService>()
                 .AddTransient<ICacheService, CacheService>()
                 .AddTransient<ITokensService, TokensService>()
+                .AddTransient<OptionRequestsMiddleware>()
                 .AddTransient<TokenManagerMiddleware>();
 
         public static IServiceCollection AddSwagger(this IServiceCollection services)

@@ -25,6 +25,11 @@
                 httpContext => !httpContext.Request.Path.StartsWithSegments('/' + Identity.IdentityRoute),
                 subApp => subApp.UseMiddleware<TokenManagerMiddleware>());
 
+        public static IApplicationBuilder UseOptionsMiddleware(this IApplicationBuilder app)
+        {
+            return app.UseMiddleware<OptionRequestsMiddleware>();
+        }
+
         public static void ApplyMigrations(this IApplicationBuilder app)
         {
             using var services = app.ApplicationServices.CreateScope();

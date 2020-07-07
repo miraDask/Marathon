@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Context } from '../../providers/global-context.provider';
-import { registerUser } from '../../utils/user';
+import { registerUser } from '../../utils/workers/user';
 import {
 	validatePassword,
 	validateConfirmPassword,
@@ -10,8 +10,8 @@ import {
 	validateEmail,
 	validateFirstName,
 	validateLastName
-} from '../../utils/validator';
-import { getServerErrorsObject, getEmptyInputsErrorsObject } from '../../utils/error-messages';
+} from '../../utils/validations/auth';
+import { getServerErrorsObject, getEmptyInputsErrorsObject } from '../../utils/errors/auth';
 import ErrorMessageContainer from '../../components/messages/form-input-error-message.component';
 import FormInput from './form-input.component';
 import FormButton from './form-button.component';

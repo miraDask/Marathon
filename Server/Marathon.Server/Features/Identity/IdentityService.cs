@@ -29,9 +29,9 @@
             var user = await this.AddNewClaimToUserAsync(userId, claimKey, claimValue);
 
             var claims = await this.userManager.GetClaimsAsync(user);
-            var token = await this.tokenService.GenerateJwtToken(user.Id, user.UserName, secret, claims);
-
             await this.tokenService.DeactivateJwtToken(user.Id);
+
+            var token = await this.tokenService.GenerateJwtToken(user.Id, user.UserName, secret, claims);
             return token;
         }
 
