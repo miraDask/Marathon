@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Context } from '../../providers/global-context.provider';
-import { logoutUser } from '../../utils/workers/user';
+import { logoutUser } from '../../services/users.service';
 import { Link, useHistory } from 'react-router-dom';
 
 import logo from '../../assets/logo.png';

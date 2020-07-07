@@ -4,7 +4,7 @@ const name = localStorage.getItem('name') ? localStorage.getItem('name') : '';
 const lastToken = localStorage.getItem('token') ? localStorage.getItem('token') : '';
 
 const initialState = {
-	projects: [],
+	projects: [ 1 ],
 	token: lastToken,
 	fullName: name,
 	isLoggedIn: isLogged,

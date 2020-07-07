@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Context } from '../../providers/global-context.provider';
-import { registerUser } from '../../utils/workers/user';
+import { registerUser } from '../../services/users.service';
 import {
 	validatePassword,
 	validateConfirmPassword,

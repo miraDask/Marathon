@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Context } from '../../providers/global-context.provider';
-import { loginUser } from '../../utils/workers/user';
+import { loginUser } from '../../services/users.service';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/auth';
 import ErrorMessageContainer from '../../components/messages/form-input-error-message.component';
 import FormInput from './form-input.component';

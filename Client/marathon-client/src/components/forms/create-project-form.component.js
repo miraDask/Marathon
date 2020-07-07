@@ -2,12 +2,12 @@ import React, { useContext, useState } from 'react';
 
 import { useHistory } from 'react-router-dom';
 import { Context } from '../../providers/global-context.provider';
-import { createProject } from '../../utils/workers/projects';
+import { createProject } from '../../services/projects.service';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/project';
 import { validateKey, validateName } from '../../utils/validations/project';
 
-import ErrorMessageContainer from '../../components/messages/form-input-error-message.component';
-import InfoMessageContainer from '../../components/messages/form-input-info-message.component';
+import ErrorMessageContainer from '../messages/form-input-error-message.component';
+import InfoMessageContainer from '../messages/form-input-info-message.component';
 
 import FormInput from './form-input.component';
 import FormButton from './form-button.component';
@@ -57,7 +57,7 @@ const CreateProjectForm = () => {
 			console.log(project);
 			saveProject({ name: project.name, key: project.key });
 			setErrors({ name: '', key: '' });
-			history.push('/user/dashboard');
+			history.push('/user/projects');
 		} else {
 			setErrors({ ...errors, password: 'Invalid username or password' });
 		}
