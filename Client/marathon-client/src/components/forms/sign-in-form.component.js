@@ -49,7 +49,7 @@ const SignInForm = () => {
 			onSubmit={handleSubmit}
 			className="lg:w-2/6 md:w-1/2 rounded-lg p-8 flex flex-col md:ml-0 w-full mt-10 md:mt-0"
 		>
-			<h2 class="text-gray-900 text-lg font-medium title-font mb-5">SIGN IN</h2>
+			<h2 className="text-gray-900 text-lg font-medium title-font mb-5">SIGN IN</h2>
 			<FormInput handleChange={handleChange} type="text" name="email" value={user.email} placeholder="Email" />
 			{errors.email ? <ErrorMessageContainer>{errors.email}</ErrorMessageContainer> : null}
 			<FormInput
