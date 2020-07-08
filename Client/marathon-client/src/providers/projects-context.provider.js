@@ -9,6 +9,7 @@ const initialState = {
 	currentProject: currProject,
 	saveCurrentProject: () => {},
 	saveProjects: () => {},
+	deleteFromProjects: () => {},
 	updateProjects: () => {},
 	toggleHasProjects: () => {}
 };
@@ -25,8 +26,17 @@ const ProjectsContextProvider = ({ children }) => {
 		setProjects(projects);
 		localStorage.setItem('projects', JSON.stringify(projects));
 	};
-	const updateProjects = (id) => {
+	const deleteFromProjects = (id) => {
 		const updatedProjects = projects.filter((x) => x.id !== +id);
+		setProjects(updatedProjects);
+		localStorage.setItem('projects', JSON.stringify(updatedProjects));
+	};
+
+	const updateProjects = ({ name, key }, id) => {
+		let currantProject = projects.filter((x) => x.id === +id)[0];
+		currantProject = { ...currantProject, name, key };
+		const filteredProjects = projects.filter((x) => x.id !== +id);
+		const updatedProjects = [ ...filteredProjects, currantProject ];
 		setProjects(updatedProjects);
 		localStorage.setItem('projects', JSON.stringify(updatedProjects));
 	};
@@ -49,7 +59,8 @@ const ProjectsContextProvider = ({ children }) => {
 				saveCurrentProject,
 				saveProjects,
 				updateProjects,
-				toggleHasProjects
+				toggleHasProjects,
+				deleteFromProjects
 			}}
 		>
 			{children}

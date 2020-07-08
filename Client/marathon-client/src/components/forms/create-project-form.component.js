@@ -51,15 +51,13 @@ const CreateProjectForm = () => {
 		}
 
 		const result = await createProject({ name, key }, token);
-		console.log(result);
+
 		if (result.token) {
 			saveToken(result.token);
 			console.log(project);
-			//saveProject({ name: project.name, key: project.key });
+			saveProject({ name: project.name, key: project.key });
 			setErrors({ name: '', key: '' });
 			history.push('/user/projects');
-		} else {
-			setErrors({ ...errors, password: 'Invalid username or password' });
 		}
 	};
 

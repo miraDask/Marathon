@@ -39,6 +39,20 @@ export const createProject = async (data, token) => {
 	}
 };
 
+export const updateProject = async (id, data, token) => {
+	const headers = getHeaders(token);
+
+	try {
+		const response = await fetcher(API_URL + `/${id}`, 'PUT', headers, data);
+		if (response.status >= 400) {
+			throw new Error('Bad request');
+		}
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
+
 export const deleteProject = async (token, id) => {
 	const headers = getHeaders(token);
 
