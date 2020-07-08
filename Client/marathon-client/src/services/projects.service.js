@@ -39,6 +39,20 @@ export const createProject = async (data, token) => {
 	}
 };
 
+export const deleteProject = async (token, id) => {
+	const headers = getHeaders(token);
+
+	try {
+		const response = await fetcher(API_URL + `/${id}`, 'DELETE', headers);
+		if (response.status === 400) {
+			throw new Error('Bad request');
+		}
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
+
 const fetcher = async (url, method, headers, data = null) => {
 	return fetch(url, {
 		method,

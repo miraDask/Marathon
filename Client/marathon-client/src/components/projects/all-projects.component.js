@@ -3,7 +3,7 @@ import React from 'react';
 import MainWrapper from '../../components/main/maim-wrapper.component';
 import FormButton from '../../components/forms/form-button.component';
 import NavLink from '../../components/navigation/nav-link.component';
-import Card from '../../components/cards/card.component';
+import ProjectCard from '../../components/cards/project-card.component';
 
 const ProjectsAll = ({ projects }) => {
 	return (
@@ -18,7 +18,12 @@ const ProjectsAll = ({ projects }) => {
 				<div className="lg:w-2/3 flex mb-8 flex-col sm:flex-row sm:items-center items-start mx-auto">
 					<div className="w-full">
 						{projects.map((project) => (
-							<Card key={project.id} data={project.id} title={project.name} subTitle={project.key} />
+							<ProjectCard
+								key={project.id}
+								data={project.id}
+								title={project.name}
+								subTitle={project.key}
+							/>
 						))}
 					</div>
 				</div>

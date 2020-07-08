@@ -4,20 +4,18 @@ const name = localStorage.getItem('name') ? localStorage.getItem('name') : '';
 const lastToken = localStorage.getItem('token') ? localStorage.getItem('token') : '';
 
 const initialState = {
-	currentProject: {},
 	token: lastToken,
 	fullName: name,
 	isLoggedIn: isLogged,
 	toggleLoggedIn: () => {},
-	saveToken: () => {},
-	saveProject: () => {}
+	saveToken: () => {}
 };
 
 export const Context = createContext(initialState);
 
-const GlobalContextProvider = (props) => {
+const GlobalContextProvider = ({ children }) => {
 	const [ token, setToken ] = useState(lastToken);
-	//const [ currentProject, setCurrentProject ] = useState({});
+
 	const [ fullName, setName ] = useState(name);
 	const [ isLoggedIn, setLoggedIn ] = useState(isLogged);
 
@@ -40,7 +38,6 @@ const GlobalContextProvider = (props) => {
 		setToken(newToken);
 	};
 
-	//const saveProject = (newProject) => setCurrentProject(newProject);
 	useEffect(
 		() => {
 			setToken(token);
@@ -55,11 +52,9 @@ const GlobalContextProvider = (props) => {
 				isLoggedIn,
 				toggleLoggedIn,
 				saveToken
-				// currentProject,
-				// saveProject
 			}}
 		>
-			{props.children}
+			{children}
 		</Context.Provider>
 	);
 };

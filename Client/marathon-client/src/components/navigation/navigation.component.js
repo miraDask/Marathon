@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 import { Context } from '../../providers/global-context.provider';
+import { ProjectsContext } from '../../providers/projects-context.provider';
+
 import { logoutUser } from '../../services/users.service';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -10,11 +12,13 @@ import Avatar from '../../components/user/user-avatar.component';
 const Navigation = () => {
 	const history = useHistory();
 	const { isLoggedIn, toggleLoggedIn, token } = useContext(Context);
+	const { toggleHasProjects } = useContext(ProjectsContext);
 
 	const handleSignOut = async (e) => {
 		e.preventDefault();
 		await logoutUser(token);
 		toggleLoggedIn();
+		toggleHasProjects();
 		history.push('/');
 	};
 

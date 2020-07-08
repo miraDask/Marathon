@@ -1,8 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+
 import { Context } from '../../providers/global-context.provider';
+import { ProjectsContext } from '../../providers/projects-context.provider';
 import { loginUser } from '../../services/users.service';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/auth';
+
 import ErrorMessageContainer from '../../components/messages/form-input-error-message.component';
 import FormInput from './form-input.component';
 import FormButton from './form-button.component';
@@ -15,6 +18,8 @@ const initialUser = {
 const SignInForm = () => {
 	const history = useHistory();
 	const { toggleLoggedIn, saveToken } = useContext(Context);
+	const { toggleHasProjects } = useContext(ProjectsContext);
+
 	const [ user, setUser ] = useState(initialUser);
 	const [ errors, setErrors ] = useState({ username: '', password: '' });
 
@@ -38,6 +43,11 @@ const SignInForm = () => {
 			toggleLoggedIn(result.fullName);
 			saveToken(result.token);
 			setErrors(null);
+
+			if (result.hasProjects) {
+				toggleHasProjects();
+			}
+
 			history.push('/user/dashboard');
 		} else {
 			setErrors({ ...errors, password: 'Invalid username or password' });
