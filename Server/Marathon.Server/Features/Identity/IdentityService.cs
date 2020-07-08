@@ -3,25 +3,28 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-
+    using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
+    using Marathon.Server.Features.Projects;
     using Marathon.Server.Features.Tokens;
 
     using Microsoft.AspNetCore.Identity;
-
+    using Microsoft.EntityFrameworkCore;
     using static Marathon.Server.Features.Common.Constants;
 
     public class IdentityService : IIdentityService
     {
         private readonly UserManager<User> userManager;
         private readonly ITokensService tokenService;
+        private readonly MarathonDbContext dbContext;
 
-        public IdentityService(UserManager<User> userManager, ITokensService tokenService)
+        public IdentityService(UserManager<User> userManager, ITokensService tokenService, MarathonDbContext dbContext)
         {
             this.userManager = userManager;
             this.tokenService = tokenService;
+            this.dbContext = dbContext;
         }
 
         public async Task<string> AddClaimToUserAsync(string userId, string claimKey, string claimValue, string secret)
@@ -62,7 +65,16 @@
             }
 
             var claims = await this.userManager.GetClaimsAsync(user);
-            var token = await this.tokenService.GenerateJwtToken(user.Id, user.UserName, secret, claims);
+            var token = await this.tokenService.GenerateJwtToken(user.Id, email, secret, claims);
+            var userProjects = await this.dbContext.Users.
+                Where(x => x.Id == user.Id)
+                .Select(x => new
+                {
+                    HasAny = x.CreatedProjects.Any()
+                    || x.ProjectsAdmins.Any(y => y.UserId == x.Id)
+                    || x.TeamsUsers.Any(y => y.UserId == x.Id),
+                })
+                .FirstOrDefaultAsync();
 
             return new ResultModel<AuthResponseModel>
             {
@@ -70,6 +82,7 @@
                 {
                     Token = token,
                     FullName = user.FullName,
+                    HasProjects = userProjects.HasAny,
                 },
                 Success = true,
             };
