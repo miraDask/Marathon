@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
@@ -10,8 +10,11 @@ import { validateKey, validateName } from '../../utils/validations/project';
 import { ReactComponent as EditIcon } from '../../assets/icon-edit.svg';
 import { ReactComponent as DeleteIcon } from '../../assets/icon-trash.svg';
 import { ReactComponent as SaveIcon } from '../../assets/icon-check-circle.svg';
+import { ReactComponent as CancelIcon } from '../../assets/icon-x-circle.svg';
+
 import ErrorMessageContainer from '../messages/form-input-error-message.component';
 import FormInput from '../../components/forms/form-input.component';
+import NavLink from '../../components/navigation/nav-link.component';
 
 const initialIsEditClicked = false;
 
@@ -38,7 +41,7 @@ const ProjectCard = ({ title, subTitle, data }) => {
 		setEditHidden(!editHidden);
 	};
 
-	const handleEditClick = (e) => {
+	const handleEditClick = () => {
 		toggleButtons();
 	};
 
@@ -90,10 +93,13 @@ const ProjectCard = ({ title, subTitle, data }) => {
 		<div className="mx-auto flex p-6 bg-white rounded-lg shadow-xl mb-3 justify-between">
 			<div className="pt-1">
 				{!isEditClicked ? (
-					<h4 className="cursor-pointer text-xl text-gray-900 leading-tight">{title}</h4>
+					<NavLink hoverColor="green-400" otherClasses="cursor-pointer text-xl text-gray-900 leading-tight">
+						{title}
+					</NavLink>
 				) : (
 					<div>
 						<FormInput
+							autoFocus
 							className="focus:outline-none text-xl text-black leading-tight"
 							type="text"
 							name="name"
@@ -103,12 +109,6 @@ const ProjectCard = ({ title, subTitle, data }) => {
 							placeholder="Project Name"
 						/>
 						{errors.name ? <ErrorMessageContainer>{errors.name}</ErrorMessageContainer> : null}
-						<span className="inline-block">
-							<SaveIcon id={data} className="cursor-pointer" onClick={handleUpdate} />
-						</span>
-						<span className="inline-block ">
-							<DeleteIcon id={data} className="ml-1 cursor-pointer" onClick={handleDeleteClick} />
-						</span>
 					</div>
 				)}
 
@@ -129,7 +129,20 @@ const ProjectCard = ({ title, subTitle, data }) => {
 					</p>
 				)}
 			</div>
-			{editHidden ? null : (
+			{editHidden ? (
+				<div>
+					<span className="inline-block mr-2">
+						<CancelIcon className="mx-1
+						cursor-pointer" onClick={handleEditClick} />
+					</span>
+					<span className="inline-block mr-2">
+						<SaveIcon id={data} className="mx-1 cursor-pointer" onClick={handleUpdate} />
+					</span>
+					<span className="inline-block mr-10">
+						<DeleteIcon id={data} className="mx-1 cursor-pointer" onClick={handleDeleteClick} />
+					</span>
+				</div>
+			) : (
 				<span className="inline-block cursor-pointer">
 					<EditIcon onClick={handleEditClick} />
 				</span>

@@ -1,7 +1,9 @@
 import React, { useContext, useState } from 'react';
-
 import { useHistory } from 'react-router-dom';
+
 import { Context } from '../../providers/global-context.provider';
+import { ProjectsContext } from '../../providers/projects-context.provider';
+
 import { createProject } from '../../services/projects.service';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/project';
 import { validateKey, validateName } from '../../utils/validations/project';
@@ -19,7 +21,8 @@ const initialProject = {
 
 const CreateProjectForm = () => {
 	const history = useHistory();
-	const { saveProject, saveToken, token } = useContext(Context);
+	const { saveToken, token } = useContext(Context);
+	const { updateProjects } = useContext(ProjectsContext);
 	const [ project, setProject ] = useState(initialProject);
 	const [ errors, setErrors ] = useState({ name: '', key: '' });
 
@@ -54,8 +57,7 @@ const CreateProjectForm = () => {
 
 		if (result.token) {
 			saveToken(result.token);
-			console.log(project);
-			saveProject({ name: project.name, key: project.key });
+			updateProjects({ name, key }, result.id);
 			setErrors({ name: '', key: '' });
 			history.push('/user/projects');
 		}

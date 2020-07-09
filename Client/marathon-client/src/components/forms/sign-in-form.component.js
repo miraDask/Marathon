@@ -40,7 +40,7 @@ const SignInForm = () => {
 
 		const result = await loginUser({ ...user });
 		if (result.token) {
-			toggleLoggedIn(result.fullName);
+			toggleLoggedIn(email, result.fullName);
 			saveToken(result.token);
 			setErrors(null);
 

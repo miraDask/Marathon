@@ -1,26 +1,14 @@
 import React, { useContext } from 'react';
-import { Context } from '../../providers/global-context.provider';
-import { ProjectsContext } from '../../providers/projects-context.provider';
+import { Link } from 'react-router-dom';
 
-import { logoutUser } from '../../services/users.service';
-import { Link, useHistory } from 'react-router-dom';
+import { Context } from '../../providers/global-context.provider';
 
 import logo from '../../assets/logo.png';
 import NavLink from './nav-link.component';
-import Avatar from '../../components/user/user-avatar.component';
+import AccountDropdown from '../../components/user/user-account-dropdown.component';
 
 const Navigation = () => {
-	const history = useHistory();
-	const { isLoggedIn, toggleLoggedIn, token } = useContext(Context);
-	const { toggleHasProjects } = useContext(ProjectsContext);
-
-	const handleSignOut = async (e) => {
-		e.preventDefault();
-		await logoutUser(token);
-		toggleLoggedIn();
-		toggleHasProjects();
-		history.push('/');
-	};
+	const { isLoggedIn } = useContext(Context);
 
 	return (
 		<header className="text-gray-700 body-font w-full bg-white opacity-100">
@@ -46,12 +34,7 @@ const Navigation = () => {
 				) : null}
 				<nav className="flex lg:w-2/5 flex-wrap items-center text-base lg:justify-end md:ml-auto md:mr-5">
 					{isLoggedIn ? (
-						<div>
-							<NavLink handleSignOut={handleSignOut} to="/" hoverColor="green-400">
-								SIGN OUT
-							</NavLink>
-							<Avatar bgColor="orange-400" />
-						</div>
+						<AccountDropdown />
 					) : (
 						<div>
 							<NavLink to="/help" hoverColor="green-400">

@@ -61,7 +61,7 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 		const result = await registerUser({ fullName, username, email, password });
 
 		if (result.token) {
-			toggleLoggedIn(fullName);
+			toggleLoggedIn(email, fullName);
 			saveToken(result.token);
 			history.push('/user/dashboard');
 		} else {

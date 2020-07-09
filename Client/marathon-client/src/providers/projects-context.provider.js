@@ -34,7 +34,7 @@ const ProjectsContextProvider = ({ children }) => {
 
 	const updateProjects = ({ name, key }, id) => {
 		let currantProject = projects.filter((x) => x.id === +id)[0];
-		currantProject = { ...currantProject, name, key };
+		currantProject = !currentProject ? { id, name, key } : { ...currantProject, name, key };
 		const filteredProjects = projects.filter((x) => x.id !== +id);
 		const updatedProjects = [ ...filteredProjects, currantProject ];
 		setProjects(updatedProjects);
