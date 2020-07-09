@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
@@ -89,11 +89,17 @@ const ProjectCard = ({ title, subTitle, data }) => {
 		}
 	};
 
+	const handleLinking = () => {};
+
 	return (
 		<div className="mx-auto flex p-6 bg-white rounded-lg shadow-xl mb-3 justify-between">
 			<div className="pt-1">
 				{!isEditClicked ? (
-					<NavLink hoverColor="green-400" otherClasses="cursor-pointer text-xl text-gray-900 leading-tight">
+					<NavLink
+						handleClick={handleLinking}
+						hoverColor="green-400"
+						otherClasses="cursor-pointer text-xl text-gray-900 leading-tight"
+					>
 						{title}
 					</NavLink>
 				) : (

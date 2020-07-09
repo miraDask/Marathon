@@ -22,7 +22,7 @@ const initialProject = {
 const CreateProjectForm = () => {
 	const history = useHistory();
 	const { saveToken, token } = useContext(Context);
-	const { updateProjects } = useContext(ProjectsContext);
+	const { updateProjects, saveCurrentProject } = useContext(ProjectsContext);
 	const [ project, setProject ] = useState(initialProject);
 	const [ errors, setErrors ] = useState({ name: '', key: '' });
 
@@ -58,6 +58,7 @@ const CreateProjectForm = () => {
 		if (result.token) {
 			saveToken(result.token);
 			updateProjects({ name, key }, result.id);
+			saveCurrentProject({ name, key, id: result.id });
 			setErrors({ name: '', key: '' });
 			history.push('/user/projects');
 		}
