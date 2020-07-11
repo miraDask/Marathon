@@ -3,12 +3,28 @@ import React from 'react';
 import PriorityIcon from '../../components/icons/priority-icon.component';
 import IssueIcon from '../../components/icons/issue-icon.component';
 
-const IssueCard = ({ title, assignee, priority = 'high', type = 'task', storyPoints = 2 }) => {
+const IssueCard = ({
+	id,
+	title,
+	assignee,
+	priority = 'high',
+	type = 'task',
+	storyPoints = 2,
+	handleDragStart,
+	invisible
+}) => {
 	return (
-		<div className="mx-auto flex p-5 hover:bg-blue-100 bg-white rounded-lg shadow-xl mb-3 justify-between">
+		<div
+			id={id}
+			draggable
+			onDragStart={handleDragStart}
+			className={`${invisible
+				? 'invisible'
+				: ''} mx-auto flex p-5 hover:bg-blue-300 bg-white rounded-lg shadow-xl mb-3 justify-between`}
+		>
 			<div>
-				<div className="text-gray-900">Issue title</div>
-				<div className="mr-2">assignee</div>
+				<div className="text-gray-900">{title}</div>
+				<div className="mr-2">{assignee}</div>
 			</div>
 			<div>
 				<IssueIcon type={type} size="h-5 w-5" />
