@@ -5,6 +5,7 @@ import StatusList from '../../components/board/status-list.component';
 
 const testData = [
 	{
+		id: 1,
 		title: 'TO DO',
 		issues: [
 			{
@@ -18,6 +19,7 @@ const testData = [
 		]
 	},
 	{
+		id: 2,
 		title: 'IN PROGRESS',
 		issues: [
 			{
@@ -29,22 +31,36 @@ const testData = [
 				storyPoints: 2
 			}
 		]
+	},
+	{
+		id: 3,
+		title: 'DONE',
+		issues: [
+			{
+				title: 'Test  DONE',
+				assignee: 'me',
+				type: 'story',
+				priority: 'high',
+				id: 4,
+				storyPoints: 2
+			}
+		]
 	}
 ];
-const Board = ({ data }) => {
-	const [ statuses, setStatuses ] = useState(testData);
+const Board = ({ data = testData }) => {
+	const [ statuses, setStatuses ] = useState(data);
 	const [ dragging, setDragging ] = useState(false);
 	const columns = !statuses ? 3 : statuses.length + 1;
 	const dragItem = useRef();
 	const dragNode = useRef();
 
 	const handleDragStart = (e, params) => {
-		dragItem.current = params;
-		dragNode.current = e.target;
-		dragNode.current.addEventListener('dragend', handleDragEnd);
 		setTimeout(() => {
 			setDragging(true);
 		}, 0);
+		dragItem.current = params;
+		dragNode.current = e.target;
+		dragNode.current.addEventListener('dragend', handleDragEnd);
 	};
 
 	const handleDragEnd = () => {
@@ -52,6 +68,24 @@ const Board = ({ data }) => {
 		dragItem.current = null;
 		dragNode.current = null;
 		setDragging(false);
+	};
+
+	const handleDragEnter = (e, params) => {
+		const currentItem = dragItem.current;
+		const { statusIndex, issueIndex } = params;
+
+		if (e.target !== currentItem) {
+			setStatuses((statusLists) => {
+				const newStatusLists = JSON.parse(JSON.stringify(statusLists));
+				const dragItemOldIndex = newStatusLists[currentItem.statusIndex].issues.splice(
+					currentItem.issueIndex,
+					1
+				)[0];
+				newStatusLists[statusIndex].issues.splice(issueIndex, 0, dragItemOldIndex);
+				dragItem.current = params;
+				return newStatusLists;
+			});
+		}
 	};
 
 	const getInvisible = (params) => {
@@ -77,20 +111,34 @@ const Board = ({ data }) => {
 					</StatusList>
 				) : (
 					statuses.map((status, statusIndex) => (
-						<StatusList key={status.id} columns={columns} title={status.title}>
-							{status.issues.map((issue, issueIndex) => (
-								<IssueCard
-									key={issue.id}
-									title={issue.title}
-									assignee={issue.assignee}
-									priority={issue.priority}
-									type={issue.type}
-									storyPoints={issue.storyPoints}
-									id={issue.id}
-									handleDragStart={(e) => handleDragStart(e, { issueIndex, statusIndex })}
-									invisible={dragging ? getInvisible({ issueIndex, statusIndex }) : false}
-								/>
-							))}
+						<StatusList
+							key={status.id}
+							columns={columns}
+							title={status.title}
+							onDragEnter={
+								dragging && !status.items ? (
+									(e) => handleDragEnter(e, { statusIndex, issueIndex: 0 })
+								) : null
+							}
+						>
+							{status.issues ? (
+								status.issues.map((issue, issueIndex) => (
+									<IssueCard
+										key={issue.id}
+										title={issue.title}
+										assignee={issue.assignee}
+										priority={issue.priority}
+										type={issue.type}
+										storyPoints={issue.storyPoints}
+										id={issue.id}
+										handleDragStart={(e) => handleDragStart(e, { statusIndex, issueIndex })}
+										handleDragEnter={
+											dragging ? (e) => handleDragEnter(e, { statusIndex, issueIndex }) : null
+										}
+										invisible={dragging ? getInvisible({ statusIndex, issueIndex }) : false}
+									/>
+								))
+							) : null}
 						</StatusList>
 					))
 				)}

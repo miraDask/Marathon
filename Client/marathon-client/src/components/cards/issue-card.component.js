@@ -11,6 +11,7 @@ const IssueCard = ({
 	type = 'task',
 	storyPoints = 2,
 	handleDragStart,
+	handleDragEnter,
 	invisible
 }) => {
 	return (
@@ -18,6 +19,7 @@ const IssueCard = ({
 			id={id}
 			draggable
 			onDragStart={handleDragStart}
+			onDragEnter={handleDragEnter}
 			className={`${invisible
 				? 'invisible'
 				: ''} mx-auto flex p-5 hover:bg-blue-300 bg-white rounded-lg shadow-xl mb-3 justify-between`}
