@@ -2,11 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 
 import IssueCard from '../../components/cards/issue-card.component';
 import StatusList from '../../components/board/status-list.component';
+import PopupWindow from '../../components/board/issue-popup-window.component';
+
 import { mockStatuses } from '../../data/mock-data';
 
 const Board = ({ data = mockStatuses }) => {
 	const [ statuses, setStatuses ] = useState(data);
 	const [ dragging, setDragging ] = useState(false);
+	const [ show, setShow ] = useState(false);
 
 	useEffect(
 		() => {
@@ -54,6 +57,9 @@ const Board = ({ data = mockStatuses }) => {
 		dragItemNode.current = null;
 	};
 
+	const onClose = () => setShow(false);
+	const onOpen = () => setShow(true);
+
 	const getInvisible = (params) => {
 		const currentItem = dragItem.current;
 		return currentItem.statusIndex === params.statusIndex && currentItem.issueIndex === params.issueIndex;
@@ -79,20 +85,19 @@ const Board = ({ data = mockStatuses }) => {
 						>
 							{status.issues ? (
 								status.issues.map((issue, issueIndex) => (
-									<IssueCard
-										key={issue.id}
-										title={issue.title}
-										assignee={issue.assignee}
-										priority={issue.priority}
-										type={issue.type}
-										storyPoints={issue.storyPoints}
-										id={issue.id}
-										handleDragStart={(e) => handleDragStart(e, { statusIndex, issueIndex })}
-										handleDragEnter={
-											dragging ? (e) => handleDragEnter(e, { statusIndex, issueIndex }) : null
-										}
-										invisible={dragging ? getInvisible({ statusIndex, issueIndex }) : false}
-									/>
+									<div>
+										<IssueCard
+											key={issue.id}
+											issue={issue}
+											handleClick={onOpen}
+											handleDragStart={(e) => handleDragStart(e, { statusIndex, issueIndex })}
+											handleDragEnter={
+												dragging ? (e) => handleDragEnter(e, { statusIndex, issueIndex }) : null
+											}
+											invisible={dragging ? getInvisible({ statusIndex, issueIndex }) : false}
+										/>
+										<PopupWindow item={issue} onClose={onClose} show={show} />
+									</div>
 								))
 							) : null}
 						</StatusList>
