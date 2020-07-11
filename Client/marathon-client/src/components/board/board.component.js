@@ -1,91 +1,57 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import IssueCard from '../../components/cards/issue-card.component';
 import StatusList from '../../components/board/status-list.component';
+import { mockStatuses } from '../../data/mock-data';
 
-const testData = [
-	{
-		id: 1,
-		title: 'TO DO',
-		issues: [
-			{
-				title: 'Test to do',
-				assignee: 'me',
-				type: 'story',
-				priority: 'medium',
-				id: 1,
-				storyPoints: 0
-			}
-		]
-	},
-	{
-		id: 2,
-		title: 'IN PROGRESS',
-		issues: [
-			{
-				title: 'Test in progress',
-				assignee: 'me',
-				type: 'bug',
-				priority: 'highest',
-				id: 2,
-				storyPoints: 2
-			}
-		]
-	},
-	{
-		id: 3,
-		title: 'DONE',
-		issues: [
-			{
-				title: 'Test  DONE',
-				assignee: 'me',
-				type: 'story',
-				priority: 'high',
-				id: 4,
-				storyPoints: 2
-			}
-		]
-	}
-];
-const Board = ({ data = testData }) => {
+const Board = ({ data = mockStatuses }) => {
 	const [ statuses, setStatuses ] = useState(data);
 	const [ dragging, setDragging ] = useState(false);
-	const columns = !statuses ? 3 : statuses.length + 1;
-	const dragItem = useRef();
-	const dragNode = useRef();
 
-	const handleDragStart = (e, params) => {
+	useEffect(
+		() => {
+			setStatuses(data);
+		},
+		[ setStatuses, data ]
+	);
+
+	const dragItem = useRef();
+	const dragItemNode = useRef();
+
+	const handleDragStart = (e, item) => {
+		console.log('Starting to drag', item);
+
+		dragItemNode.current = e.target;
+		dragItemNode.current.addEventListener('dragend', handleDragEnd);
+		dragItem.current = item;
+
 		setTimeout(() => {
 			setDragging(true);
 		}, 0);
-		dragItem.current = params;
-		dragNode.current = e.target;
-		dragNode.current.addEventListener('dragend', handleDragEnd);
 	};
 
-	const handleDragEnd = () => {
-		dragNode.current.removeEventListener('dragend', handleDragEnd);
-		dragItem.current = null;
-		dragNode.current = null;
-		setDragging(false);
-	};
-
-	const handleDragEnter = (e, params) => {
-		const currentItem = dragItem.current;
-		const { statusIndex, issueIndex } = params;
-
-		if (e.target !== currentItem) {
-			setStatuses((statusLists) => {
-				const newStatusLists = JSON.parse(JSON.stringify(statusLists));
-				const dragItemOldIndex = newStatusLists[currentItem.statusIndex].issues.splice(
-					currentItem.issueIndex,
-					1
-				)[0];
-				newStatusLists[statusIndex].issues.splice(issueIndex, 0, dragItemOldIndex);
-				dragItem.current = params;
-				return newStatusLists;
+	const handleDragEnter = (e, targetItem) => {
+		console.log('Entering a drag target', targetItem);
+		if (dragItemNode.current !== e.target) {
+			console.log('Target is NOT the same as dragged item');
+			setStatuses((oldList) => {
+				let newList = JSON.parse(JSON.stringify(oldList));
+				newList[targetItem.statusIndex].issues.splice(
+					targetItem.issueIndex,
+					0,
+					newList[dragItem.current.statusIndex].issues.splice(dragItem.current.issueIndex, 1)[0]
+				);
+				dragItem.current = targetItem;
+				localStorage.setItem('List', JSON.stringify(newList));
+				return newList;
 			});
 		}
+	};
+	const handleDragEnd = (e) => {
+		setDragging(false);
+		dragItem.current = null;
+		dragItemNode.current.removeEventListener('dragend', handleDragEnd);
+		dragItemNode.current = null;
 	};
 
 	const getInvisible = (params) => {
@@ -93,22 +59,12 @@ const Board = ({ data = testData }) => {
 		return currentItem.statusIndex === params.statusIndex && currentItem.issueIndex === params.issueIndex;
 	};
 
+	const columns = statuses ? statuses.length + 1 : 3;
 	return (
 		<div className="container px-5 py-24 mx-auto">
 			<div className="flex flex-wrap m-4 md:mb-4">
 				{!statuses ? (
-					<StatusList columns={columns} title="TODO">
-						<IssueCard
-							key="1"
-							title="test issue"
-							assignee="me"
-							priority="medium"
-							type="story"
-							storyPoints="2"
-							id="2"
-							handleDragStart={handleDragStart}
-						/>
-					</StatusList>
+					<StatusList columns={columns} title="TODO" />
 				) : (
 					statuses.map((status, statusIndex) => (
 						<StatusList
@@ -116,7 +72,7 @@ const Board = ({ data = testData }) => {
 							columns={columns}
 							title={status.title}
 							onDragEnter={
-								dragging && !status.items ? (
+								dragging && !status.issues.length ? (
 									(e) => handleDragEnter(e, { statusIndex, issueIndex: 0 })
 								) : null
 							}
