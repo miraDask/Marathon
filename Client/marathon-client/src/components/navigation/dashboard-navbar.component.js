@@ -11,16 +11,16 @@ const DashboardNavBar = ({ otherClasses }) => {
 		<div className={`${otherClasses} bg-gray-100 text-center h-10 border-b-2 border-t-1`}>
 			<div className=" mx-auto px-10">
 				<ul className="list-reset flex flex-row text-center">
-					<DashboardNavItem type="inactive" to="/">
+					<DashboardNavItem type="inactive" to="/user/dashboard">
 						<p>{currentProject ? currentProject.name : 'Choose Project'}</p>
 					</DashboardNavItem>
-					<DashboardNavItem type="active" to="/">
+					<DashboardNavItem type="active" to="/user/dashboard/board">
 						Board
 					</DashboardNavItem>
-					<DashboardNavItem type="inactive" to="/">
+					<DashboardNavItem type="inactive" to="/user/dashboard/backlog">
 						Backlog
 					</DashboardNavItem>
-					<DashboardNavItem type="inactive" to="/">
+					<DashboardNavItem type="inactive" to="/user/dashboard/team">
 						Team
 					</DashboardNavItem>
 				</ul>

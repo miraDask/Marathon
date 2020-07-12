@@ -24,8 +24,6 @@ const Board = ({ data = mockStatuses }) => {
 	const dragItemNode = useRef();
 
 	const handleDragStart = (e, item) => {
-		console.log('Starting to drag', item);
-
 		dragItemNode.current = e.target;
 		dragItemNode.current.addEventListener('dragend', handleDragEnd);
 		dragItem.current = item;
@@ -116,7 +114,22 @@ const Board = ({ data = mockStatuses }) => {
 
 	const columns = statuses ? statuses.length + 1 : 3;
 	return (
-		<div className="container px-5 py-24 mx-auto">
+		<div className="container px-5 py-4 mx-auto">
+			<div class="lg:w-5/6 flex mb-8 flex-col sm:flex-row sm:items-center items-center mx-auto">
+				<h1 class="flex-grow sm:pr-16 text-2xl font-medium title-font text-gray-900">Project/Sprint</h1>
+				<a class="mr-5 undefined" href="/user/projects/create">
+					<button
+						disabled
+						type="submit"
+						class="text-white
+                        bg-green-400
+                        border-0
+                        py-2 px-3 cursor-not-allowed focus:outline-none  rounded text-lg mt-4 undefined"
+					>
+						Complete Sprint
+					</button>
+				</a>
+			</div>
 			<div className="flex flex-wrap m-4 md:mb-4">{renderStatuses()}</div>
 		</div>
 	);

@@ -7,7 +7,7 @@ import SignUpPage from '../../pages/sign-up/sign-up-page.component';
 import SignInPage from '../../pages/sign-in/sign-in-page.component';
 import UserProjectsPage from '../../pages/user-projects/user-projects-page.component';
 import CreateProjectPage from '../../pages/user-projects/user-create-project-page.component';
-import DashboardPage from '../../pages/dashboard/dashboard-page.component';
+import BoardPage from '../../pages/board/board-page.component';
 
 const Main = () => {
 	const { isLoggedIn } = useContext(Context);
@@ -18,7 +18,8 @@ const Main = () => {
 			<Route exact path="/help" component={HelpPage} />
 			<Route exact path="/user/projects" component={UserProjectsPage} />
 			<Route exact path="/user/projects/create" component={CreateProjectPage} />
-			<Route exact path="/user/dashboard" component={DashboardPage} />
+			<Route exact path="/user/dashboard/board" component={BoardPage} />
+			{/* <Route exact path="/user/dashboard/backlog" component={DashboardBacklogPage} /> */}
 			<Route exact path="/signup" render={() => (isLoggedIn ? <Redirect to="/" /> : <SignUpPage />)} />
 			<Route exact path="/signin" render={() => (isLoggedIn ? <Redirect to="/" /> : <SignInPage />)} />
 		</Switch>

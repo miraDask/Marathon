@@ -23,7 +23,7 @@ const Navigation = () => {
 				</Link>
 				{isLoggedIn ? (
 					<div>
-						<NavLink to="/user/dashboard" textColor="teal-600" hoverColor="green-400">
+						<NavLink to="/user/dashboard/board" textColor="teal-600" hoverColor="green-400">
 							Dashboard
 						</NavLink>
 						<NavLink to="/user/projects" textColor="teal-600" hoverColor="green-400">
