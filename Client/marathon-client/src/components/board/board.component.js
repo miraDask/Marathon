@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { Context } from '../../providers/global-context.provider';
 
 import IssueCard from '../../components/cards/issue-card.component';
 import StatusList from '../../components/board/status-list.component';
@@ -8,9 +9,10 @@ import { mockStatuses } from '../../data/mock-data';
 
 const Board = ({ data = mockStatuses }) => {
 	const [ statuses, setStatuses ] = useState(data);
+	const [ openedIssue, setOpenedIssue ] = useState(null);
 	const [ dragging, setDragging ] = useState(false);
 	const [ show, setShow ] = useState(false);
-
+	const { toggleModalIsOpen } = useContext(Context);
 	useEffect(
 		() => {
 			setStatuses(data);
@@ -34,9 +36,7 @@ const Board = ({ data = mockStatuses }) => {
 	};
 
 	const handleDragEnter = (e, targetItem) => {
-		console.log('Entering a drag target', targetItem);
 		if (dragItemNode.current !== e.target) {
-			console.log('Target is NOT the same as dragged item');
 			setStatuses((oldList) => {
 				let newList = JSON.parse(JSON.stringify(oldList));
 				newList[targetItem.statusIndex].issues.splice(
@@ -57,53 +57,67 @@ const Board = ({ data = mockStatuses }) => {
 		dragItemNode.current = null;
 	};
 
-	const onClose = () => setShow(false);
-	const onOpen = () => setShow(true);
+	const onClose = () => {
+		toggleModalIsOpen();
+		setShow(false);
+	};
+	const onOpen = (e) => {
+		const currentClicked = e.target;
+		const issueId = currentClicked.id
+			? currentClicked.id
+			: currentClicked.parentNode.id ? currentClicked.parentNode.id : currentClicked.parentNode.parentNode.id;
+		const statusList = statuses.filter((s) => s.issues.some((i) => i.id === +issueId))[0];
+		const clickedIssue = statusList.issues.filter((i) => i.id === +issueId)[0];
+		setOpenedIssue(clickedIssue);
+		setShow(true);
+		toggleModalIsOpen();
+	};
 
 	const getInvisible = (params) => {
 		const currentItem = dragItem.current;
 		return currentItem.statusIndex === params.statusIndex && currentItem.issueIndex === params.issueIndex;
 	};
 
+	const renderIssues = (issues, statusIndex) => {
+		return issues.map((issue, issueIndex) => (
+			<div key={issue.id}>
+				<IssueCard
+					issue={issue}
+					handleClick={onOpen}
+					handleDragStart={(e) => handleDragStart(e, { statusIndex, issueIndex })}
+					handleDragEnter={dragging ? (e) => handleDragEnter(e, { statusIndex, issueIndex }) : null}
+					invisible={dragging ? getInvisible({ statusIndex, issueIndex }) : false}
+				/>
+				{!openedIssue ? null : <PopupWindow item={openedIssue} onClose={onClose} show={show} />}
+			</div>
+		));
+	};
+
+	const renderStatuses = () => {
+		return !statuses ? (
+			<StatusList columns={columns} title="TODO" />
+		) : (
+			statuses.map((status, statusIndex) => (
+				<StatusList
+					key={status.id}
+					columns={columns}
+					title={status.title}
+					onDragEnter={
+						dragging && !status.issues.length ? (
+							(e) => handleDragEnter(e, { statusIndex, issueIndex: 0 })
+						) : null
+					}
+				>
+					{renderIssues(status.issues, statusIndex)}
+				</StatusList>
+			))
+		);
+	};
+
 	const columns = statuses ? statuses.length + 1 : 3;
 	return (
 		<div className="container px-5 py-24 mx-auto">
-			<div className="flex flex-wrap m-4 md:mb-4">
-				{!statuses ? (
-					<StatusList columns={columns} title="TODO" />
-				) : (
-					statuses.map((status, statusIndex) => (
-						<StatusList
-							key={status.id}
-							columns={columns}
-							title={status.title}
-							onDragEnter={
-								dragging && !status.issues.length ? (
-									(e) => handleDragEnter(e, { statusIndex, issueIndex: 0 })
-								) : null
-							}
-						>
-							{status.issues ? (
-								status.issues.map((issue, issueIndex) => (
-									<div>
-										<IssueCard
-											key={issue.id}
-											issue={issue}
-											handleClick={onOpen}
-											handleDragStart={(e) => handleDragStart(e, { statusIndex, issueIndex })}
-											handleDragEnter={
-												dragging ? (e) => handleDragEnter(e, { statusIndex, issueIndex }) : null
-											}
-											invisible={dragging ? getInvisible({ statusIndex, issueIndex }) : false}
-										/>
-										<PopupWindow item={issue} onClose={onClose} show={show} />
-									</div>
-								))
-							) : null}
-						</StatusList>
-					))
-				)}
-			</div>
+			<div className="flex flex-wrap m-4 md:mb-4">{renderStatuses()}</div>
 		</div>
 	);
 };

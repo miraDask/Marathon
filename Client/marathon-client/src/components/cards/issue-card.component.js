@@ -4,9 +4,10 @@ import PriorityIcon from '../../components/icons/priority-icon.component';
 import IssueIcon from '../../components/icons/issue-icon.component';
 
 const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleClick }) => {
-	const { title, assignee, priority, type, storyPoints } = issue;
+	const { id, title, assignee, priority, type, storyPoints } = issue;
 	return (
 		<div
+			id={id}
 			draggable
 			onClick={handleClick}
 			onDragStart={handleDragStart}
@@ -17,7 +18,7 @@ const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleC
 		>
 			<div>
 				<div className="text-gray-900">{title}</div>
-				<div className="mr-2">{assignee}</div>
+				<div className="mr-2 mt-1">{assignee}</div>
 			</div>
 			<div>
 				<IssueIcon type={type} size="h-5 w-5" />

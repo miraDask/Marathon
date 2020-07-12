@@ -8,7 +8,7 @@ import NavLink from './nav-link.component';
 import AccountDropdown from '../../components/user/user-account-dropdown.component';
 
 const Navigation = () => {
-	const { isLoggedIn } = useContext(Context);
+	const { isLoggedIn, isModalOpen } = useContext(Context);
 
 	return (
 		<header className="text-gray-700 body-font w-full bg-white opacity-100">
@@ -36,7 +36,7 @@ const Navigation = () => {
 				) : null}
 				<nav className="flex lg:w-2/5 flex-wrap items-center text-base lg:justify-end md:ml-auto md:mr-5">
 					{isLoggedIn ? (
-						<AccountDropdown />
+						<AccountDropdown otherClasses={isModalOpen ? 'invisible' : ''} />
 					) : (
 						<div>
 							<NavLink to="/help" hoverColor="green-400">

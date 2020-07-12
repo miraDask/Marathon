@@ -5,10 +5,12 @@ const userEmail = localStorage.getItem('email') ? localStorage.getItem('email') 
 const lastToken = localStorage.getItem('token') ? localStorage.getItem('token') : '';
 
 const initialState = {
+	isModalOpen: false,
 	token: lastToken,
 	email: userEmail,
 	fullName: name,
 	isLoggedIn: isLogged,
+	toggleModalIsOpen: () => {},
 	toggleLoggedIn: () => {},
 	saveToken: () => {}
 };
@@ -20,6 +22,7 @@ const GlobalContextProvider = ({ children }) => {
 	const [ email, setEmail ] = useState(userEmail);
 	const [ fullName, setName ] = useState(name);
 	const [ isLoggedIn, setLoggedIn ] = useState(isLogged);
+	const [ isModalOpen, setModalOpen ] = useState(false);
 
 	const toggleLoggedIn = (email, userFullName) => {
 		if (!isLoggedIn) {
@@ -44,6 +47,10 @@ const GlobalContextProvider = ({ children }) => {
 		setToken(newToken);
 	};
 
+	const toggleModalIsOpen = () => {
+		setModalOpen(!isModalOpen);
+	};
+
 	useEffect(
 		() => {
 			setToken(token);
@@ -57,8 +64,10 @@ const GlobalContextProvider = ({ children }) => {
 				token,
 				fullName,
 				isLoggedIn,
+				isModalOpen,
 				toggleLoggedIn,
-				saveToken
+				saveToken,
+				toggleModalIsOpen
 			}}
 		>
 			{children}
