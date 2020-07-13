@@ -14,7 +14,7 @@ const HomePage = () => {
 		<MainWrapper>
 			<HomeHero id="hero" />
 			<About />
-			<div className="container px-5 py-24 mx-auto flex flex-wrap">
+			<div className="container px-5 lg:py-24 py-6 mx-auto flex flex-wrap">
 				<div id="about" className="lg:w-1/2 w-full mb-10 lg:mb-0 rounded-lg overflow-hidden mr-24">
 					<img src={image} alt="feature" className="object-cover object-center h-full w-full" />
 				</div>

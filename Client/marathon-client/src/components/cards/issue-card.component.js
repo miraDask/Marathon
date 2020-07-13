@@ -14,7 +14,7 @@ const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleC
 			onDragEnter={handleDragEnter}
 			className={`${invisible
 				? 'invisible'
-				: ''} mx-auto cursor-pointer flex p-3 hover:bg-blue-300 bg-white rounded-lg shadow-xl mb-2 justify-between`}
+				: ''} mx-auto cursor-pointer flex p-3 hover:bg-blue-200 bg-white rounded-lg shadow-xl mb-2 justify-between`}
 		>
 			<div>
 				<div className="text-gray-900">{title}</div>

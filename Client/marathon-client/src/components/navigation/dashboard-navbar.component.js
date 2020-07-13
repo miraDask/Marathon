@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
@@ -9,6 +10,28 @@ const DashboardNavBar = ({ otherClasses }) => {
 	const [ boardLinkIsClicked, setBoardLinkIsClicked ] = useState(false);
 	const [ teamLinkIsClicked, setTeamLinkIsClicked ] = useState(false);
 	const [ backlogLinkIsClicked, setBacklogLinkIsClicked ] = useState(false);
+	const { pathname } = useLocation();
+
+	useEffect(
+		() => {
+			const splittedPath = pathname.split('/');
+			const pageName = splittedPath[splittedPath.length - 1];
+			switch (pageName) {
+				case 'board':
+					setBoardLinkIsClicked(true);
+					break;
+				case 'team':
+					setTeamLinkIsClicked(true);
+					break;
+				case 'backlog':
+					setBacklogLinkIsClicked(true);
+					break;
+				default:
+					return null;
+			}
+		},
+		[ pathname ]
+	);
 
 	const handleBoardLinkClick = () => {
 		setBoardLinkIsClicked(true);
@@ -32,9 +55,14 @@ const DashboardNavBar = ({ otherClasses }) => {
 		<div className={`${otherClasses} bg-gray-100 text-center h-10 border-b-2 border-t-1`}>
 			<div className=" mx-auto px-10">
 				<ul className="list-reset flex flex-row text-center">
-					<DashboardNavItem type="inactive" to="/user/dashboard">
-						<p>{currentProject ? currentProject.name : 'Choose Project'}</p>
-					</DashboardNavItem>
+					{currentProject ? (
+						<li className="mr-3 flex-1 text-center">currentProject.name</li>
+					) : (
+						<DashboardNavItem type="inactive" to="/user/projects">
+							'Open Project
+						</DashboardNavItem>
+					)}
+
 					<DashboardNavItem
 						handleClick={handleBoardLinkClick}
 						type={boardLinkIsClicked ? 'active' : 'inactive'}

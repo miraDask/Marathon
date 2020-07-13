@@ -4,7 +4,7 @@ import NavLink from '../../components/navigation/nav-link.component';
 import FormButton from '../../components/forms/form-button.component';
 const HomeHero = () => {
 	return (
-		<div className="container mx-auto flex py-20 md:flex-row flex-col items-center px-16 ">
+		<div className="container mx-auto flex lg:py-20 py-10 md:flex-row flex-col items-center px-16 ">
 			<div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center">
 				<h1 className="title-font sm:text-4xl text-5xl mb-4 font-medium text-gray-900">
 					Marathon
@@ -16,7 +16,7 @@ const HomeHero = () => {
 				</p>
 				<div className="flex items-center flex-wrap">
 					<NavLink to="/signup">
-						<FormButton inverted>Try - It's free!</FormButton>
+						<FormButton>Try - It's free!</FormButton>
 					</NavLink>
 				</div>
 			</div>
