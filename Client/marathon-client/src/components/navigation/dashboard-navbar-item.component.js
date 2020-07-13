@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const DashboardNavItem = ({ type, children, to }) => {
+const DashboardNavItem = ({ type, children, to, handleClick }) => {
 	const otherClasses = {
 		active: {
 			a: 'text-orange-500',
@@ -18,6 +18,7 @@ const DashboardNavItem = ({ type, children, to }) => {
 		<li className="mr-3 flex-1 text-center">
 			<Link
 				to={to}
+				onClick={handleClick}
 				className={`block py-1 pl-1 align-middle no-underline
                                    ${otherClasses[type].a}`}
 			>
