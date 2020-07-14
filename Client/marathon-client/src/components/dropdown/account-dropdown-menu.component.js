@@ -10,13 +10,14 @@ import { ProjectsContext } from '../../providers/projects-context.provider';
 const AccountDropdownMenu = () => {
 	const history = useHistory();
 	const { toggleLoggedIn, token, email } = useContext(Context);
-	const { toggleHasProjects } = useContext(ProjectsContext);
+	const { removeHasProjects, deleteProjects } = useContext(ProjectsContext);
 
 	const handleSignOut = async (e) => {
 		e.preventDefault();
 		await logoutUser(token);
 		toggleLoggedIn();
-		toggleHasProjects();
+		removeHasProjects();
+		deleteProjects();
 		history.push('/');
 	};
 

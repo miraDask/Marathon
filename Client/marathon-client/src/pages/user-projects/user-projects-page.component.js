@@ -12,7 +12,7 @@ import Spinner from '../../components/spinner/spinner.component';
 const UserProjectsPage = () => {
 	const history = useHistory();
 	const { token, toggleLoggedIn } = useContext(Context);
-	const { saveProjects, hasProjects, projects } = useContext(ProjectsContext);
+	const { saveProjects, hasProjects, projects, saveHasProjects } = useContext(ProjectsContext);
 	const [ isLoading, setLoading ] = useState(true);
 
 	useEffect(
@@ -26,8 +26,9 @@ const UserProjectsPage = () => {
 
 				if (projectsAll.length > 0) {
 					saveProjects(projectsAll);
+					saveHasProjects();
 				}
-				//setLoading(false);
+				setLoading(false);
 			};
 
 			if (!projects) {

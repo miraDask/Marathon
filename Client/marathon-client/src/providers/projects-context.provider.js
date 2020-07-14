@@ -9,9 +9,11 @@ const initialState = {
 	currentProject: currProject,
 	saveCurrentProject: () => {},
 	saveProjects: () => {},
+	deleteProjects: () => {},
 	deleteFromProjects: () => {},
 	updateProjects: () => {},
-	toggleHasProjects: () => {}
+	saveHasProjects: () => {},
+	removeHasProjects: () => {}
 };
 
 export const ProjectsContext = createContext(initialState);
@@ -27,6 +29,11 @@ const ProjectsContextProvider = ({ children }) => {
 		setProjects(projects);
 		localStorage.setItem('projects', JSON.stringify(projects));
 	};
+
+	const deleteProjects = () => {
+		localStorage.removeItem('projects');
+	};
+
 	const deleteFromProjects = (id) => {
 		const updatedProjects = projects.filter((x) => x.id !== +id);
 		setProjects(updatedProjects);
@@ -34,21 +41,27 @@ const ProjectsContextProvider = ({ children }) => {
 	};
 
 	const updateProjects = ({ name, key }, id) => {
-		let currantProject = projects.filter((x) => x.id === +id)[0];
-		currantProject = !currentProject ? { id, name, key } : { ...currantProject, name, key };
-		const filteredProjects = projects.filter((x) => x.id !== +id);
-		const updatedProjects = [ ...filteredProjects, currantProject ];
+		let updatedProjects = [];
+		const newProject = { id, name, key };
+		if (!projects) {
+			updatedProjects = [ newProject ];
+		} else {
+			const filteredProjects = projects.filter((x) => x.id !== +id);
+			updatedProjects = [ ...filteredProjects, newProject ];
+		}
+
 		setProjects(updatedProjects);
 		localStorage.setItem('projects', JSON.stringify(updatedProjects));
 	};
 
-	const toggleHasProjects = () => {
-		if (!hasProjects) {
-			localStorage.setItem('hasProjects', 'true');
-		} else {
-			localStorage.removeItem('hasProjects');
-		}
-		setHasProjects(!hasProjects);
+	const saveHasProjects = () => {
+		localStorage.setItem('hasProjects', 'true');
+		setHasProjects(true);
+	};
+
+	const removeHasProjects = () => {
+		localStorage.removeItem('hasProjects');
+		setHasProjects(false);
 	};
 
 	return (
@@ -60,8 +73,10 @@ const ProjectsContextProvider = ({ children }) => {
 				saveCurrentProject,
 				saveProjects,
 				updateProjects,
-				toggleHasProjects,
-				deleteFromProjects
+				removeHasProjects,
+				saveHasProjects,
+				deleteFromProjects,
+				deleteProjects
 			}}
 		>
 			{children}

@@ -63,7 +63,7 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 		if (result.token) {
 			toggleLoggedIn(email, fullName);
 			saveToken(result.token);
-			history.push('/user/dashboard');
+			history.push('/user/projects');
 		} else {
 			const errorsObject = getServerErrorsObject(result);
 			setErrors({ ...errors, ...errorsObject });

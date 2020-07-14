@@ -18,7 +18,7 @@ const initialUser = {
 const SignInForm = () => {
 	const history = useHistory();
 	const { toggleLoggedIn, saveToken } = useContext(Context);
-	const { toggleHasProjects } = useContext(ProjectsContext);
+	const { saveHasProjects } = useContext(ProjectsContext);
 
 	const [ user, setUser ] = useState(initialUser);
 	const [ errors, setErrors ] = useState({ username: '', password: '' });
@@ -45,10 +45,10 @@ const SignInForm = () => {
 			setErrors(null);
 
 			if (result.hasProjects) {
-				toggleHasProjects();
+				saveHasProjects();
 			}
 
-			history.push('/user/dashboard');
+			history.push('/user/projects');
 		} else {
 			setErrors({ ...errors, password: 'Invalid username or password' });
 		}

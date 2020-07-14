@@ -1,8 +1,5 @@
+import { fetcher, getHeaders } from './common';
 const API_URL = 'https://localhost:44391/api/projects';
-const headers = {
-	Accept: 'application/json',
-	'Content-Type': 'application/json'
-};
 
 export const getProjects = async (token) => {
 	const headers = getHeaders(token);
@@ -65,19 +62,4 @@ export const deleteProject = async (token, id) => {
 		console.log(error);
 		return error;
 	}
-};
-
-const fetcher = async (url, method, headers, data = null) => {
-	return fetch(url, {
-		method,
-		headers,
-		body: data ? JSON.stringify(data) : null
-	});
-};
-
-const getHeaders = (token) => {
-	return {
-		...headers,
-		authorization: `Bearer ${token}`
-	};
 };

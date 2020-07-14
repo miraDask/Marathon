@@ -1,6 +1,5 @@
 export const mockStatuses = [
 	{
-		id: 1,
 		title: 'TO DO',
 		issues: [
 			{
@@ -14,8 +13,7 @@ export const mockStatuses = [
 		]
 	},
 	{
-		id: 2,
-		title: 'IN PROGRESS',
+		title: 'DEVELOPMENT',
 		issues: [
 			{
 				title: 'Test in progress',
@@ -28,7 +26,11 @@ export const mockStatuses = [
 		]
 	},
 	{
-		id: 3,
+		title: 'TESTING',
+		issues: []
+	},
+
+	{
 		title: 'DONE',
 		issues: [
 			{

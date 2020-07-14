@@ -7,7 +7,7 @@ import IssueDetailsModal from '../modals/issue-details-modal.component';
 import { mockStatuses } from '../../data/mock-data';
 
 const Board = ({ data = mockStatuses }) => {
-	const [ statuses, setStatuses ] = useState(data);
+	const [ statusesList, setStatuses ] = useState(data);
 	const [ openedIssue, setOpenedIssue ] = useState(null);
 	const [ dragging, setDragging ] = useState(false);
 	const [ show, setShow ] = useState(false);
@@ -63,7 +63,7 @@ const Board = ({ data = mockStatuses }) => {
 		const issueId = currentClicked.id
 			? currentClicked.id
 			: currentClicked.parentNode.id ? currentClicked.parentNode.id : currentClicked.parentNode.parentNode.id;
-		const statusList = statuses.filter((s) => s.issues.some((i) => i.id === +issueId))[0];
+		const statusList = statusesList.filter((s) => s.issues.some((i) => i.id === +issueId))[0];
 		const clickedIssue = statusList.issues.filter((i) => i.id === +issueId)[0];
 		setOpenedIssue(clickedIssue);
 		setShow(true);
@@ -91,13 +91,12 @@ const Board = ({ data = mockStatuses }) => {
 	};
 
 	const renderStatuses = () => {
-		return !statuses ? (
-			<StatusList columns={columns} title="TODO" />
+		return !statusesList ? (
+			<StatusList title="TODO" />
 		) : (
-			statuses.map((status, statusIndex) => (
+			statusesList.map((status, statusIndex) => (
 				<StatusList
 					key={status.id}
-					columns={columns}
 					title={status.title}
 					onDragEnter={
 						dragging && !status.issues.length ? (
@@ -111,7 +110,6 @@ const Board = ({ data = mockStatuses }) => {
 		);
 	};
 
-	const columns = statuses ? statuses.length + 1 : 3;
 	return (
 		<div className="container px-5 py-4 mx-auto">
 			<div className="flex flex-wrap m-4 md:mb-4">{renderStatuses()}</div>

@@ -119,7 +119,7 @@ const ProjectCard = ({ title, subTitle, data }) => {
 				)}
 
 				{!isEditClicked ? (
-					<p className="mt-1">subTitle</p>
+					<p className="mt-1">{project.key}</p>
 				) : (
 					<p className="mt-1">
 						<FormInput

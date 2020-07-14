@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { ProjectsContext } from '../../providers/projects-context.provider';
 
 import MainWrapper from '../../components/main/maim-wrapper.component';
 import FormButton from '../../components/buttons/form-button.component';
@@ -7,6 +8,18 @@ import ProjectCard from '../../components/cards/project-card.component';
 import PageTopicContainer from '../../components/containers/page-topic-container.component';
 
 const ProjectsAll = ({ projects }) => {
+	const { removeHasProjects } = useContext(ProjectsContext);
+
+	useEffect(
+		() => {
+			if (projects.length < 1) {
+				removeHasProjects();
+			}
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[ projects ]
+	);
+
 	return (
 		<MainWrapper otherClasses="pb-24">
 			<div className="container px-5 py-8 mx-auto">
