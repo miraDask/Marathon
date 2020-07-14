@@ -96,7 +96,7 @@ const CreateProjectForm = () => {
 					that is descriptive and easy to type.
 				</InfoMessageContainer>
 			)}
-			<FormButton>SUBMIT</FormButton>
+			<FormButton addClass="mt-4">SUBMIT</FormButton>
 		</form>
 	);
 };

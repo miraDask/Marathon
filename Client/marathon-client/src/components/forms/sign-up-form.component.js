@@ -141,7 +141,7 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 			/>
 			{errors.confirmPassword ? <ErrorMessageContainer>{errors.confirmPassword}</ErrorMessageContainer> : null}
 
-			<FormButton>SUBMIT</FormButton>
+			<FormButton addClass="mt-4">SUBMIT</FormButton>
 		</form>
 	);
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FormButton = ({ children, textSize, addClass, onClick, ...otherProps }) => (
+const FormButton = ({ children, disabled, textSize, addClass, onClick, ...otherProps }) => (
 	<button
 		type="submit"
 		onClick={onClick}
@@ -8,7 +8,9 @@ const FormButton = ({ children, textSize, addClass, onClick, ...otherProps }) =>
 		className={`text-white
  bg-green-400
  border-0
- py-2 px-8 focus:outline-none hover:bg-green-700 rounded ${!textSize ? 'text-lg' : textSize} mt-4 ${addClass}`}
+ py-2 px-8 focus:outline-none ${disabled ? 'cursor-not-allowed' : 'hover:bg-green-700'} rounded ${!textSize
+			? 'text-lg'
+			: textSize} ${addClass}`}
 	>
 		{children}
 	</button>

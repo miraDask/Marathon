@@ -70,7 +70,7 @@ const SignInForm = () => {
 				handleChange={handleChange}
 			/>
 			{errors.password ? <ErrorMessageContainer>{errors.password}</ErrorMessageContainer> : null}
-			<FormButton>SUBMIT</FormButton>
+			<FormButton addClass="mt-4">SUBMIT</FormButton>
 		</form>
 	);
 };
