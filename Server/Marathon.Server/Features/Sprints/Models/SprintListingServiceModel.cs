@@ -1,9 +1,6 @@
 ﻿namespace Marathon.Server.Features.Sprints.Models
 {
     using System;
-    using System.Collections.Generic;
-
-    using Marathon.Server.Features.Status.Models;
 
     public class SprintListingServiceModel
     {

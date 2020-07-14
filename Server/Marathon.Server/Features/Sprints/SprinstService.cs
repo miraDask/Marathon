@@ -10,7 +10,6 @@
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Features.Sprints.Models;
-    using Marathon.Server.Features.Status.Models;
     using Microsoft.EntityFrameworkCore;
 
     using static Marathon.Server.Features.Common.Constants.Errors;
@@ -117,13 +116,8 @@
                         Id = x.Id,
                         Title = x.Title,
                         StoryPoints = x.StoryPoints,
-                        Status = new StatusListingModel
-                        {
-                            Id = x.Status.Id,
-                            Name = x.Status.Name,
-                        },
+                        Status = x.Status,
                     }),
-                    Statuses = x.SprintsStatuses.Select(x => x.StatusId),
                     Estimate = x.Issues.Sum(x => x.StoryPoints),
                 })
                 .FirstOrDefaultAsync();
@@ -145,7 +139,7 @@
 
         public async Task<ResultModel<bool>> AssignIssueToSprintAsync(int projectId, int sprintId, int issueId)
         {
-            var sprint = await this.GetSprintWithStatusesAsync(sprintId, projectId);
+            var sprint = await this.GetByIdAndProjectIdAsync(sprintId, projectId);
 
             if (sprint == null)
             {
@@ -168,61 +162,6 @@
             issue.SprintId = sprintId;
 
             this.dbContext.Update(issue);
-            await this.dbContext.SaveChangesAsync();
-
-            var statusConnectionExists = sprint.Statuses.Any(x => x == issue.StatusId);
-
-            if (!statusConnectionExists)
-            {
-                await this.AddStatusAsync(sprintId, issue.StatusId);
-            }
-
-            return new ResultModel<bool>
-            {
-                Success = true,
-            };
-        }
-
-        public async Task<ResultModel<bool>> AddStatusAsync(int sprintId, int statusId)
-        {
-            var sprintStatus = new SprintStatus
-            {
-                SprintId = sprintId,
-                StatusId = statusId,
-            };
-
-            try
-            {
-                await this.dbContext.AddAsync(sprintStatus);
-                await this.dbContext.SaveChangesAsync();
-
-                return new ResultModel<bool>
-                {
-                    Success = true,
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ResultModel<bool>
-                {
-                    Errors = new string[] { ex.Message },
-                };
-            }
-        }
-
-        public async Task<ResultModel<bool>> RemoveStatusAsync(int sprintId, int statusId)
-        {
-            var sprintStatus = await this.dbContext.SprintsStatuses.FirstOrDefaultAsync(x => x.SprintId == sprintId && x.StatusId == statusId);
-
-            if (sprintStatus == null)
-            {
-                return new ResultModel<bool>
-                {
-                    Errors = new string[] { InvalidSprintId, InvalidStatusId },
-                };
-            }
-
-            this.dbContext.Remove(sprintStatus);
             await this.dbContext.SaveChangesAsync();
 
             return new ResultModel<bool>
@@ -285,16 +224,5 @@
          => await this.dbContext
                       .Sprints
                       .FirstOrDefaultAsync(x => x.Id == sprintId && x.ProjectId == projectId);
-
-        private async Task<SprintWithStatusesServiceModel> GetSprintWithStatusesAsync(int sprintId, int projectId)
-         => await this.dbContext
-                      .Sprints
-                      .Where(x => x.Id == sprintId && x.ProjectId == projectId)
-                      .Select(x => new SprintWithStatusesServiceModel
-                      {
-                          Id = x.Id,
-                          Statuses = x.SprintsStatuses.Select(x => x.StatusId),
-                      })
-                      .FirstOrDefaultAsync();
     }
 }

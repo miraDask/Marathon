@@ -2,10 +2,8 @@
 {
     public enum Type
     {
-        Theme = 0,
-        Epic = 1,
-        Story = 2,
-        Task = 3,
-        Bug = 4,
+        Story = 0,
+        Task = 1,
+        Bug = 2,
     }
 }

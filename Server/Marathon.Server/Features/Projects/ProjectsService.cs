@@ -11,8 +11,6 @@
     using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Projects.Models;
-    using Marathon.Server.Features.Status.Models;
-    using Marathon.Server.Features.Statuses;
     using Marathon.Server.Features.Teams.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -23,18 +21,15 @@
     {
         private readonly MarathonDbContext dbContext;
         private readonly IIdentityService identityService;
-        private readonly IStatusesService statusService;
         private readonly UserManager<User> userManager;
 
         public ProjectsService(
             MarathonDbContext dbContext,
             IIdentityService identityService,
-            IStatusesService statusService,
             UserManager<User> userManager)
         {
             this.dbContext = dbContext;
             this.identityService = identityService;
-            this.statusService = statusService;
             this.userManager = userManager;
         }
 
@@ -51,8 +46,6 @@
             this.dbContext.Projects.Add(project);
 
             await this.dbContext.SaveChangesAsync();
-
-            await this.statusService.CreateInitialToDoStatusAsync(project.Id);
 
             return project.Id;
         }
@@ -145,11 +138,6 @@
                         Id = x.Id,
                         Title = x.Title,
                         ImageUrl = x.ImageUrl,
-                    }),
-                    Statuses = x.Statuses.Select(x => new StatusListingModel
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
                     }),
                 })
                 .FirstOrDefaultAsync();

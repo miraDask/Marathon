@@ -1,15 +1,11 @@
 ﻿namespace Marathon.Server.Features.Sprints
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Marathon.Server.Features.Common;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Sprints.Models;
-    using Marathon.Server.Features.Statuses;
-    using Marathon.Server.Features.Statuses.Models;
     using Marathon.Server.Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
 
@@ -18,12 +14,10 @@
     public class SprintsController : ApiController
     {
         private readonly ISprintsService sprintService;
-        private readonly IStatusesService statusesService;
 
-        public SprintsController(ISprintsService sprintService, IStatusesService statusesService)
+        public SprintsController(ISprintsService sprintService)
         {
             this.sprintService = sprintService;
-            this.statusesService = statusesService;
         }
 
         /// <summary>
@@ -209,86 +203,6 @@
             }
 
             return this.Ok();
-        }
-
-        /// <summary>
-        /// Add current Status to current Sprint.
-        /// </summary>
-        /// <param name="projectId"></param>
-        /// <param name="sprintId"></param>
-        /// <param name="input"></param>
-        /// <response code="200"> Successfully added status to sprint.</response>
-        /// <response code="400"> Bad Reaquest.</response>
-        /// <response code="401"> Unauthorized request.</response>
-        [HttpPost]
-        [Route(Sprints.AddStatus)]
-        [HasProjectAdminAuthorization]
-        public async Task<ActionResult<int>> AddStatusToSprint(int projectId, int sprintId, [FromBody]CreateStatusRequestModel input)
-        {
-            var statusId = await this.statusesService.CreateAsync(input.Name, projectId);
-
-            var addStatusRequest = await this.sprintService.AddStatusAsync(sprintId, statusId);
-
-            if (!addStatusRequest.Success)
-            {
-                return this.BadRequest(new ErrorsResponseModel
-                {
-                    Errors = addStatusRequest.Errors,
-                });
-            }
-
-            return this.Ok(statusId);
-        }
-
-        /// <summary>
-        /// Remove current Status from current Sprint.
-        /// </summary>
-        /// <param name="sprintId"></param>
-        /// <param name="statusId"></param>
-        /// <response code="200"> Successfully removed status from sprint.</response>
-        /// <response code="400"> Bad Reaquest.</response>
-        /// <response code="401"> Unauthorized request.</response>
-        [HttpDelete]
-        [Route(Sprints.RemoveStatus)]
-        [HasProjectAdminAuthorization]
-        public async Task<ActionResult> RemoveStatusFromSprint(int sprintId, int statusId)
-        {
-            var removeStatusRequest = await this.sprintService.RemoveStatusAsync(sprintId, statusId);
-
-            if (!removeStatusRequest.Success)
-            {
-                return this.BadRequest(new ErrorsResponseModel
-                {
-                    Errors = removeStatusRequest.Errors,
-                });
-            }
-
-            return this.Ok();
-        }
-
-        /// <summary>
-        /// Get all statuses for current sprint.
-        /// </summary>
-        /// <param name="sprintId"></param>
-        /// <response code="200">Returns all statuses for current sprint.</response>
-        /// <response code="400"> Bad Reaquest.</response>
-        /// <response code="401"> Unauthorized request.</response>
-        [HttpGet]
-        [Route(Sprints.GetAllStatuses)]
-        [HasProjectTeamAuthorization]
-        public async Task<ActionResult<AllStatusesResponseModel>> GetAllStatuses(int sprintId)
-        {
-            var getAllReaquest = await this.statusesService.GetAllForSprintAsync(sprintId);
-
-            if (!getAllReaquest.Success)
-            {
-                return this.BadRequest(new ErrorsResponseModel
-                {
-                    Errors = getAllReaquest.Errors,
-                });
-            }
-
-            return this.Ok(getAllReaquest.Result);
         }
     }
 }

@@ -148,18 +148,18 @@
         /// <summary>
         /// Change status of current issue.
         /// </summary>
-        /// <param name="statusId"></param>
         /// <param name="issueId"></param>
         /// <param name="projectId"></param>
+        /// <param name="model"></param>
         /// <response code="200">Successfully updated.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPatch]
         [Route(Issues.ChangeStatus)]
         [HasProjectTeamAuthorizationAttribute]
-        public async Task<ActionResult> ChangeStatus(int issueId, int statusId, int projectId)
+        public async Task<ActionResult> ChangeStatus(int issueId, int projectId, [FromBody] ChangeStatusRequestModel model)
         {
-            var updateRequest = await this.issuesService.ChangeStatusAsync(issueId, statusId, projectId);
+            var updateRequest = await this.issuesService.ChangeStatusAsync(issueId, model.Status, projectId);
 
             if (!updateRequest.Success)
             {

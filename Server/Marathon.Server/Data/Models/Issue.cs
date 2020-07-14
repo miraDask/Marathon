@@ -31,6 +31,8 @@
 
         public Type Type { get; set; }
 
+        public Status Status { get; set; }
+
         public string ReporterId { get; set; }
 
         public virtual User Reporter { get; set; }
@@ -38,10 +40,6 @@
         public string AssigneeId { get; set; }
 
         public User Assignee { get; set; }
-
-        public int StatusId { get; set; }
-
-        public virtual Status Status { get; set; }
 
         public int? SprintId { get; set; }
 

@@ -6,13 +6,13 @@
     using System.Threading.Tasks;
 
     using Marathon.Server.Data;
+    using Marathon.Server.Data.Enumerations;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Cache;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Features.Sprints.Models;
-    using Marathon.Server.Features.Status.Models;
     using Microsoft.EntityFrameworkCore;
 
     using static Marathon.Server.Features.Common.Constants.Errors;
@@ -30,8 +30,6 @@
 
         public async Task<int> CreateAsync(int projectId, string userId, CreateIssueRequestModel model)
         {
-            var statusId = model.StatusId == null ? int.Parse(await this.cacheService.GetAsync(projectId.ToString())) : (int)model.StatusId;
-
             var issue = new Issue
             {
                 Title = model.Title,
@@ -41,7 +39,7 @@
                 Type = model.Type,
                 ReporterId = userId,
                 AssigneeId = model.IsAssignedToCreator == true ? userId : null,
-                StatusId = statusId,
+                Status = model.Status,
                 SprintId = model.SprintId,
                 ParentIssueId = model.ParentIssueId,
                 ProjectId = projectId,
@@ -87,11 +85,7 @@
                 {
                     Id = x.Id,
                     Title = x.Title,
-                    Status = new StatusListingModel
-                    {
-                        Id = x.Status.Id,
-                        Name = x.Status.Name,
-                    },
+                    Status = x.Status,
                     StoryPoints = x.StoryPoints,
                 })
                 .ToListAsync();
@@ -125,11 +119,7 @@
                     StoryPoins = x.StoryPoints,
                     Priority = x.Priority.ToString(),
                     Type = x.Type.ToString(),
-                    Status = new StatusListingModel
-                    {
-                        Id = x.Status.Id,
-                        Name = x.Status.Name,
-                    },
+                    Status = x.Status,
                     Sprint = new SprintListingServiceModel
                     {
                         Id = x.Sprint.Id,
@@ -139,11 +129,7 @@
                     {
                         Id = x.ParentIssue.Id,
                         Title = x.ParentIssue.Title,
-                        Status = new StatusListingModel
-                        {
-                            Id = x.ParentIssue.Status.Id,
-                            Name = x.ParentIssue.Status.Name,
-                        },
+                        Status = x.Status,
                     },
                     Reporter = new UserListingServerModel
                     {
@@ -162,11 +148,7 @@
                         Id = x.Id,
                         Title = x.Title,
                         StoryPoints = x.StoryPoints,
-                        Status = new StatusListingModel
-                        {
-                            Id = x.Status.Id,
-                            Name = x.Status.Name,
-                        },
+                        Status = x.Status,
                     }),
                 })
                 .FirstOrDefaultAsync();
@@ -203,7 +185,7 @@
             issue.StoryPoints = model.StoryPoints;
             issue.Priority = model.Priority;
             issue.Type = model.Type;
-            issue.StatusId = model.StatusId;
+            issue.Status = model.Status;
             issue.AssigneeId = model.AssigneeId;
             issue.SprintId = model.SprintId;
             issue.ParentIssueId = model.ParentIssueId;
@@ -217,7 +199,7 @@
             };
         }
 
-        public async Task<ResultModel<bool>> ChangeStatusAsync(int issueId, int statusId, int projectId)
+        public async Task<ResultModel<bool>> ChangeStatusAsync(int issueId, Status status, int projectId)
         {
             var issue = await this.GetByIdAndProjectIdAsync(issueId, projectId);
 
@@ -229,7 +211,7 @@
                 };
             }
 
-            issue.StatusId = statusId;
+            issue.Status = status;
             issue.ModifiedOn = DateTime.UtcNow;
 
             await this.dbContext.SaveChangesAsync();

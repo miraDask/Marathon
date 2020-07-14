@@ -1,6 +1,6 @@
 ﻿namespace Marathon.Server.Features.Issues.Models
 {
-    using Marathon.Server.Features.Status.Models;
+    using Marathon.Server.Data.Enumerations;
 
     public class IssueListingServiceModel
     {
@@ -10,6 +10,6 @@
 
         public int? StoryPoints { get; set; }
 
-        public StatusListingModel Status { get; set; }
+        public Status Status { get; set; }
     }
 }

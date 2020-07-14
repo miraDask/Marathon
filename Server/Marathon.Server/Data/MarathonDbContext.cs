@@ -24,8 +24,6 @@
         {
         }
 
-        public DbSet<Status> Statuses { get; set; }
-
         public DbSet<Issue> Issues { get; set; }
 
         public DbSet<Sprint> Sprints { get; set; }
@@ -37,8 +35,6 @@
         public DbSet<TeamUser> TeamsUsers { get; set; }
 
         public DbSet<ProjectAdmin> ProjectsAdmins { get; set; }
-
-        public DbSet<SprintStatus> SprintsStatuses { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 

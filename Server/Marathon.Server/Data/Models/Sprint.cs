@@ -13,7 +13,6 @@
         public Sprint()
         {
             this.Issues = new HashSet<Issue>();
-            this.SprintsStatuses = new HashSet<SprintStatus>();
         }
 
         [Required]
@@ -35,7 +34,5 @@
         public DateTime EndDate { get; set; }
 
         public virtual ICollection<Issue> Issues { get; set; }
-
-        public ICollection<SprintStatus> SprintsStatuses { get; set; }
     }
 }

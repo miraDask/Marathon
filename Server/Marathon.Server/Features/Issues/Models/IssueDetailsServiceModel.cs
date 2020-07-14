@@ -2,9 +2,9 @@
 {
     using System.Collections.Generic;
 
+    using Marathon.Server.Data.Enumerations;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Sprints.Models;
-    using Marathon.Server.Features.Status.Models;
 
     public class IssueDetailsServiceModel
     {
@@ -26,7 +26,7 @@
 
         public UserListingServerModel Assignee { get; set; }
 
-        public StatusListingModel Status { get; set; }
+        public Status Status { get; set; }
 
         public SprintListingServiceModel Sprint { get; set; }
 

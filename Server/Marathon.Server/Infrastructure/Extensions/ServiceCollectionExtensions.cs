@@ -14,7 +14,6 @@
     using Marathon.Server.Features.Issues;
     using Marathon.Server.Features.Projects;
     using Marathon.Server.Features.Sprints;
-    using Marathon.Server.Features.Statuses;
     using Marathon.Server.Features.Teams;
     using Marathon.Server.Features.Tokens;
     using Marathon.Server.Infrastructure.Filters;
@@ -127,7 +126,6 @@
                 .AddTransient<ITeamsService, TeamsService>()
                 .AddTransient<IIssuesService, IssuesService>()
                 .AddTransient<ISprintsService, SprinstService>()
-                .AddTransient<IStatusesService, StatusesService>()
                 .AddTransient<ICacheService, CacheService>()
                 .AddTransient<ITokensService, TokensService>()
                 .AddTransient<OptionRequestsMiddleware>()
