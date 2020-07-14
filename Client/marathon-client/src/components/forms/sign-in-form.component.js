@@ -7,8 +7,8 @@ import { loginUser } from '../../services/users.service';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/auth';
 
 import ErrorMessageContainer from '../../components/messages/form-input-error-message.component';
-import FormInput from './form-input.component';
-import FormButton from './form-button.component';
+import FormInput from '../inputs/form-input.component';
+import FormButton from '../buttons/form-button.component';
 
 const initialUser = {
 	email: '',

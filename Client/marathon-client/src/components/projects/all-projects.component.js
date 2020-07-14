@@ -1,7 +1,7 @@
 import React from 'react';
 
 import MainWrapper from '../../components/main/maim-wrapper.component';
-import FormButton from '../../components/forms/form-button.component';
+import FormButton from '../../components/buttons/form-button.component';
 import NavLink from '../../components/navigation/nav-link.component';
 import ProjectCard from '../../components/cards/project-card.component';
 import PageTopicContainer from '../../components/containers/page-topic-container.component';

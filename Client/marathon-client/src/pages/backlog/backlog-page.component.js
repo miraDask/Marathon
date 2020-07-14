@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MainWrapper from '../../components/main/maim-wrapper.component';
 import PageTopicContainer from '../../components/containers/page-topic-container.component';
-import BacklogDndContainer from './backlog-dnd-container.component';
+import BacklogDndContainer from '../../components/backlog/backlog-dnd-container.component';
 import NoPlanedSprint from '../../components/sprints/no-planed-sprint.component';
 import BacklogIssueCard from '../../components/cards/backlog-issue-card.component';
 

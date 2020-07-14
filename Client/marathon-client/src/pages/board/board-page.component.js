@@ -2,7 +2,7 @@ import React from 'react';
 import MainWrapper from '../../components/main/maim-wrapper.component';
 import Board from '../../components/board/board.component';
 import PageTopicContainer from '../../components/containers/page-topic-container.component';
-import FormButton from '../../components/forms/form-button.component';
+import FormButton from '../../components/buttons/form-button.component';
 const BoardPage = () => {
 	return (
 		<MainWrapper>

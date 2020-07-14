@@ -13,7 +13,7 @@ import { ReactComponent as SaveIcon } from '../../assets/icon-check-circle.svg';
 import { ReactComponent as CancelIcon } from '../../assets/icon-x-circle.svg';
 
 import ErrorMessageContainer from '../messages/form-input-error-message.component';
-import FormInput from '../../components/forms/form-input.component';
+import FormInput from '../../components/inputs/form-input.component';
 import NavLink from '../../components/navigation/nav-link.component';
 
 const initialIsEditClicked = false;

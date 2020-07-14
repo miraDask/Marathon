@@ -2,7 +2,7 @@ import React from 'react';
 import { ReactComponent as Image } from '../../assets/watermelon-pack-illustration-02.svg';
 
 import MainWrapper from '../../components/main/maim-wrapper.component';
-import FormButton from '../../components/forms/form-button.component';
+import FormButton from '../../components/buttons/form-button.component';
 import NavLink from '../../components/navigation/nav-link.component';
 
 const NoProjects = () => {

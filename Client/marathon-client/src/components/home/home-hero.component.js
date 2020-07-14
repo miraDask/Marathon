@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactComponent as HeroImage } from '../../assets/watermelon-pack-illustration-07.svg';
 import NavLink from '../../components/navigation/nav-link.component';
-import FormButton from '../../components/forms/form-button.component';
+import FormButton from '../../components/buttons/form-button.component';
 const HomeHero = () => {
 	return (
 		<div className="container mx-auto flex lg:py-20 py-10 md:flex-row flex-col items-center px-16 ">

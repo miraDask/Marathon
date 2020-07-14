@@ -7,15 +7,18 @@ import Navigation from './components/navigation/navigation.component';
 import Footer from './components/footer/footer.component';
 import DashboardNavBar from './components/navigation/dashboard-navbar.component';
 import ProjectsContextProvider from '../src/providers/projects-context.provider';
+import IssuesContextProvider from '../src/providers/issues-context.provider';
 
-const App = (props) => {
+const App = () => {
 	const isDashboardPathActive = useLocation().pathname.includes('user/dashboard');
 	return (
 		<div>
 			<ProjectsContextProvider>
 				<Navigation />
 				{isDashboardPathActive ? <DashboardNavBar otherClasses="w-full" /> : null}
-				<Main />
+				<IssuesContextProvider>
+					<Main />
+				</IssuesContextProvider>
 				<Footer />
 			</ProjectsContextProvider>
 		</div>

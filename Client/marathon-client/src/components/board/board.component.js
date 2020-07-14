@@ -3,7 +3,7 @@ import { Context } from '../../providers/global-context.provider';
 
 import IssueCard from '../../components/cards/issue-card.component';
 import StatusList from '../../components/board/status-list.component';
-import PopupWindow from '../../components/board/issue-popup-window.component';
+import IssueDetailsModal from '../modals/issue-details-modal.component';
 import { mockStatuses } from '../../data/mock-data';
 
 const Board = ({ data = mockStatuses }) => {
@@ -85,7 +85,7 @@ const Board = ({ data = mockStatuses }) => {
 					handleDragEnter={dragging ? (e) => handleDragEnter(e, { statusIndex, issueIndex }) : null}
 					invisible={dragging ? getInvisible({ statusIndex, issueIndex }) : false}
 				/>
-				{!openedIssue ? null : <PopupWindow item={openedIssue} onClose={onClose} show={show} />}
+				{!openedIssue ? null : <IssueDetailsModal item={openedIssue} onClose={onClose} show={show} />}
 			</div>
 		));
 	};

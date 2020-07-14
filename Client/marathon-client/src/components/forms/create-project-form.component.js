@@ -11,8 +11,8 @@ import { validateKey, validateName } from '../../utils/validations/project';
 import ErrorMessageContainer from '../messages/form-input-error-message.component';
 import InfoMessageContainer from '../messages/form-input-info-message.component';
 
-import FormInput from './form-input.component';
-import FormButton from './form-button.component';
+import FormInput from '../inputs/form-input.component';
+import FormButton from '../buttons/form-button.component';
 
 const initialProject = {
 	name: '',
