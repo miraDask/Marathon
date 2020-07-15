@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
@@ -20,8 +19,8 @@ const initialIssue = {
 	type: 0,
 	priority: 0,
 	status: 0,
-	storyPoints: null,
-	sprintId: null
+	storyPoints: 0,
+	sprintId: ''
 };
 
 const CreateIssueForm = () => {
@@ -60,9 +59,9 @@ const CreateIssueForm = () => {
 
 		const result = await createIssue({ ...issue }, token, currentProject.id);
 
-		if (result.id) {
+		if (result) {
 			const newIssue = {
-				id: result.id,
+				id: result,
 				...issue
 			};
 

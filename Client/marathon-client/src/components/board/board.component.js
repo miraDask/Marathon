@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useEffect, useContext, Fragment } from 'react';
 import { Context } from '../../providers/global-context.provider';
 
 import IssueCard from '../../components/cards/issue-card.component';
@@ -77,8 +77,9 @@ const Board = ({ data = mockStatuses }) => {
 
 	const renderIssues = (issues, statusIndex) => {
 		return issues.map((issue, issueIndex) => (
-			<div key={issue.id}>
+			<Fragment>
 				<IssueCard
+					key={issue.id}
 					issue={issue}
 					handleClick={onOpen}
 					handleDragStart={(e) => handleDragStart(e, { statusIndex, issueIndex })}
@@ -86,7 +87,7 @@ const Board = ({ data = mockStatuses }) => {
 					invisible={dragging ? getInvisible({ statusIndex, issueIndex }) : false}
 				/>
 				{!openedIssue ? null : <IssueDetailsModal item={openedIssue} onClose={onClose} show={show} />}
-			</div>
+			</Fragment>
 		));
 	};
 

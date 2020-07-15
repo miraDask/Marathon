@@ -50,6 +50,23 @@ export const updateProject = async (id, data, token) => {
 	}
 };
 
+export const getProjectDetails = async (id, token) => {
+	const headers = getHeaders(token);
+
+	try {
+		const response = await fetcher(API_URL + `/${id}`, 'GET', headers);
+		try {
+			const dataToReturn = await response.json();
+			return dataToReturn;
+		} catch (error) {
+			console.log(error);
+		}
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
+
 export const deleteProject = async (token, id) => {
 	const headers = getHeaders(token);
 

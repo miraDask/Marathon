@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Context } from '../../providers/global-context.provider';
+import { ProjectsContext } from '../../providers/projects-context.provider';
 
 import logo from '../../assets/logo.png';
 import NavLink from './nav-link.component';
@@ -9,6 +10,7 @@ import AccountDropdown from '../../components/user/user-account-dropdown.compone
 
 const Navigation = () => {
 	const { isLoggedIn, isModalOpen } = useContext(Context);
+	const { currentProject } = useContext(ProjectsContext);
 
 	return (
 		<header className="text-gray-700 body-font w-full bg-white opacity-100">
@@ -23,9 +25,15 @@ const Navigation = () => {
 				</Link>
 				{isLoggedIn ? (
 					<div>
-						<NavLink to="/user/dashboard/backlog" textColor="teal-600" hoverColor="green-400">
-							Dashboard
-						</NavLink>
+						{currentProject ? (
+							<NavLink
+								to={`/user/dashboard/${currentProject.id}/board`}
+								textColor="teal-600"
+								hoverColor="green-400"
+							>
+								Dashboard
+							</NavLink>
+						) : null}
 						<NavLink to="/user/projects" textColor="teal-600" hoverColor="green-400">
 							Projects
 						</NavLink>

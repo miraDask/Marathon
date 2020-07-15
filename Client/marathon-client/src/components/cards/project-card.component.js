@@ -18,13 +18,13 @@ import NavLink from '../../components/navigation/nav-link.component';
 
 const initialIsEditClicked = false;
 
-const ProjectCard = ({ title, subTitle, data }) => {
+const ProjectCard = ({ project }) => {
 	const history = useHistory();
 	const { updateProjects, deleteFromProjects } = useContext(ProjectsContext);
 	const { token } = useContext(Context);
 	const [ isEditClicked, setIsEditClicked ] = useState(initialIsEditClicked);
 	const [ editHidden, setEditHidden ] = useState(false);
-	const [ project, setProject ] = useState({ name: title, key: subTitle });
+	const [ projectToEdit, setProjectToEdit ] = useState({ name: project.name, key: project.key });
 	const [ errors, setErrors ] = useState({ name: '', key: '' });
 
 	const handleOnBlur = (event, validationFunc, data) => {
@@ -51,9 +51,9 @@ const ProjectCard = ({ title, subTitle, data }) => {
 			return;
 		}
 
-		const { name, key } = project;
+		const { name, key } = projectToEdit;
 
-		if (title === name && subTitle === key) {
+		if (project.name === name && project.key === key) {
 			toggleButtons();
 			return;
 		}
@@ -65,7 +65,7 @@ const ProjectCard = ({ title, subTitle, data }) => {
 
 		try {
 			await updateProject(id, { name, key }, token);
-			updateProjects(project, id);
+			updateProjects(projectToEdit, id);
 			toggleButtons();
 		} catch (error) {
 			console.log(error);
@@ -74,7 +74,7 @@ const ProjectCard = ({ title, subTitle, data }) => {
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		setProject({ ...project, [name]: value });
+		setProjectToEdit({ ...projectToEdit, [name]: value });
 		setErrors({ ...errors, [name]: '' });
 	};
 
@@ -89,18 +89,16 @@ const ProjectCard = ({ title, subTitle, data }) => {
 		}
 	};
 
-	const handleLinking = () => {};
-
 	return (
 		<div className="mx-auto flex p-6 bg-white rounded-lg shadow-xl mb-3 justify-between">
 			<div className="pt-1">
 				{!isEditClicked ? (
 					<NavLink
-						handleClick={handleLinking}
+						to={`/user/dashboard/${project.id}/backlog`}
 						hoverColor="green-400"
 						otherClasses="cursor-pointer text-xl text-gray-900 leading-tight"
 					>
-						{title}
+						{project.name}
 					</NavLink>
 				) : (
 					<div>
@@ -109,9 +107,9 @@ const ProjectCard = ({ title, subTitle, data }) => {
 							className="focus:outline-none text-xl text-black leading-tight"
 							type="text"
 							name="name"
-							value={project.name}
+							value={projectToEdit.name}
 							onChange={handleChange}
-							handleOnBlur={(event) => handleOnBlur(event, validateName, { name: project.name })}
+							handleOnBlur={(event) => handleOnBlur(event, validateName, { name: projectToEdit.name })}
 							placeholder="Project Name"
 						/>
 						{errors.name ? <ErrorMessageContainer>{errors.name}</ErrorMessageContainer> : null}
@@ -119,7 +117,7 @@ const ProjectCard = ({ title, subTitle, data }) => {
 				)}
 
 				{!isEditClicked ? (
-					<p className="mt-1">{project.key}</p>
+					<p className="mt-1">{projectToEdit.key}</p>
 				) : (
 					<p className="mt-1">
 						<FormInput
@@ -127,9 +125,9 @@ const ProjectCard = ({ title, subTitle, data }) => {
 							type="text"
 							name="key"
 							placeholder="Key"
-							value={project.key}
+							value={projectToEdit.key}
 							handleChange={handleChange}
-							handleOnBlur={(event) => handleOnBlur(event, validateKey, { key: project.key })}
+							handleOnBlur={(event) => handleOnBlur(event, validateKey, { key: projectToEdit.key })}
 						/>
 						{errors.key ? <ErrorMessageContainer>{errors.key}</ErrorMessageContainer> : null}
 					</p>
@@ -142,10 +140,10 @@ const ProjectCard = ({ title, subTitle, data }) => {
 						cursor-pointer" onClick={handleEditClick} />
 					</span>
 					<span className="inline-block mr-2">
-						<SaveIcon id={data} className="mx-1 cursor-pointer" onClick={handleUpdate} />
+						<SaveIcon id={project.id} className="mx-1 cursor-pointer" onClick={handleUpdate} />
 					</span>
 					<span className="inline-block mr-10">
-						<DeleteIcon id={data} className="mx-1 cursor-pointer" onClick={handleDeleteClick} />
+						<DeleteIcon id={project.id} className="mx-1 cursor-pointer" onClick={handleDeleteClick} />
 					</span>
 				</div>
 			) : (

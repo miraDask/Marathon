@@ -1,5 +1,6 @@
+/* eslint-disable default-case */
 import React, { useContext, useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
@@ -11,7 +12,8 @@ const DashboardNavBar = ({ otherClasses }) => {
 	const [ teamLinkIsClicked, setTeamLinkIsClicked ] = useState(false);
 	const [ backlogLinkIsClicked, setBacklogLinkIsClicked ] = useState(false);
 	const { pathname } = useLocation();
-
+	const { projectId } = useParams();
+	const id = currentProject ? currentProject.id : projectId;
 	useEffect(
 		() => {
 			const splittedPath = pathname.split('/');
@@ -26,8 +28,6 @@ const DashboardNavBar = ({ otherClasses }) => {
 				case 'backlog':
 					setBacklogLinkIsClicked(true);
 					break;
-				default:
-					return null;
 			}
 		},
 		[ pathname ]
@@ -55,32 +55,24 @@ const DashboardNavBar = ({ otherClasses }) => {
 		<div className={`${otherClasses} bg-gray-100 text-center h-10 border-b-2 border-t-1`}>
 			<div className=" mx-auto px-10">
 				<ul className="list-reset flex flex-row text-center">
-					{currentProject ? (
-						<li className="mr-3 flex-1 text-center">currentProject.name</li>
-					) : (
-						<DashboardNavItem type="inactive" to="/user/projects">
-							'Open Project
-						</DashboardNavItem>
-					)}
-
 					<DashboardNavItem
 						handleClick={handleBoardLinkClick}
 						type={boardLinkIsClicked ? 'active' : 'inactive'}
-						to="/user/dashboard/board"
+						to={`/user/dashboard/${id}/board`}
 					>
 						Board
 					</DashboardNavItem>
 					<DashboardNavItem
 						handleClick={handleBacklogLinkClick}
 						type={backlogLinkIsClicked ? 'active' : 'inactive'}
-						to="/user/dashboard/backlog"
+						to={`/user/dashboard/${id}/backlog`}
 					>
 						Backlog
 					</DashboardNavItem>
 					<DashboardNavItem
 						handleClick={handleTeamLinkClick}
 						type={teamLinkIsClicked ? 'active' : 'inactive'}
-						to="/user/dashboard/team"
+						to={`/user/dashboard/${id}/teams`}
 					>
 						Team
 					</DashboardNavItem>

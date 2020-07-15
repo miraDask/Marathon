@@ -19,8 +19,8 @@ const Main = () => {
 			<Route exact path="/help" component={HelpPage} />
 			<Route exact path="/user/projects" component={UserProjectsPage} />
 			<Route exact path="/user/projects/create" component={CreateProjectPage} />
-			<Route exact path="/user/dashboard/board" component={BoardPage} />
-			<Route exact path="/user/dashboard/backlog" component={BacklogPage} />
+			<Route exact path="/user/dashboard/:projectId/board" component={BoardPage} />
+			<Route exact path="/user/dashboard/:projectId/backlog" component={BacklogPage} />
 			<Route exact path="/signup" render={() => (isLoggedIn ? <Redirect to="/" /> : <SignUpPage />)} />
 			<Route exact path="/signin" render={() => (isLoggedIn ? <Redirect to="/" /> : <SignInPage />)} />
 		</Switch>

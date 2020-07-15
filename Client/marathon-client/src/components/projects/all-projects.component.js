@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
+import InfoMessageContainer from '../messages/form-input-info-message.component';
 import MainWrapper from '../../components/main/maim-wrapper.component';
 import FormButton from '../../components/buttons/form-button.component';
 import NavLink from '../../components/navigation/nav-link.component';
@@ -28,16 +29,12 @@ const ProjectsAll = ({ projects }) => {
 						<FormButton>Create</FormButton>
 					</NavLink>
 				</PageTopicContainer>
+				<InfoMessageContainer addClass="lg:w-2/3 flex mt-8 flex-col  mx-auto">
+					Click on project name to open it in the backlog
+				</InfoMessageContainer>
 				<div className="lg:w-2/3 flex mb-8 flex-col sm:flex-row sm:items-center items-start mx-auto">
 					<div className="w-full">
-						{projects.map((project) => (
-							<ProjectCard
-								key={project.id}
-								data={project.id}
-								title={project.name}
-								subTitle={project.key}
-							/>
-						))}
+						{projects.map((project) => <ProjectCard key={project.id} project={project} />)}
 					</div>
 				</div>
 

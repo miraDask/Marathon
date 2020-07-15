@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import React, { createContext, useState } from 'react';
 const hasUserProjects = localStorage.getItem('hasProjects') !== null ? true : false;
 const createdProjects = localStorage.getItem('projects') ? JSON.parse(localStorage.getItem('projects')) : null;
@@ -23,7 +24,10 @@ const ProjectsContextProvider = ({ children }) => {
 	const [ projects, setProjects ] = useState(createdProjects);
 	const [ hasProjects, setHasProjects ] = useState(hasUserProjects);
 
-	const saveCurrentProject = (newProject) => setCurrentProject(newProject);
+	const saveCurrentProject = (newProject) => {
+		setCurrentProject(newProject);
+		localStorage.setItem('currentProject', JSON.stringify(newProject));
+	};
 
 	const saveProjects = (projects) => {
 		setProjects(projects);
@@ -46,7 +50,7 @@ const ProjectsContextProvider = ({ children }) => {
 		if (!projects) {
 			updatedProjects = [ newProject ];
 		} else {
-			const filteredProjects = projects.filter((x) => x.id !== +id);
+			const filteredProjects = projects.filter((x) => x.id != id);
 			updatedProjects = [ ...filteredProjects, newProject ];
 		}
 
