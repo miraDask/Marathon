@@ -6,7 +6,7 @@ import { Context } from '../../providers/global-context.provider';
 import { getProjectDetails } from '../../services/projects.service';
 
 import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
-
+import Spinner from '../../components/spinner/spinner.component';
 import MainWrapper from '../../components/main/maim-wrapper.component';
 import PageTopicContainer from '../../components/containers/page-topic-container.component';
 import BacklogDndContainer from '../../components/backlog/backlog-dnd-container.component';
@@ -14,10 +14,9 @@ import NoPlanedSprint from '../../components/sprints/no-planed-sprint.component'
 import BacklogIssueCard from '../../components/cards/backlog-issue-card.component';
 
 const BacklogPage = ({ match }) => {
-	const [ issues, setIssues ] = useState([]);
-	const [ sprints, setSprint ] = useState([]);
 	const { token } = useContext(Context);
 	const { saveCurrentProject, currentProject } = useContext(ProjectsContext);
+	const [ isLoading, setLoading ] = useState(true);
 
 	useEffect(() => {
 		const getCurrentProjectDetails = async () => {
@@ -28,13 +27,21 @@ const BacklogPage = ({ match }) => {
 				saveCurrentProject(response);
 			}
 		};
-
 		getCurrentProjectDetails();
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const getEstimate = () => {
+	useEffect(
+		() => {
+			if (currentProject) {
+				setLoading(false);
+			}
+		},
+		[ currentProject ]
+	);
+
+	const getEstimate = (id = null) => {
+		const issues = currentProject.issues.filter((x) => x.sprintId === id);
 		const estimate = issues.reduce((acc, curr) => {
 			return curr.storyPoints + acc;
 		}, 0);
@@ -42,10 +49,14 @@ const BacklogPage = ({ match }) => {
 		return estimate;
 	};
 
-	const renderIssues = (issues) => {};
+	const renderIssues = (issues) =>
+		issues.map((issue, issueIndex) => {
+			return <BacklogIssueCard issue={issue} />;
+		});
 
-	const renderSprints = () =>
+	const renderSprints = (sprints) =>
 		sprints.map((sprint, sprintIndex) => {
+			const issues = currentProject.issues.filter((x) => x.sprintId === sprint.id);
 			return (
 				<BacklogDndContainer
 					index={sprintIndex}
@@ -66,30 +77,33 @@ const BacklogPage = ({ match }) => {
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
 			<MainWrapper>
-				<PageTopicContainer size="lg:w-5/6" title="Backlog" />
-				<div className="overflow-y-auto h-screen">
-					{sprints.length > 0 ? (
-						renderSprints()
-					) : (
-						<BacklogDndContainer
-							index="0"
-							top="mt-12"
-							issuesCount={issues.length > 0 ? issues.length : 0}
-							estimate={issues.length > 0 ? getEstimate() : 0}
-						>
-							<NoPlanedSprint />
-						</BacklogDndContainer>
-					)}
+				<PageTopicContainer size="lg:w-5/6" title={`Backlog / ${!currentProject ? '' : currentProject.name}`} />
+				{!isLoading ? (
+					<div className="overflow-y-auto h-screen">
+						{currentProject.sprints.length > 0 ? (
+							renderSprints(currentProject.sprints)
+						) : (
+							<BacklogDndContainer index="0" top="mt-12" issuesCount={0} estimate={0}>
+								<NoPlanedSprint />
+							</BacklogDndContainer>
+						)}
 
-					<BacklogDndContainer
-						top="mt-10"
-						issuesCount={issues ? issues.length : 0}
-						estimate={issues ? getEstimate() : 0}
-						primary
-					>
-						{issues.length > 0 ? <BacklogIssueCard /> : 'Your backlog is empty'}
-					</BacklogDndContainer>
-				</div>
+						<BacklogDndContainer
+							top="mt-10"
+							issuesCount={currentProject.issues.length}
+							estimate={currentProject.issues.length > 0 ? getEstimate() : 0}
+							primary
+						>
+							{currentProject.issues.length > 0 ? (
+								renderIssues(currentProject.issues.filter((x) => x.sprintId === null))
+							) : (
+								'Your backlog is empty'
+							)}
+						</BacklogDndContainer>
+					</div>
+				) : (
+					<Spinner />
+				)}
 			</MainWrapper>
 		</Fragment>
 	);

@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 
 import { IssuesContext } from '../../providers/issues-context.provider';
 import { Context } from '../../providers/global-context.provider';
+import { ProjectsContext } from '../../providers/projects-context.provider';
 
 import NavLink from '../navigation/nav-link.component';
 import ClearButton from '../buttons/button-clear.component';
@@ -11,8 +12,9 @@ import CreateIssueModal from '../modals/create-issue-modal.component';
 const BacklogDndContainer = ({ onDragEnter, top, estimate, issuesCount, index, primary, children }) => {
 	const { toggleCreating } = useContext(IssuesContext);
 	const { toggleModalIsOpen } = useContext(Context);
+	const { currentProject } = useContext(ProjectsContext);
 
-	const title = index ? `Sprint ${+index + 1}` : 'Backlog';
+	const title = index ? `${currentProject.key} / Sprint ${+index + 1}` : `${currentProject.key} / Backlog`;
 	const buttonTitle = !index ? 'Add Sprint' : 'Start Sprint';
 	const disabled = !primary;
 

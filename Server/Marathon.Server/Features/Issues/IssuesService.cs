@@ -8,7 +8,6 @@
     using Marathon.Server.Data;
     using Marathon.Server.Data.Enumerations;
     using Marathon.Server.Data.Models;
-    using Marathon.Server.Features.Cache;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
@@ -20,12 +19,10 @@
     public class IssuesService : IIssuesService
     {
         private readonly MarathonDbContext dbContext;
-        private readonly ICacheService cacheService;
 
-        public IssuesService(MarathonDbContext dbContext, ICacheService cacheService)
+        public IssuesService(MarathonDbContext dbContext)
         {
             this.dbContext = dbContext;
-            this.cacheService = cacheService;
         }
 
         public async Task<int> CreateAsync(int projectId, string userId, CreateIssueRequestModel model)
@@ -89,6 +86,7 @@
                     StoryPoints = x.StoryPoints,
                     Priority = x.Priority,
                     Type = x.Type,
+                    SprintId = x.SprintId,
                 })
                 .ToListAsync();
 

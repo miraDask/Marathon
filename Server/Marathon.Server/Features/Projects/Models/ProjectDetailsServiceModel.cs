@@ -4,7 +4,7 @@
 
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
-    using Marathon.Server.Features.Teams.Models;
+    using Marathon.Server.Features.Sprints.Models;
 
     public class ProjectDetailsServiceModel
     {
@@ -19,5 +19,7 @@
         public UserListingServerModel Creator { get; set; }
 
         public IEnumerable<IssueListingServiceModel> Issues { get; set; }
+
+        public IEnumerable<SprintWithIssuesServiceModel> Sprints { get; set; }
     }
 }

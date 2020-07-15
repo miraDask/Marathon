@@ -8,6 +8,8 @@
 
         public string Title { get; set; }
 
+        public int? SprintId { get; set; }
+
         public int? StoryPoints { get; set; }
 
         public Status Status { get; set; }

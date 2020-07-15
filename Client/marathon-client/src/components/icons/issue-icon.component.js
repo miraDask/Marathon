@@ -6,11 +6,11 @@ import { ReactComponent as StoryIcon } from '../../assets/ticket.svg';
 const IssueIcon = ({ type, size }) => {
 	const getIcon = () => {
 		switch (type) {
-			case 'story':
+			case 0:
 				return <StoryIcon className={`${size} bg-teal-300 rounded-full p-1`} />;
-			case 'task':
+			case 1:
 				return <TaskIcon className={`${size} bg-blue-400 rounded-full p-1`} />;
-			case 'bug':
+			case 2:
 				return <BugIcon className={`${size} bg-red-400 rounded-full p-1`} />;
 			default:
 				return <span>{getIcon()}</span>;

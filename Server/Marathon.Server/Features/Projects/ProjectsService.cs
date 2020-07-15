@@ -12,6 +12,7 @@
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Features.Projects.Models;
+    using Marathon.Server.Features.Sprints.Models;
     using Marathon.Server.Features.Teams.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -134,7 +135,7 @@
                         UserName = x.Creator.UserName,
                         ImageUrl = x.Creator.ImageUrl,
                     },
-                    Issues = x.Issues.Select(x => new IssueListingServiceModel
+                    Issues = x.Issues.Where(x => x.SprintId == null).Select(x => new IssueListingServiceModel
                     {
                         Title = x.Title,
                         Id = x.Id,
@@ -142,6 +143,22 @@
                         Type = x.Type,
                         Priority = x.Priority,
                         Status = x.Status,
+                    }),
+                    Sprints = x.Sprints.Select(x => new SprintWithIssuesServiceModel
+                    {
+                        Id = x.Id,
+                        Title = x.Title,
+                        StartDate = x.StartDate,
+                        EndDate = x.EndDate,
+                        Issues = x.Issues.Select(x => new IssueListingServiceModel
+                        {
+                            Title = x.Title,
+                            Id = x.Id,
+                            StoryPoints = x.StoryPoints,
+                            Type = x.Type,
+                            Priority = x.Priority,
+                            Status = x.Status,
+                        }),
                     }),
                 })
                 .FirstOrDefaultAsync();
