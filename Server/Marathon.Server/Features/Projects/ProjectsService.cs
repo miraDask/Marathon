@@ -10,6 +10,7 @@
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Identity.Models;
+    using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Features.Projects.Models;
     using Marathon.Server.Features.Teams.Models;
     using Microsoft.AspNetCore.Identity;
@@ -133,11 +134,14 @@
                         UserName = x.Creator.UserName,
                         ImageUrl = x.Creator.ImageUrl,
                     },
-                    Teams = x.Teams.Select(x => new TeamListingServiceModel
+                    Issues = x.Issues.Select(x => new IssueListingServiceModel
                     {
-                        Id = x.Id,
                         Title = x.Title,
-                        ImageUrl = x.ImageUrl,
+                        Id = x.Id,
+                        StoryPoints = x.StoryPoints,
+                        Type = x.Type,
+                        Priority = x.Priority,
+                        Status = x.Status,
                     }),
                 })
                 .FirstOrDefaultAsync();

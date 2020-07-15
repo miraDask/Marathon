@@ -11,5 +11,9 @@
         public int? StoryPoints { get; set; }
 
         public Status Status { get; set; }
+
+        public Type Type { get; set; }
+
+        public Priority Priority { get; set; }
     }
 }

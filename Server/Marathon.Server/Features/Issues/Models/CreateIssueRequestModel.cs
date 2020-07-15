@@ -26,10 +26,6 @@
 
         public Status Status { get; set; }
 
-        public bool IsAssignedToCreator { get; set; }
-
         public int? SprintId { get; set; }
-
-        public int? ParentIssueId { get; set; }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace Marathon.Server.Data.Migrations
+﻿namespace Marathon.Server.Data.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class AddNewPropertyFullNameToUser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

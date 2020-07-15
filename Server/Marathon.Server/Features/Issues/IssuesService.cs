@@ -38,10 +38,10 @@
                 Priority = model.Priority,
                 Type = model.Type,
                 ReporterId = userId,
-                AssigneeId = model.IsAssignedToCreator == true ? userId : null,
+                AssigneeId = null,
                 Status = model.Status,
                 SprintId = model.SprintId,
-                ParentIssueId = model.ParentIssueId,
+                ParentIssueId = null,
                 ProjectId = projectId,
             };
 
@@ -87,6 +87,8 @@
                     Title = x.Title,
                     Status = x.Status,
                     StoryPoints = x.StoryPoints,
+                    Priority = x.Priority,
+                    Type = x.Type,
                 })
                 .ToListAsync();
 
