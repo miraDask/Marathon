@@ -5,8 +5,8 @@ export const mockStatuses = [
 			{
 				title: 'Test to do',
 				assignee: 'me',
-				type: 'story',
-				priority: 'medium',
+				type: 0,
+				priority: 0,
 				id: 1,
 				storyPoints: 0
 			}
@@ -18,8 +18,8 @@ export const mockStatuses = [
 			{
 				title: 'Test in progress',
 				assignee: 'me',
-				type: 'bug',
-				priority: 'highest',
+				type: 2,
+				priority: 2,
 				id: 2,
 				storyPoints: 2
 			}
@@ -36,8 +36,8 @@ export const mockStatuses = [
 			{
 				title: 'Test  DONE',
 				assignee: 'me',
-				type: 'story',
-				priority: 'high',
+				type: 1,
+				priority: 2,
 				id: 4,
 				storyPoints: 2
 			}

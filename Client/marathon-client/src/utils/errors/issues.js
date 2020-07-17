@@ -1,4 +1,4 @@
-import { validateTitle } from '../validations/issue';
+import { validateTitle, validateDescription } from '../validations/issue';
 
 export const getEmptyInputsErrorsObject = (inputsObject) => {
 	let errorsObject = {};
@@ -8,6 +8,9 @@ export const getEmptyInputsErrorsObject = (inputsObject) => {
 			if (key === 'title') {
 				const { error } = validateTitle({ value });
 				errorsObject = { ...errorsObject, title: error };
+			} else if (key === 'description') {
+				const { error } = validateDescription({ value });
+				errorsObject = { ...errorsObject, description: error };
 			}
 		}
 	});

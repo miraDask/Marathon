@@ -2,24 +2,24 @@ import React, { useContext } from 'react';
 
 import { IssuesContext } from '../../providers/issues-context.provider';
 import { Context } from '../../providers/global-context.provider';
-import { ProjectsContext } from '../../providers/projects-context.provider';
 
 import NavLink from '../navigation/nav-link.component';
 import ClearButton from '../buttons/button-clear.component';
 import { ReactComponent as EditIcon } from '../../assets/icon-edit.svg';
 import CreateIssueModal from '../modals/create-issue-modal.component';
 
-const BacklogDndContainer = ({ onDragEnter, top, estimate, issuesCount, index, primary, children }) => {
-	const { toggleCreating } = useContext(IssuesContext);
+const BacklogDndContainer = ({ onDragEnter, top, estimate, sprint, issuesCount, primary, children }) => {
+	const { toggleCreating, saveCurrentSprintId } = useContext(IssuesContext);
 	const { toggleModalIsOpen } = useContext(Context);
-	const { currentProject } = useContext(ProjectsContext);
 
-	const title = index ? `${currentProject.key} / Sprint ${+index + 1}` : `${currentProject.key} / Backlog`;
-	const buttonTitle = !index ? 'Add Sprint' : 'Start Sprint';
-	const disabled = !primary;
+	const buttonTitle = !sprint ? 'Add Sprint' : 'Start Sprint';
 
 	const handleCreateIssueClick = (e) => {
 		e.preventDefault();
+		if (sprint) {
+			saveCurrentSprintId(sprint.id);
+		}
+
 		toggleCreating();
 		toggleModalIsOpen();
 	};
@@ -29,16 +29,20 @@ const BacklogDndContainer = ({ onDragEnter, top, estimate, issuesCount, index, p
 			<div className="flex justify-between text-lg">
 				<div className="">
 					<NavLink hoverColor="green-400 font-bold" to="">
-						{title}
+						{!sprint ? 'Backlog' : sprint.title}
 					</NavLink>
 				</div>
 				<div className="inline-flex">
-					<ClearButton textSize="text-sm" disabled={disabled} addClass="mb-2">
+					<ClearButton
+						textSize="text-sm"
+						disabled={!sprint ? false : sprint.issues.length > 0 ? false : true}
+						addClass="mb-2"
+					>
 						{buttonTitle}
 					</ClearButton>
-					{disabled ? null : (
+					{!sprint ? null : (
 						<div className="inline-flex">
-							<ClearButton textSize="text-sm" disabled={disabled} addClass="mb-2 ml-2">
+							<ClearButton textSize="text-sm" addClass="mb-2 ml-2">
 								<EditIcon />
 							</ClearButton>
 						</div>
@@ -51,7 +55,7 @@ const BacklogDndContainer = ({ onDragEnter, top, estimate, issuesCount, index, p
 			<div className="flex justify-between mt-2">
 				<div className="">
 					<ClearButton onClick={handleCreateIssueClick}>+ Create issue</ClearButton>
-					<CreateIssueModal />
+					<CreateIssueModal sprintId={!sprint ? null : sprint.id} />
 				</div>
 				<div className="inline-flex">
 					{issuesCount} issue / Estimate: {estimate}

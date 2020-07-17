@@ -13,6 +13,7 @@ const ERROR_MESSAGES = {
 		TITLE: `Title should be between ${ISSUE.TITLE_MIN_LENGTH}
 		 and ${ISSUE.TITLE_MAX_LENGTH} characters long`,
 		TITLE_REQUIRED: 'Title is required',
+		DESCRIPTION_REQUIRED: 'Description is required',
 		DESCRIPTION: `Description should be between ${ISSUE.DESCRIPTION_MIN_LENGTH} and ${ISSUE.DESCRIPTION_MAX_LENGTH} characters long`
 	}
 };
@@ -37,7 +38,7 @@ export const validatePoints = ({ storyPoints }) => {
 
 export const validateDescription = ({ description }) => {
 	if (!description) {
-		return true;
+		return getValidationResult(false, ERROR_MESSAGES.ISSUE.DESCRIPTION_REQUIRED);
 	}
 	const isValid =
 		description.length >= ISSUE.DESCRIPTION_MIN_LENGTH && description.length <= ISSUE.DESCRIPTION_MAX_LENGTH;

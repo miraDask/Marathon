@@ -28,7 +28,7 @@ const CreateIssueForm = () => {
 	const [ errors, setErrors ] = useState({ title: '', description: '', storyPoints: '' });
 	const { token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
-	const { toggleCreating, updateIssues, issues } = useContext(IssuesContext);
+	const { toggleCreating, updateIssues, issues, currentSprintId } = useContext(IssuesContext);
 
 	const handleChange = (event) => {
 		const { value, name } = event.target;
@@ -51,13 +51,13 @@ const CreateIssueForm = () => {
 			return;
 		}
 
-		const { title } = issue;
-		let errorsObject = getEmptyInputsErrorsObject({ title });
+		const { title, description } = issue;
+		let errorsObject = getEmptyInputsErrorsObject({ title, description });
 		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
 			return setErrors({ ...errors, ...errorsObject });
 		}
 
-		const result = await createIssue({ ...issue }, token, currentProject.id);
+		const result = await createIssue({ ...issue, sprintId: currentSprintId }, token, currentProject.id);
 
 		if (result) {
 			const newIssue = {

@@ -51,21 +51,24 @@ const BacklogPage = ({ match }) => {
 
 	const renderIssues = (issues) =>
 		issues.map((issue, issueIndex) => {
-			return <BacklogIssueCard issue={issue} />;
+			return <BacklogIssueCard key={issue.id} issue={issue} />;
 		});
 
 	const renderSprints = (sprints) =>
 		sprints.map((sprint, sprintIndex) => {
-			const issues = currentProject.issues.filter((x) => x.sprintId === sprint.id);
+			const issues = sprint.issues;
 			return (
 				<BacklogDndContainer
-					index={sprintIndex}
+					sprint={sprint}
 					top="mt-12"
 					issuesCount={issues.length > 0 ? issues.length : 0}
 					estimate={issues.length > 0 ? getEstimate() : 0}
+					primary={issues.length > 0}
 				>
 					{sprint.issues.length > 0 ? (
 						renderIssues(sprint.issues)
+					) : sprintIndex === 0 ? (
+						<NoPlanedSprint />
 					) : (
 						'Plan a sprint by dragging the sprint footer down below some issues, or by dragging issues here.'
 					)}
@@ -80,13 +83,7 @@ const BacklogPage = ({ match }) => {
 				<PageTopicContainer size="lg:w-5/6" title={`Backlog / ${!currentProject ? '' : currentProject.name}`} />
 				{!isLoading ? (
 					<div className="overflow-y-auto h-screen">
-						{currentProject.sprints.length > 0 ? (
-							renderSprints(currentProject.sprints)
-						) : (
-							<BacklogDndContainer index="0" top="mt-12" issuesCount={0} estimate={0}>
-								<NoPlanedSprint />
-							</BacklogDndContainer>
-						)}
+						{renderSprints(currentProject.sprints)}
 
 						<BacklogDndContainer
 							top="mt-10"
