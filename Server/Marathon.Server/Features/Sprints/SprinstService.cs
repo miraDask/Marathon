@@ -12,7 +12,7 @@
     using Marathon.Server.Features.Sprints.Models;
     using Microsoft.EntityFrameworkCore;
 
-    using static Marathon.Server.Features.Common.Constants.Errors;
+    using static Marathon.Server.Features.Common.Constants;
 
     public class SprinstService : ISprintsService
     {
@@ -24,18 +24,18 @@
             this.dbContext = dbContext;
         }
 
-        public async Task<int> CreateAsync(int projectId, string title, string goal, int weeks, DateTime startDate)
+        public async Task<int> CreateAsync(int projectId)
         {
-            var duration = TimeSpan.FromDays(weeks * DaysInWeek);
+            var sprintsCount = await this.dbContext.Sprints.CountAsync(x => x.ProjectId == projectId);
 
             var sprint = new Sprint
             {
-                Title = title,
-                Goal = goal,
+                Title = string.Format(DefaultSprintName, sprintsCount + 1),
+                Goal = string.Empty,
                 ProjectId = projectId,
-                DurationInWeeks = weeks,
-                StartDate = startDate.ToUniversalTime(),
-                EndDate = startDate.Add(duration).ToUniversalTime(),
+                DurationInWeeks = null,
+                StartDate = null,
+                EndDate = null,
             };
 
             await this.dbContext.AddAsync(sprint);
@@ -52,7 +52,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidSprintId },
+                    Errors = new string[] { Errors.InvalidSprintId },
                 };
             }
 
@@ -87,7 +87,7 @@
             {
                 return new ResultModel<IEnumerable<SprintListingServiceModel>>
                 {
-                    Errors = new string[] { InvalidProjectId },
+                    Errors = new string[] { Errors.InvalidProjectId },
                 };
             }
 
@@ -126,7 +126,7 @@
             {
                 return new ResultModel<SprintDetailsServiceModel>
                 {
-                    Errors = new string[] { InvalidSprintId },
+                    Errors = new string[] { Errors.InvalidSprintId },
                 };
             }
 
@@ -145,7 +145,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidSprintId },
+                    Errors = new string[] { Errors.InvalidSprintId },
                 };
             }
 
@@ -155,7 +155,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidIssueId },
+                    Errors = new string[] { Errors.InvalidIssueId },
                 };
             }
 
@@ -178,7 +178,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidIssueId },
+                    Errors = new string[] { Errors.InvalidIssueId },
                 };
             }
 
@@ -193,7 +193,7 @@
             };
         }
 
-        public async Task<ResultModel<bool>> UpdateAsync(int sprintId, int projectId, string title, string goal, int weeks, DateTime startDate)
+        public async Task<ResultModel<bool>> UpdateAsync(int sprintId, int projectId, string title, string goal, int? weeks, DateTime? startDate)
         {
             var sprint = await this.GetByIdAndProjectIdAsync(sprintId, projectId);
 
@@ -201,7 +201,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidSprintId },
+                    Errors = new string[] { Errors.InvalidSprintId },
                 };
             }
 
@@ -209,7 +209,7 @@
             sprint.Goal = goal;
             sprint.DurationInWeeks = weeks;
             sprint.StartDate = startDate;
-            sprint.EndDate = startDate.Add(TimeSpan.FromDays(weeks * DaysInWeek)).ToUniversalTime();
+            sprint.EndDate = this.GetEndDate(startDate, weeks);
             sprint.ModifiedOn = DateTime.UtcNow;
 
             await this.dbContext.SaveChangesAsync();
@@ -224,5 +224,16 @@
          => await this.dbContext
                       .Sprints
                       .FirstOrDefaultAsync(x => x.Id == sprintId && x.ProjectId == projectId);
+
+        private DateTime? GetEndDate(DateTime? startDate, int? weeks)
+        {
+            if (startDate == null)
+            {
+                return startDate;
+            }
+
+            var convertedStartDate = (DateTime)startDate;
+            return convertedStartDate.Add(TimeSpan.FromDays((int)weeks * DaysInWeek)).ToUniversalTime();
+        }
     }
 }

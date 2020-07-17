@@ -12,6 +12,7 @@
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Features.Projects.Models;
+    using Marathon.Server.Features.Sprints;
     using Marathon.Server.Features.Sprints.Models;
     using Marathon.Server.Features.Teams.Models;
     using Microsoft.AspNetCore.Identity;
@@ -24,15 +25,18 @@
         private readonly MarathonDbContext dbContext;
         private readonly IIdentityService identityService;
         private readonly UserManager<User> userManager;
+        private readonly ISprintsService sprintsService;
 
         public ProjectsService(
             MarathonDbContext dbContext,
             IIdentityService identityService,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            ISprintsService sprintsService)
         {
             this.dbContext = dbContext;
             this.identityService = identityService;
             this.userManager = userManager;
+            this.sprintsService = sprintsService;
         }
 
         public async Task<int> CreateAsync(string name, string key, string imageUrl, string userId)
@@ -46,9 +50,9 @@
             };
 
             this.dbContext.Projects.Add(project);
-
             await this.dbContext.SaveChangesAsync();
 
+            await this.sprintsService.CreateAsync(project.Id);
             return project.Id;
         }
 

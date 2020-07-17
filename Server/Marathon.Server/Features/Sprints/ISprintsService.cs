@@ -9,9 +9,9 @@
 
     public interface ISprintsService
     {
-        Task<int> CreateAsync(int projectId, string title, string goal, int weeks, DateTime startDate);
+        Task<int> CreateAsync(int projectId);
 
-        Task<ResultModel<bool>> UpdateAsync(int sprintId, int projectId, string title, string goal, int weeks, DateTime startDate);
+        Task<ResultModel<bool>> UpdateAsync(int sprintId, int projectId, string title, string goal, int? weeks, DateTime? startDate);
 
         Task<ResultModel<bool>> DeleteAsync(int sprintId, int projectId);
 

@@ -33,12 +33,7 @@
         [HasProjectAdminAuthorization]
         public async Task<ActionResult<int>> Create(int projectId, [FromBody]CreateSprintRequestModel input)
         {
-            var id = await this.sprintService.CreateAsync(
-                projectId,
-                input.Title,
-                input.Goal,
-                input.DurationInWeeks,
-                input.StartDate);
+            var id = await this.sprintService.CreateAsync(projectId);
 
             return this.Created(nameof(this.Create), id);
         }

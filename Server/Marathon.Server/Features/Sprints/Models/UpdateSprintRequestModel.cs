@@ -10,19 +10,17 @@
 
     public class UpdateSprintRequestModel
     {
-        [Required]
         [MinLength(TitleMinLength)]
         [MaxLength(TitleMaxLength)]
         public string Title { get; set; }
 
-        [Required]
         [MinLength(GoalMinLength)]
         [MaxLength(GoalMaxLength)]
         public string Goal { get; set; }
 
         // 1, 2, 3, 4
-        public int DurationInWeeks { get; set; }
+        public int? DurationInWeeks { get; set; }
 
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
     }
 }

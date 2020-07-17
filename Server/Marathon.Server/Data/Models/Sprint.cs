@@ -15,11 +15,9 @@
             this.Issues = new HashSet<Issue>();
         }
 
-        [Required]
         [MaxLength(TitleMaxLength)]
         public string Title { get; set; }
 
-        [Required]
         [MaxLength(GoalMaxLength)]
         public string Goal { get; set; }
 
@@ -27,11 +25,11 @@
 
         public virtual Project Project { get; set; }
 
-        public int DurationInWeeks { get; set; }
+        public int? DurationInWeeks { get; set; }
 
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
 
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         public virtual ICollection<Issue> Issues { get; set; }
     }

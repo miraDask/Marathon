@@ -3,6 +3,7 @@
     public static class Constants
     {
         public const string DeactivatedTokenString = "token: {0} deactivated";
+        public const string DefaultSprintName = "Sprint {0}";
 
         public static class Errors
         {
