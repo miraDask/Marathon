@@ -25,7 +25,7 @@ const BacklogDndContainer = ({ onDragEnter, top, estimate, sprint, issuesCount, 
 	};
 
 	return (
-		<div className={`lg:mx-24 lg:w-5/6 text-right md:w-full w-full ${top}`} onDragEnter={onDragEnter}>
+		<div className={`lg:mx-24 lg:w-5/6 text-right md:w-full w-full ${top}`}>
 			<div className="flex justify-between text-lg">
 				<div className="">
 					<NavLink hoverColor="green-400 font-bold" to="">
@@ -49,7 +49,10 @@ const BacklogDndContainer = ({ onDragEnter, top, estimate, sprint, issuesCount, 
 					)}
 				</div>
 			</div>
-			<div className="h-full px-2 py-2 border-dashed border-2 border-gray-400 overflow-hidden text-center relative">
+			<div
+				onDragEnter={onDragEnter}
+				className="h-full px-2 py-2 border-dashed border-2 border-gray-400 overflow-hidden text-center relative"
+			>
 				{children}
 			</div>
 			<div className="flex justify-between mt-2">

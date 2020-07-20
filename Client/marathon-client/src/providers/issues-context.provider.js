@@ -1,21 +1,26 @@
 import React, { createContext, useState } from 'react';
 
-const projectIssues = localStorage.getItem('issues') ? JSON.parse(localStorage.getItem('issues')) : [];
+const boardIssues = localStorage.getItem('boardIssues') ? JSON.parse(localStorage.getItem('boardIssues')) : [];
+const backlogIssues = localStorage.getItem('backlogIssues') ? JSON.parse(localStorage.getItem('backlogIssues')) : [];
 
 const initialState = {
-	issues: projectIssues,
+	boardIssuesCollections: boardIssues,
+	backlogIssuesCollections: backlogIssues,
 	creating: false,
 	currentSprintId: null,
 	toggleCreating: () => {},
 	saveCurrentIssue: () => {},
 	saveCurrentSprintId: () => {},
-	updateIssues: () => {}
+	updateBoardIssues: () => {},
+	updateBacklogIssues: () => {}
 };
 
 export const IssuesContext = createContext(initialState);
 
 const IssuesContextProvider = ({ children }) => {
-	const [ issues, setIssues ] = useState(projectIssues);
+	const [ boardIssuesCollections, setBoardIssuesCollections ] = useState(boardIssues);
+	const [ backlogIssuesCollections, setBacklogIssuesCollections ] = useState(backlogIssues);
+
 	const [ creating, setCreating ] = useState(false);
 	const [ currentSprintId, setCurrentSprintId ] = useState(null);
 
@@ -25,11 +30,28 @@ const IssuesContextProvider = ({ children }) => {
 
 	const saveCurrentSprintId = (id) => setCurrentSprintId(id);
 
-	const updateIssues = (newIssuesList) => setIssues(newIssuesList);
+	const updateBoardIssues = (newIssuesList) => {
+		setBoardIssuesCollections(newIssuesList);
+		localStorage.setItem('boardIssues', JSON.stringify(newIssuesList));
+	};
+
+	const updateBacklogIssues = (newIssuesList) => {
+		setBacklogIssuesCollections(newIssuesList);
+		localStorage.setItem('backlogIssues', JSON.stringify(newIssuesList));
+	};
 
 	return (
 		<IssuesContext.Provider
-			value={{ issues, creating, currentSprintId, updateIssues, toggleCreating, saveCurrentSprintId }}
+			value={{
+				backlogIssuesCollections,
+				boardIssuesCollections,
+				creating,
+				currentSprintId,
+				updateBacklogIssues,
+				updateBoardIssues,
+				toggleCreating,
+				saveCurrentSprintId
+			}}
 		>
 			{children}
 		</IssuesContext.Provider>
