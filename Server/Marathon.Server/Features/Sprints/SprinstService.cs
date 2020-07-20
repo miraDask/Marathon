@@ -220,6 +220,12 @@
             };
         }
 
+        public async Task<int> GetIssuesCount(int sprintId)
+        => await this.dbContext.Sprints
+                .Where(x => x.Id == sprintId)
+                .Select(x => x.Issues.Count())
+                .FirstOrDefaultAsync();
+
         private async Task<Sprint> GetByIdAndProjectIdAsync(int sprintId, int projectId)
          => await this.dbContext
                       .Sprints

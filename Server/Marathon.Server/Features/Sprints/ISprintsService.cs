@@ -15,6 +15,8 @@
 
         Task<ResultModel<bool>> DeleteAsync(int sprintId, int projectId);
 
+        Task<int> GetIssuesCount(int sprintId);
+
         Task<ResultModel<IEnumerable<SprintListingServiceModel>>> GetAllByProjecIdAsync(int projectId);
 
         Task<ResultModel<SprintDetailsServiceModel>> GetDetailsAsync(int sprintId, int projectId);

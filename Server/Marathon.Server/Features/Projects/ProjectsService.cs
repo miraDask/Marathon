@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using Marathon.Server.Data;
+    using Marathon.Server.Data.Enumerations;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity;
@@ -14,7 +15,6 @@
     using Marathon.Server.Features.Projects.Models;
     using Marathon.Server.Features.Sprints;
     using Marathon.Server.Features.Sprints.Models;
-    using Marathon.Server.Features.Teams.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
@@ -147,7 +147,8 @@
                         Type = x.Type,
                         Priority = x.Priority,
                         Status = x.Status,
-                    }),
+                        BacklogIndex = x.BacklogIndex,
+                    }).OrderBy(x => x.BacklogIndex),
                     Sprints = x.Sprints.Select(x => new SprintWithIssuesServiceModel
                     {
                         Id = x.Id,
@@ -162,7 +163,8 @@
                             Type = x.Type,
                             Priority = x.Priority,
                             Status = x.Status,
-                        }),
+                            BacklogIndex = x.BacklogIndex,
+                        }).OrderBy(x => x.BacklogIndex),
                     }),
                 })
                 .FirstOrDefaultAsync();
@@ -305,6 +307,18 @@
                 Success = true,
             };
         }
+
+        public async Task<int> GetIssuesWithoutSprintsCount(int id)
+        => await this.dbContext.Projects
+                .Where(x => x.Id == id)
+                .Select(x => x.Issues.Where(x => x.SprintId == null).Count())
+                .FirstOrDefaultAsync();
+
+        public async Task<int> GetIssuesByStatusCount(int id, Status status)
+         => await this.dbContext.Projects
+                .Where(x => x.Id == id)
+                .Select(x => x.Issues.Where(x => x.Status == status).Count())
+                .FirstOrDefaultAsync();
 
         private async Task<Project> GetByIdAsync(int id)
      => await this.dbContext

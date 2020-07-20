@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
+    using Marathon.Server.Data.Enumerations;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Projects.Models;
 
@@ -11,6 +11,10 @@
         Task<int> CreateAsync(string name, string key, string imageUrl, string userId);
 
         Task<ResultModel<bool>> UpdateAsync(int id, string name, string key, string imageUrl);
+
+        Task<int> GetIssuesWithoutSprintsCount(int id);
+
+        Task<int> GetIssuesByStatusCount(int id, Status status);
 
         Task<ResultModel<bool>> DeleteAsync(int id);
 
