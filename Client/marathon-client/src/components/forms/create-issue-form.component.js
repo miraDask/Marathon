@@ -26,7 +26,7 @@ const initialIssue = {
 const CreateIssueForm = () => {
 	const [ issue, setIssue ] = useState(initialIssue);
 	const [ errors, setErrors ] = useState({ title: '', description: '', storyPoints: '' });
-	const { token } = useContext(Context);
+	const { token, toggleModalIsOpen } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 	const { toggleCreating, updateIssues, issues, currentSprintId } = useContext(IssuesContext);
 
@@ -68,6 +68,7 @@ const CreateIssueForm = () => {
 			updateIssues(issues.concat(newIssue));
 			setErrors({ name: '', key: '' });
 			toggleCreating();
+			toggleModalIsOpen();
 		}
 	};
 
