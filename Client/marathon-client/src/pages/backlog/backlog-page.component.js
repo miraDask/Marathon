@@ -6,6 +6,7 @@ import { IssuesContext } from '../../providers/issues-context.provider';
 
 import { processBoardIssuesCollections, getNewIssuesCollections } from '../../utils/issues';
 import { getProjectDetails } from '../../services/projects.service';
+import { updateIssue } from '../../services/issues.service';
 
 import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
 import Spinner from '../../components/spinner/spinner.component';
@@ -33,7 +34,7 @@ const BacklogPage = ({ match }) => {
 				console.log(response);
 				const issuesCollections = processBoardIssuesCollections(response);
 				updateBacklogIssues(issuesCollections);
-				saveCurrentProject({ id: response.id, name: response.name });
+				saveCurrentProject({ id: response.id, name: response.name, creator: response.creator });
 			}
 		};
 		getCurrentProjectDetails();
@@ -53,7 +54,7 @@ const BacklogPage = ({ match }) => {
 		dragItemNode.current = e.target;
 		dragItemNode.current.addEventListener('dragend', handleDragEnd);
 		dragItem.current = item;
-
+		console.log(item);
 		setTimeout(() => {
 			setDragging(true);
 		}, 0);
@@ -61,13 +62,20 @@ const BacklogPage = ({ match }) => {
 
 	const handleDragEnter = (e, targetItem) => {
 		if (dragItemNode.current !== e.target) {
+			console.log('target :', targetItem);
 			const newBacklogCollection = getNewIssuesCollections(backlogIssuesCollections, dragItem, targetItem);
 			updateBacklogIssues(newBacklogCollection);
+			const data = {
+				...dragItem.current.issue,
+				backlogIndex: targetItem.issueIndex,
+				sprintId: targetItem.sprintId ? targetItem.sprintId : null
+			};
+			updateIssue(data, token, currentProject.id);
 			dragItem.current = targetItem;
 		}
 	};
 
-	const handleDragEnd = (e) => {
+	const handleDragEnd = () => {
 		setDragging(false);
 		dragItem.current = null;
 		dragItemNode.current.removeEventListener('dragend', handleDragEnd);
@@ -88,14 +96,18 @@ const BacklogPage = ({ match }) => {
 		return currentItem.parentIndex === params.parentIndex && currentItem.issueIndex === params.issueIndex;
 	};
 
-	const renderIssues = (issues, parentIndex) =>
+	const renderIssues = (issues, parentIndex, sprintId) =>
 		issues.map((issue, issueIndex) => {
 			return (
 				<BacklogIssueCard
 					key={issue.id}
 					issue={issue}
-					handleDragStart={(e) => handleDragStart(e, { parentIndex, issueIndex })}
-					handleDragEnter={dragging ? (e) => handleDragEnter(e, { parentIndex, issueIndex }) : null}
+					handleDragStart={(e) => handleDragStart(e, { parentIndex, issueIndex, issue })}
+					handleDragEnter={
+						dragging ? (
+							(e) => handleDragEnter(e, { parentIndex, issueIndex, issueId: issue.id, sprintId })
+						) : null
+					}
 					invisible={dragging ? getInvisible({ parentIndex, issueIndex }) : false}
 				/>
 			);
@@ -106,19 +118,21 @@ const BacklogPage = ({ match }) => {
 			const issues = sprint.issues;
 			return (
 				<BacklogDndContainer
+					key={sprint.id ? sprint.id : currentProject.id}
 					sprint={parentIndex === backlogIssuesCollections.length - 1 ? null : sprint}
 					top="mt-12"
+					sprintIndex={parentIndex}
 					issuesCount={issues.length > 0 ? issues.length : 0}
 					estimate={issues.length > 0 ? getEstimate(parentIndex) : 0}
 					primary={parentIndex === backlogIssuesCollections.length - 1 ? true : issues.length > 0}
 					onDragEnter={
 						dragging && !sprint.issues.length ? (
-							(e) => handleDragEnter(e, { parentIndex, issueIndex: 0 })
+							(e) => handleDragEnter(e, { parentIndex, issueIndex: 0, sprintId: sprint.id })
 						) : null
 					}
 				>
 					{sprint.issues.length > 0 ? (
-						renderIssues(sprint.issues, parentIndex)
+						renderIssues(sprint.issues, parentIndex, sprint.id)
 					) : parentIndex === 0 ? (
 						<NoPlanedSprint />
 					) : parentIndex === backlogIssuesCollections.length - 1 ? (

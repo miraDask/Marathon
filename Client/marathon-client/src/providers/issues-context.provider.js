@@ -7,10 +7,10 @@ const initialState = {
 	boardIssuesCollections: boardIssues,
 	backlogIssuesCollections: backlogIssues,
 	creating: false,
-	currentSprintId: null,
+	currentSprint: null,
 	toggleCreating: () => {},
 	saveCurrentIssue: () => {},
-	saveCurrentSprintId: () => {},
+	saveCurrentSprint: () => {},
 	updateBoardIssues: () => {},
 	updateBacklogIssues: () => {}
 };
@@ -22,13 +22,13 @@ const IssuesContextProvider = ({ children }) => {
 	const [ backlogIssuesCollections, setBacklogIssuesCollections ] = useState(backlogIssues);
 
 	const [ creating, setCreating ] = useState(false);
-	const [ currentSprintId, setCurrentSprintId ] = useState(null);
+	const [ currentSprint, setCurrentSprint ] = useState(null);
 
 	const toggleCreating = () => {
 		setCreating(!creating);
 	};
 
-	const saveCurrentSprintId = (id) => setCurrentSprintId(id);
+	const saveCurrentSprint = (currentSprint) => setCurrentSprint(currentSprint);
 
 	const updateBoardIssues = (newIssuesList) => {
 		setBoardIssuesCollections(newIssuesList);
@@ -46,11 +46,11 @@ const IssuesContextProvider = ({ children }) => {
 				backlogIssuesCollections,
 				boardIssuesCollections,
 				creating,
-				currentSprintId,
+				currentSprint,
 				updateBacklogIssues,
 				updateBoardIssues,
 				toggleCreating,
-				saveCurrentSprintId
+				saveCurrentSprint
 			}}
 		>
 			{children}

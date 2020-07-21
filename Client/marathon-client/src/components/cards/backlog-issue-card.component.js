@@ -17,7 +17,7 @@ const BacklogIssueCard = ({ issue, handleClick, handleDragEnter, handleDragStart
 					'invisible'
 				) : (
 					`mx-auto cursor-pointer
-                     flex p-1 hover:bg-blue-100 bg-gray-200 mb-2 justify-between`
+                     flex p-1 hover:bg-blue-100 bg-gray-200 my-2 justify-between`
 				)
 			}
 		>

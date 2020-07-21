@@ -8,24 +8,31 @@ import ClearButton from '../buttons/button-clear.component';
 import { ReactComponent as EditIcon } from '../../assets/icon-edit.svg';
 import CreateIssueModal from '../modals/create-issue-modal.component';
 
-const BacklogDndContainer = ({ onDragEnter, top, estimate, sprint, issuesCount, primary, children }) => {
-	const { toggleCreating, saveCurrentSprintId } = useContext(IssuesContext);
+const BacklogDndContainer = ({
+	onDragEnter,
+	top,
+	estimate,
+	sprint,
+	sprintIndex,
+	issuesCount,
+	primary,
+	children,
+	otherProps
+}) => {
+	const { toggleCreating, saveCurrentSprint } = useContext(IssuesContext);
 	const { toggleModalIsOpen } = useContext(Context);
 
 	const buttonTitle = !sprint ? 'Add Sprint' : 'Start Sprint';
 
 	const handleCreateIssueClick = (e) => {
 		e.preventDefault();
-		if (sprint) {
-			saveCurrentSprintId(sprint.id);
-		}
-
+		saveCurrentSprint({ id: sprint ? sprint.id : null, index: sprintIndex });
 		toggleCreating();
 		toggleModalIsOpen();
 	};
 
 	return (
-		<div className={`lg:mx-24 lg:w-5/6 text-right md:w-full w-full ${top}`}>
+		<div className={`lg:mx-24 lg:w-5/6 text-right md:w-full w-full ${top}`} {...otherProps}>
 			<div className="flex justify-between text-lg">
 				<div className="">
 					<NavLink hoverColor="green-400 font-bold" to="">

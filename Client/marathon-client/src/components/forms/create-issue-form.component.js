@@ -28,7 +28,7 @@ const CreateIssueForm = () => {
 	const [ errors, setErrors ] = useState({ title: '', description: '', storyPoints: '' });
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
-	const { toggleCreating, updateIssues, issues, currentSprintId } = useContext(IssuesContext);
+	const { toggleCreating, updateBacklogIssues, backlogIssuesCollections, currentSprint } = useContext(IssuesContext);
 
 	const handleChange = (event) => {
 		const { value, name } = event.target;
@@ -57,7 +57,7 @@ const CreateIssueForm = () => {
 			return setErrors({ ...errors, ...errorsObject });
 		}
 
-		const result = await createIssue({ ...issue, sprintId: currentSprintId }, token, currentProject.id);
+		const result = await createIssue({ ...issue, sprintId: currentSprint.id }, token, currentProject.id);
 
 		if (result) {
 			const newIssue = {
@@ -65,7 +65,10 @@ const CreateIssueForm = () => {
 				...issue
 			};
 
-			updateIssues(issues.concat(newIssue));
+			let newCollection = JSON.parse(JSON.stringify(backlogIssuesCollections));
+			newCollection[currentSprint.index].issues.push(newIssue);
+			updateBacklogIssues(newCollection);
+
 			setErrors({ name: '', key: '' });
 			toggleCreating();
 			toggleModalIsOpen();
