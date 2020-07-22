@@ -127,7 +127,6 @@ const BacklogPage = ({ match }) => {
 					sprintIndex={parentIndex}
 					issuesCount={issues.length > 0 ? issues.length : 0}
 					estimate={issues.length > 0 ? getEstimate(parentIndex) : 0}
-					primary={parentIndex === backlogIssuesCollections.length - 1 ? true : issues.length > 0}
 					onDragEnter={
 						dragging && !sprint.issues.length ? (
 							(e) => handleDragEnter(e, { parentIndex, issueIndex: 0, sprintId: sprint.id })

@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 
+import { createSprint } from '../../services/sprints.service';
 import { IssuesContext } from '../../providers/issues-context.provider';
 import { Context } from '../../providers/global-context.provider';
+import { ProjectsContext } from '../../providers/projects-context.provider';
 
-import NavLink from '../navigation/nav-link.component';
 import ClearButton from '../buttons/button-clear.component';
 import { ReactComponent as EditIcon } from '../../assets/icon-edit.svg';
 import CreateIssueModal from '../modals/create-issue-modal.component';
@@ -15,14 +16,32 @@ const BacklogDndContainer = ({
 	sprint,
 	sprintIndex,
 	issuesCount,
-	primary,
 	children,
 	otherProps
 }) => {
-	const { toggleCreating, saveCurrentSprint } = useContext(IssuesContext);
-	const { toggleModalIsOpen } = useContext(Context);
+	const { toggleCreating, saveCurrentSprint, updateBacklogIssues, backlogIssuesCollections } = useContext(
+		IssuesContext
+	);
+	const { toggleModalIsOpen, token } = useContext(Context);
+	const { currentProject } = useContext(ProjectsContext);
 
 	const buttonTitle = !sprint ? 'Add Sprint' : 'Start Sprint';
+
+	const handleAddSprint = async () => {
+		const response = await createSprint(currentProject.id, token);
+		const sprint = {
+			...response,
+			issues: []
+		};
+
+		let newCollection = JSON.parse(JSON.stringify(backlogIssuesCollections));
+		newCollection.splice(newCollection.length - 1, 0, sprint);
+		updateBacklogIssues(newCollection);
+	};
+
+	const handleStartSprint = () => {
+		console.log('start sprint');
+	};
 
 	const handleCreateIssueClick = (e) => {
 		e.preventDefault();
@@ -34,15 +53,12 @@ const BacklogDndContainer = ({
 	return (
 		<div className={`lg:mx-24 lg:w-5/6 text-right md:w-full w-full ${top}`} {...otherProps}>
 			<div className="flex justify-between text-lg">
-				<div className="">
-					<NavLink hoverColor="green-400 font-bold" to="">
-						{!sprint ? 'Backlog' : sprint.title}
-					</NavLink>
-				</div>
+				<div className="">{!sprint ? 'Backlog' : sprint.title}</div>
 				<div className="inline-flex">
 					<ClearButton
+						onClick={!sprint ? handleAddSprint : handleStartSprint}
 						textSize="text-sm"
-						disabled={!sprint ? false : sprint.issues.length > 0 ? false : true}
+						disabled={!sprint || sprintIndex > 0 ? false : sprint.issues.length > 0 ? false : true}
 						addClass="mb-2"
 					>
 						{buttonTitle}
