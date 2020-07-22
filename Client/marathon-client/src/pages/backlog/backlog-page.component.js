@@ -25,6 +25,7 @@ const BacklogPage = ({ match }) => {
 	const [ show, setShow ] = useState(false);
 	const dragItem = useRef();
 	const dragItemNode = useRef();
+	const movingItem = useRef();
 
 	useEffect(() => {
 		const getCurrentProjectDetails = async () => {
@@ -54,7 +55,7 @@ const BacklogPage = ({ match }) => {
 		dragItemNode.current = e.target;
 		dragItemNode.current.addEventListener('dragend', handleDragEnd);
 		dragItem.current = item;
-		console.log(item);
+		movingItem.current = item.issue;
 		setTimeout(() => {
 			setDragging(true);
 		}, 0);
@@ -62,21 +63,23 @@ const BacklogPage = ({ match }) => {
 
 	const handleDragEnter = (e, targetItem) => {
 		if (dragItemNode.current !== e.target) {
-			console.log('target :', targetItem);
 			const newBacklogCollection = getNewIssuesCollections(backlogIssuesCollections, dragItem, targetItem);
 			updateBacklogIssues(newBacklogCollection);
-			const data = {
-				...dragItem.current.issue,
-				backlogIndex: targetItem.issueIndex,
-				sprintId: targetItem.sprintId ? targetItem.sprintId : null
-			};
-			updateIssue(data, token, currentProject.id);
 			dragItem.current = targetItem;
 		}
 	};
 
 	const handleDragEnd = () => {
 		setDragging(false);
+
+		console.log('curr: ', movingItem.current);
+		const data = {
+			...movingItem.current,
+			backlogIndex: dragItem.current.issueIndex,
+			sprintId: dragItem.current.sprintId ? dragItem.current.sprintId : null
+		};
+		console.log(data);
+		updateIssue(data, token, currentProject.id);
 		dragItem.current = null;
 		dragItemNode.current.removeEventListener('dragend', handleDragEnd);
 		dragItemNode.current = null;
