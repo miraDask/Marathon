@@ -62,7 +62,11 @@ const CreateIssueForm = () => {
 		if (result) {
 			const newIssue = {
 				id: result,
-				...issue
+				...issue,
+				type: parseInt(issue.type),
+				priority: parseInt(issue.priority),
+				status: parseInt(issue.status),
+				storyPoints: parseInt(issue.storyPoints)
 			};
 
 			let newCollection = JSON.parse(JSON.stringify(backlogIssuesCollections));
