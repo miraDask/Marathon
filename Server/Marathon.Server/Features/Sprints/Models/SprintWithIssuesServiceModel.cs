@@ -15,8 +15,6 @@
 
         public DateTime? EndDate { get; set; }
 
-        public int? Estimate { get; set; }
-
         public virtual IEnumerable<IssueListingServiceModel> Issues { get; set; }
     }
 }

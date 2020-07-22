@@ -24,7 +24,7 @@
             this.dbContext = dbContext;
         }
 
-        public async Task<int> CreateAsync(int projectId)
+        public async Task<SprintListingServiceModel> CreateAsync(int projectId)
         {
             var sprintsCount = await this.dbContext.Sprints.CountAsync(x => x.ProjectId == projectId);
 
@@ -41,7 +41,13 @@
             await this.dbContext.AddAsync(sprint);
             await this.dbContext.SaveChangesAsync();
 
-            return sprint.Id;
+            return new SprintListingServiceModel
+            {
+                Id = sprint.Id,
+                Title = sprint.Title,
+                StartDate = sprint.StartDate,
+                EndDate = sprint.EndDate,
+            };
         }
 
         public async Task<ResultModel<bool>> DeleteAsync(int sprintId, int projectId)

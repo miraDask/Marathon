@@ -23,7 +23,6 @@
         /// <summary>
         /// Creates new Sprint.
         /// </summary>
-        /// <param name="input"></param>
         /// <param name="projectId"></param>
         /// <response code="201"> Successfully created sprint.</response>
         /// <response code="400"> Bad Reaquest.</response>
@@ -31,11 +30,11 @@
         [HttpPost]
         [Route(Sprints.Create)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult<int>> Create(int projectId, [FromBody]CreateSprintRequestModel input)
+        public async Task<ActionResult<SprintListingServiceModel>> Create(int projectId)
         {
-            var id = await this.sprintService.CreateAsync(projectId);
+            var model = await this.sprintService.CreateAsync(projectId);
 
-            return this.Created(nameof(this.Create), id);
+            return this.Created(nameof(this.Create), model);
         }
 
         /// <summary>

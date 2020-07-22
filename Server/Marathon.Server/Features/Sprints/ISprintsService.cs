@@ -9,7 +9,7 @@
 
     public interface ISprintsService
     {
-        Task<int> CreateAsync(int projectId);
+        Task<SprintListingServiceModel> CreateAsync(int projectId);
 
         Task<ResultModel<bool>> UpdateAsync(int sprintId, int projectId, string title, string goal, int? weeks, DateTime? startDate);
 
