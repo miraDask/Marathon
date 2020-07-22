@@ -191,6 +191,16 @@
                 };
             }
 
+            if (issue.SprintId != model.SprintId)
+            {
+                await this.ReorderOldSprintBackLogIndexes(projectId, issue.BacklogIndex, issue.SprintId);
+                await this.ReorderNewSprintBackLogIndexes(projectId, model.BacklogIndex, model.SprintId);
+            }
+            else
+            {
+                await this.ReorderSameSprintBackLogIndexes(projectId, issue.Id, issue.BacklogIndex, model.BacklogIndex, model.SprintId);
+            }
+
             issue.Title = model.Title;
             issue.Description = model.Description;
             issue.StoryPoints = model.StoryPoints;
@@ -200,8 +210,11 @@
             issue.AssigneeId = model.AssigneeId;
             issue.SprintId = model.SprintId;
             issue.ParentIssueId = model.ParentIssueId;
+            issue.StatusIndex = model.StatusIndex;
+            issue.BacklogIndex = model.BacklogIndex;
             issue.ModifiedOn = DateTime.UtcNow;
 
+            this.dbContext.Update(issue);
             await this.dbContext.SaveChangesAsync();
 
             return new ResultModel<bool>
@@ -231,6 +244,72 @@
             {
                 Success = true,
             };
+        }
+
+        private async Task ReorderOldSprintBackLogIndexes(int projectId, int oldIndex, int? oldSprintId)
+        {
+            var issues = await this.dbContext.Issues
+                .Where(x => x.ProjectId == projectId && x.SprintId == oldSprintId && x.BacklogIndex > oldIndex)
+                .ToListAsync();
+
+            issues.ForEach(x =>
+            {
+                x.BacklogIndex -= 1;
+                this.dbContext.Update(x);
+            });
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        private async Task ReorderNewSprintBackLogIndexes(int projectId, int newIndex, int? newSprintId)
+        {
+            var issues = await this.dbContext.Issues
+                .Where(x => x.ProjectId == projectId && x.SprintId == newSprintId && x.BacklogIndex >= newIndex)
+                .ToListAsync();
+
+            issues.ForEach(x =>
+            {
+                x.BacklogIndex += 1;
+                this.dbContext.Update(x);
+            });
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        private async Task ReorderSameSprintBackLogIndexes(int projectId, int issueId, int oldIndex, int newIndex, int? sprintId)
+        {
+            var issues = await this.dbContext.Issues
+                .Where(x => x.ProjectId == projectId && x.SprintId == sprintId && x.Id != issueId)
+                .ToListAsync();
+
+            if (newIndex < oldIndex)
+            {
+                issues.ForEach(x =>
+                {
+                    //if (x.BacklogIndex > oldIndex)
+                    //{
+                    //    x.BacklogIndex -= 1;
+                    //    this.dbContext.Update(x);
+                    //}
+                    //else
+                    if (x.BacklogIndex >= newIndex && x.BacklogIndex < oldIndex)
+                    {
+                        x.BacklogIndex += 1;
+                        this.dbContext.Update(x);
+                    }
+                });
+            }
+            else if (newIndex > oldIndex)
+            {
+                issues.ForEach(x =>
+                {
+                    if (x.BacklogIndex > oldIndex && x.BacklogIndex <= newIndex)
+                    {
+                        x.BacklogIndex -= 1;
+                        this.dbContext.Update(x);
+                    }
+                });
+            }
+
+            await this.dbContext.SaveChangesAsync();
         }
 
         private async Task<Issue> GetByIdAndProjectIdAsync(int issueId, int projectId)

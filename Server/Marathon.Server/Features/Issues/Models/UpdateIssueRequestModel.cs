@@ -29,6 +29,10 @@
 
         public string AssigneeId { get; set; }
 
+        public int StatusIndex { get; set; }
+
+        public int BacklogIndex { get; set; }
+
         public int? SprintId { get; set; }
 
         public int? ParentIssueId { get; set; }

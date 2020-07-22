@@ -148,6 +148,11 @@
                         Priority = x.Priority,
                         Status = x.Status,
                         BacklogIndex = x.BacklogIndex,
+                        StatusIndex = x.StatusIndex,
+                        AssigneeId = x.AssigneeId,
+                        Description = x.Description,
+                        ParentIssueId = x.ParentIssueId,
+                        SprintId = x.SprintId,
                     }).OrderBy(x => x.BacklogIndex),
                     Sprints = x.Sprints.Select(x => new SprintWithIssuesServiceModel
                     {
@@ -164,6 +169,11 @@
                             Priority = x.Priority,
                             Status = x.Status,
                             BacklogIndex = x.BacklogIndex,
+                            StatusIndex = x.StatusIndex,
+                            AssigneeId = x.AssigneeId,
+                            Description = x.Description,
+                            ParentIssueId = x.ParentIssueId,
+                            SprintId = x.SprintId,
                         }).OrderBy(x => x.BacklogIndex),
                     }),
                 })
