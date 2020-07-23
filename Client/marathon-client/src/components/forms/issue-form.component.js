@@ -10,7 +10,7 @@ import IssueFormsInput from '../inputs/issue-forms-input.component';
 import CustomLabel from '../labels/custom-label.component';
 import CustomSelect from '../select/custom-select.component';
 
-const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose, buttonTitle }) => {
+const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose, children }) => {
 	const [ issue, setIssue ] = useState(initialIssue);
 	const [ errors, setErrors ] = useState({ title: '', description: '', storyPoints: '' });
 	const { toggleModalIsOpen } = useContext(Context);
@@ -32,6 +32,7 @@ const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose,
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
+
 		if (Object.keys(errors).some((key) => errors[key] !== '')) {
 			return;
 		}
@@ -52,7 +53,13 @@ const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose,
 	};
 
 	return (
-		<form onSubmit={handleSubmit} className="container px-5 py-2 mx-auto">
+		<form
+			onSubmit={handleSubmit}
+			className="container px-5 py-2 mx-auto"
+			onKeyPress={(e) => {
+				e.key === 'Enter' && e.preventDefault();
+			}}
+		>
 			<div className="flex flex-col text-center w-full mb-4">
 				<p className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">{formTitle}</p>
 			</div>
@@ -122,14 +129,7 @@ const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose,
 							</CustomSelect>
 						</div>
 					</div>
-					<div className="p-2 w-full">
-						<button
-							type="submit"
-							className="flex mx-auto text-white bg-green-400 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg"
-						>
-							{buttonTitle}
-						</button>
-					</div>
+					<div className="p-2 w-full">{children}</div>
 				</div>
 			</div>
 		</form>

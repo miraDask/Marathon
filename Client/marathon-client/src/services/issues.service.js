@@ -44,6 +44,18 @@ export const updateIssue = async (data, token, projectId) => {
 	}
 };
 
+export const deleteIssue = async (id, token, projectId) => {
+	const headers = getHeaders(token);
+	const url = getUrl(projectId);
+
+	try {
+		await fetcher(url + `/${id}`, 'DELETE', headers);
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
+
 const getUrl = (projectId) => {
 	return API_URL + `/${projectId}/issues`;
 };

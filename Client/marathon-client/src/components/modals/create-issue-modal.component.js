@@ -60,7 +60,14 @@ const CreateIssueModal = () => {
 				formTitle="Create issue"
 				handleModalClose={toggleCreating}
 				buttonTitle="Create"
-			/>
+			>
+				<button
+					type="submit"
+					className="flex mx-auto text-white bg-green-400 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg"
+				>
+					Create
+				</button>
+			</IssueForm>
 		</ModalContainer>
 	);
 };
