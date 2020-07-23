@@ -4,14 +4,14 @@ import { createIssue } from '../../services/issues.service';
 import { IssuesContext } from '../../providers/issues-context.provider';
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
+import { SprintsContext } from '../../providers/sprints-context.provider';
 
 import ModalContainer from '../containers/modal-container.component';
 import IssueForm from '../forms/issue-form.component';
 
 const CreateIssueModal = () => {
-	const { creating, toggleCreating, currentSprint, backlogIssuesCollections, updateBacklogIssues } = useContext(
-		IssuesContext
-	);
+	const { creating, toggleCreating, backlogIssuesCollections, updateBacklogIssues } = useContext(IssuesContext);
+	const { currentSprint } = useContext(SprintsContext);
 	const { toggleModalIsOpen, token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 

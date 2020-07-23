@@ -4,6 +4,7 @@ import { updateIssue, deleteIssue } from '../../services/issues.service';
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
+import { SprintsContext } from '../../providers/sprints-context.provider';
 
 import ModalContainer from '../containers/modal-container.component';
 import IssueForm from '../forms/issue-form.component';
@@ -11,9 +12,8 @@ import IssueForm from '../forms/issue-form.component';
 const IssueDetailsModal = ({ item }) => {
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
-	const { backlogIssuesCollections, updateBacklogIssues, currentSprint, toggleUpdating, updating } = useContext(
-		IssuesContext
-	);
+	const { backlogIssuesCollections, updateBacklogIssues, toggleUpdating, updating } = useContext(IssuesContext);
+	const { currentSprint } = useContext(SprintsContext);
 	const [ deleting, setDeleting ] = useState(false);
 
 	const handleUpdateIssue = async (issue) => {
@@ -57,6 +57,7 @@ const IssueDetailsModal = ({ item }) => {
 			sprint.issues.splice(item.backlogIndex, 1);
 			newCollection[currentSprint.index] = sprint;
 			updateBacklogIssues(newCollection);
+			setDeleting(false);
 			return true;
 		} catch (error) {
 			return false;

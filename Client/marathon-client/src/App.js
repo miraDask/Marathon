@@ -6,6 +6,7 @@ import Navigation from './components/navigation/navigation.component';
 import Footer from './components/footer/footer.component';
 import ProjectsContextProvider from '../src/providers/projects-context.provider';
 import IssuesContextProvider from '../src/providers/issues-context.provider';
+import SprintsContextProvider from '../src/providers/sprints-context.provider';
 
 const App = () => {
 	return (
@@ -13,7 +14,9 @@ const App = () => {
 			<ProjectsContextProvider>
 				<Navigation />
 				<IssuesContextProvider>
-					<Main />
+					<SprintsContextProvider>
+						<Main />
+					</SprintsContextProvider>
 				</IssuesContextProvider>
 				<Footer />
 			</ProjectsContextProvider>

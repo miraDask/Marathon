@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext, useRef, Fragment } from 'react'
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { Context } from '../../providers/global-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
+import { SprintsContext } from '../../providers/sprints-context.provider';
 
 import { processBoardIssuesCollections, getNewIssuesCollections } from '../../utils/issues';
 import { getProjectDetails } from '../../services/projects.service';
@@ -21,14 +22,8 @@ import BacklogIssueCard from '../../components/cards/backlog-issue-card.componen
 const BacklogPage = ({ match }) => {
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { saveCurrentProject, currentProject } = useContext(ProjectsContext);
-	const {
-		updateBacklogIssues,
-		backlogIssuesCollections,
-		saveCurrentSprint,
-		toggleUpdating,
-		creating,
-		currentSprint
-	} = useContext(IssuesContext);
+	const { updateBacklogIssues, backlogIssuesCollections, toggleUpdating, creating } = useContext(IssuesContext);
+	const { saveCurrentSprint, currentSprint } = useContext(SprintsContext);
 	const [ openedIssue, setOpenedIssue ] = useState(null);
 	const [ isLoading, setLoading ] = useState(true);
 	const [ dragging, setDragging ] = useState(false);

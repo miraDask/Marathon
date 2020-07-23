@@ -4,6 +4,7 @@ import { createSprint } from '../../services/sprints.service';
 import { IssuesContext } from '../../providers/issues-context.provider';
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
+import { SprintsContext } from '../../providers/sprints-context.provider';
 
 import ClearButton from '../buttons/button-clear.component';
 import { ReactComponent as EditIcon } from '../../assets/icon-edit.svg';
@@ -18,9 +19,8 @@ const BacklogDndContainer = ({
 	children,
 	otherProps
 }) => {
-	const { toggleCreating, saveCurrentSprint, updateBacklogIssues, backlogIssuesCollections } = useContext(
-		IssuesContext
-	);
+	const { toggleCreating, updateBacklogIssues, backlogIssuesCollections } = useContext(IssuesContext);
+	const { saveCurrentSprint } = useContext(SprintsContext);
 
 	const { toggleModalIsOpen, token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
