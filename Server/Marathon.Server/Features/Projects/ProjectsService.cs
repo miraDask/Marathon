@@ -160,6 +160,7 @@
                         Title = x.Title,
                         StartDate = x.StartDate,
                         EndDate = x.EndDate,
+                        Goal = x.Goal,
                         Issues = x.Issues.Select(x => new IssueListingServiceModel
                         {
                             Title = x.Title,

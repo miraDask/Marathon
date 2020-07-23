@@ -106,8 +106,8 @@
                 projectId,
                 input.Title,
                 input.Goal,
-                input.DurationInWeeks,
-                input.StartDate);
+                input.StartDate,
+                input.EndDate);
 
             if (!updateRequest.Success)
             {

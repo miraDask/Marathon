@@ -11,7 +11,7 @@
     {
         Task<SprintListingServiceModel> CreateAsync(int projectId);
 
-        Task<ResultModel<bool>> UpdateAsync(int sprintId, int projectId, string title, string goal, int? weeks, DateTime? startDate);
+        Task<ResultModel<bool>> UpdateAsync(int sprintId, int projectId, string title, string goal, DateTime? startDate, DateTime? endDate);
 
         Task<ResultModel<bool>> DeleteAsync(int sprintId, int projectId);
 

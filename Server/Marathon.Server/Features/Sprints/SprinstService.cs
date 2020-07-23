@@ -199,7 +199,7 @@
             };
         }
 
-        public async Task<ResultModel<bool>> UpdateAsync(int sprintId, int projectId, string title, string goal, int? weeks, DateTime? startDate)
+        public async Task<ResultModel<bool>> UpdateAsync(int sprintId, int projectId, string title, string goal, DateTime? startDate, DateTime? endDate)
         {
             var sprint = await this.GetByIdAndProjectIdAsync(sprintId, projectId);
 
@@ -213,9 +213,8 @@
 
             sprint.Title = title;
             sprint.Goal = goal;
-            sprint.DurationInWeeks = weeks;
             sprint.StartDate = startDate;
-            sprint.EndDate = this.GetEndDate(startDate, weeks);
+            sprint.EndDate = endDate;
             sprint.ModifiedOn = DateTime.UtcNow;
 
             await this.dbContext.SaveChangesAsync();

@@ -15,6 +15,8 @@
 
         public DateTime? EndDate { get; set; }
 
+        public string Goal { get; set; }
+
         public virtual IEnumerable<IssueListingServiceModel> Issues { get; set; }
     }
 }
