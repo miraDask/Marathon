@@ -53,7 +53,7 @@ const CreateIssueModal = () => {
 	};
 
 	return (
-		<ModalContainer onClose={handleClose} show={creating}>
+		<ModalContainer onClose={handleClose} show={creating} addBgColor="bg-black bg-opacity-25">
 			<IssueForm
 				initialIssue={initialIssue}
 				handleFetchData={handleCreateIssue}

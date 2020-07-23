@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { Context } from '../../providers/global-context.provider';
-import { IssuesContext } from '../../providers/issues-context.provider';
 
 import { validateDescription, validateTitle, validatePoints } from '../../utils/validations/issue';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/issues';
@@ -15,7 +14,6 @@ const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose,
 	const [ issue, setIssue ] = useState(initialIssue);
 	const [ errors, setErrors ] = useState({ title: '', description: '', storyPoints: '' });
 	const { toggleModalIsOpen } = useContext(Context);
-	const { updateBacklogIssues } = useContext(IssuesContext);
 
 	const handleChange = (event) => {
 		const { value, name } = event.target;

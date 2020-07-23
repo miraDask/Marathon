@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
+
+import { Context } from '../../providers/global-context.provider';
 import IssueIcon from '../../components/icons/issue-icon.component';
 import PriorityIcon from '../../components/icons/priority-icon.component';
 
 const BacklogIssueCard = ({ issue, handleClick, handleDragEnter, handleDragStart, invisible }) => {
+	const { isModalOpen } = useContext(Context);
 	const { id, title, storyPoints, type, priority } = issue;
 
 	return (
@@ -22,8 +25,15 @@ const BacklogIssueCard = ({ issue, handleClick, handleDragEnter, handleDragStart
 			}
 		>
 			<div>
-				<span className="flex-shrink-0 w-5 h-5 rounded-full bg-gray-500 
-        inline-flex items-center justify-center text-black relative z-10 cursor-pointer">
+				<span
+					className={
+						isModalOpen ? (
+							'invisible'
+						) : (
+							'flex-shrink-0 w-5 h-5 rounded-full bg-gray-500 inline-flex items-center justify-center text-black relative z-10 cursor-pointer'
+						)
+					}
+				>
 					<span className="p-1">{storyPoints}</span>
 				</span>
 				<div className="ml-3 text-gray-900 inline-block">{title}</div>

@@ -44,7 +44,7 @@ const IssueDetailsModal = ({ item }) => {
 	};
 
 	return (
-		<ModalContainer onClose={handleClose} show={updating}>
+		<ModalContainer onClose={handleClose} show={updating} addBgColor="bg-black bg-opacity-25">
 			<IssueForm
 				initialIssue={item}
 				handleFetchData={handleUpdateIssue}

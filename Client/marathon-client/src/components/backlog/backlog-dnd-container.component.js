@@ -7,7 +7,6 @@ import { ProjectsContext } from '../../providers/projects-context.provider';
 
 import ClearButton from '../buttons/button-clear.component';
 import { ReactComponent as EditIcon } from '../../assets/icon-edit.svg';
-import CreateIssueModal from '../modals/create-issue-modal.component';
 
 const BacklogDndContainer = ({
 	onDragEnter,
@@ -82,7 +81,6 @@ const BacklogDndContainer = ({
 			<div className="flex justify-between mt-2">
 				<div className="">
 					<ClearButton onClick={handleCreateIssueClick}>+ Create issue</ClearButton>
-					<CreateIssueModal sprintId={!sprint ? null : sprint.id} />
 				</div>
 				<div className="inline-flex">
 					{issuesCount} issue / Estimate: {estimate}

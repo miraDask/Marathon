@@ -8,6 +8,7 @@ import { processBoardIssuesCollections, getNewIssuesCollections } from '../../ut
 import { getProjectDetails } from '../../services/projects.service';
 import { updateIssue } from '../../services/issues.service';
 
+import CreateIssueModal from '../../components/modals/create-issue-modal.component';
 import IssueDetailsModal from '../../components/modals/issue-details-modal.component';
 import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
 import Spinner from '../../components/spinner/spinner.component';
@@ -20,9 +21,14 @@ import BacklogIssueCard from '../../components/cards/backlog-issue-card.componen
 const BacklogPage = ({ match }) => {
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { saveCurrentProject, currentProject } = useContext(ProjectsContext);
-	const { updateBacklogIssues, backlogIssuesCollections, saveCurrentSprint, toggleUpdating } = useContext(
-		IssuesContext
-	);
+	const {
+		updateBacklogIssues,
+		backlogIssuesCollections,
+		saveCurrentSprint,
+		toggleUpdating,
+		creating,
+		currentSprint
+	} = useContext(IssuesContext);
 	const [ openedIssue, setOpenedIssue ] = useState(null);
 	const [ isLoading, setLoading ] = useState(true);
 	const [ dragging, setDragging ] = useState(false);
@@ -87,6 +93,7 @@ const BacklogPage = ({ match }) => {
 	};
 
 	const onOpen = (issue, parentIndex) => {
+		console.log('modal is opened');
 		saveCurrentSprint({ index: parentIndex });
 		setOpenedIssue(issue);
 		toggleUpdating();
@@ -122,7 +129,6 @@ const BacklogPage = ({ match }) => {
 						}
 						invisible={dragging ? getInvisible({ parentIndex, issueIndex }) : false}
 					/>
-					{!openedIssue ? null : <IssueDetailsModal item={openedIssue} />}
 				</Fragment>
 			);
 		});
@@ -162,7 +168,15 @@ const BacklogPage = ({ match }) => {
 			<DashboardNavBar otherClasses="w-full" />
 			<MainWrapper>
 				<PageTopicContainer size="lg:w-5/6" title={`Backlog / ${!currentProject ? '' : currentProject.name}`} />
-				{!isLoading ? <div className="overflow-y-auto h-screen">{renderSprints()}</div> : <Spinner />}
+				{!isLoading ? (
+					<div className="overflow-y-auto h-screen">
+						{renderSprints()}
+						{!openedIssue ? null : <IssueDetailsModal item={openedIssue} />}
+						{creating ? <CreateIssueModal sprintId={!currentSprint ? null : currentSprint.id} /> : null}
+					</div>
+				) : (
+					<Spinner />
+				)}
 			</MainWrapper>
 		</Fragment>
 	);

@@ -12,7 +12,7 @@ const Board = ({ data = mockStatuses }) => {
 	const [ openedIssue, setOpenedIssue ] = useState(null);
 	const [ dragging, setDragging ] = useState(false);
 	const { toggleModalIsOpen } = useContext(Context);
-	const { updating, toggleUpdating } = useContext(IssuesContext);
+	const { toggleUpdating } = useContext(IssuesContext);
 
 	useEffect(
 		() => {
@@ -49,17 +49,11 @@ const Board = ({ data = mockStatuses }) => {
 			});
 		}
 	};
-	const handleDragEnd = (e) => {
+	const handleDragEnd = () => {
 		setDragging(false);
 		dragItem.current = null;
 		dragItemNode.current.removeEventListener('dragend', handleDragEnd);
 		dragItemNode.current = null;
-	};
-
-	const onClose = () => {
-		setOpenedIssue(null);
-		toggleModalIsOpen();
-		toggleUpdating();
 	};
 
 	const onOpen = (issue) => {
@@ -83,18 +77,17 @@ const Board = ({ data = mockStatuses }) => {
 					handleDragEnter={dragging ? (e) => handleDragEnter(e, { statusIndex, issueIndex }) : null}
 					invisible={dragging ? getInvisible({ statusIndex, issueIndex }) : false}
 				/>
-				{!openedIssue ? null : <IssueDetailsModal item={openedIssue} />}
 			</Fragment>
 		));
 	};
 
 	const renderStatuses = () => {
 		return !statusesList ? (
-			<StatusList title="TODO" />
+			<StatusList title="TODO" key="TODO" />
 		) : (
 			statusesList.map((status, statusIndex) => (
 				<StatusList
-					key={status.id}
+					key={status.title}
 					title={status.title}
 					onDragEnter={
 						dragging && !status.issues.length ? (
@@ -111,6 +104,7 @@ const Board = ({ data = mockStatuses }) => {
 	return (
 		<div className="container px-5 py-4 mx-auto">
 			<div className="flex flex-wrap m-4 md:mb-4">{renderStatuses()}</div>
+			{!openedIssue ? null : <IssueDetailsModal item={openedIssue} />}
 		</div>
 	);
 };
