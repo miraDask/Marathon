@@ -10,6 +10,7 @@ const ClearButton = ({ children, disabled, textSize, addClass, onClick, ...other
 	return (
 		<button
 			type="submit"
+			disabled={disabled ? disabled : null}
 			onClick={onClick}
 			{...otherProps}
 			className={`py-2 px-3 ${getStyles()} rounded ${!textSize ? 'text-md' : textSize} ${addClass}`}

@@ -57,6 +57,7 @@ const GlobalContextProvider = ({ children }) => {
 		},
 		[ token ]
 	);
+
 	return (
 		<Context.Provider
 			value={{

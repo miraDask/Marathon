@@ -1,23 +1,57 @@
-import React from 'react';
-import ModalContainer from '../containers/modal-container.component';
+import React, { useContext } from 'react';
+import { updateIssue } from '../../services/issues.service';
 
-const IssueDetailsModal = ({ item, onClose, show }) => {
+import { Context } from '../../providers/global-context.provider';
+import { ProjectsContext } from '../../providers/projects-context.provider';
+import { IssuesContext } from '../../providers/issues-context.provider';
+
+import ModalContainer from '../containers/modal-container.component';
+import IssueForm from '../forms/issue-form.component';
+
+const IssueDetailsModal = ({ item }) => {
+	const { token, toggleModalIsOpen } = useContext(Context);
+	const { currentProject } = useContext(ProjectsContext);
+	const { backlogIssuesCollections, updateBacklogIssues, currentSprint, toggleUpdating, updating } = useContext(
+		IssuesContext
+	);
+
+	const handleUpdateIssue = async (issue) => {
+		const newIssue = {
+			...issue,
+			type: parseInt(issue.type),
+			priority: parseInt(issue.priority),
+			status: parseInt(issue.status),
+			storyPoints: parseInt(issue.storyPoints)
+		};
+
+		try {
+			await updateIssue(newIssue, token, currentProject.id);
+
+			let newCollection = JSON.parse(JSON.stringify(backlogIssuesCollections));
+			let sprint = newCollection[currentSprint.index];
+			sprint.issues.splice(issue.backlogIndex, 1, newIssue);
+			newCollection[currentSprint.index] = sprint;
+			updateBacklogIssues(newCollection);
+			return true;
+		} catch (error) {
+			return false;
+		}
+	};
+
+	const handleClose = () => {
+		toggleUpdating();
+		toggleModalIsOpen();
+	};
+
 	return (
-		<ModalContainer onClose={onClose} show={show}>
-			<div className="lg:mb-0">
-				<div className="m-8 h-full text-left">
-					<div className=" p-3 object-cover object-center inline-block border-2 border-gray-200 bg-gray-100">
-						{item.title}
-					</div>
-					<p className="leading-relaxed">
-						Edison bulb retro cloud bread echo park, helvetica stumptown taiyaki taxidermy 90's cronut +1
-						kinfolk.
-					</p>
-					<span className="inline-block h-1 w-10 rounded bg-indigo-500 mt-6 mb-4" />
-					<h2 className="text-gray-900 font-medium title-font tracking-wider text-sm">{item.assignee}</h2>
-					<p className="text-gray-500">UI Develeoper</p>
-				</div>
-			</div>
+		<ModalContainer onClose={handleClose} show={updating}>
+			<IssueForm
+				initialIssue={item}
+				handleFetchData={handleUpdateIssue}
+				formTitle="issue"
+				handleModalClose={toggleUpdating}
+				buttonTitle="Edit"
+			/>
 		</ModalContainer>
 	);
 };

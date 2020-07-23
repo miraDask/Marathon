@@ -1,34 +1,21 @@
 import React, { useState, useContext } from 'react';
 import { Context } from '../../providers/global-context.provider';
-import { ProjectsContext } from '../../providers/projects-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
 
 import { validateDescription, validateTitle, validatePoints } from '../../utils/validations/issue';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/issues';
 import { statuses, priorities, types } from '../../data/constants';
-import { createIssue } from '../../services/issues.service';
 
 import ErrorMessageContainer from '../messages/form-input-error-message.component';
 import IssueFormsInput from '../inputs/issue-forms-input.component';
 import CustomLabel from '../labels/custom-label.component';
 import CustomSelect from '../select/custom-select.component';
 
-const initialIssue = {
-	title: '',
-	description: '',
-	type: 0,
-	priority: 0,
-	status: 0,
-	storyPoints: 0,
-	sprintId: ''
-};
-
-const CreateIssueForm = () => {
+const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose, buttonTitle }) => {
 	const [ issue, setIssue ] = useState(initialIssue);
 	const [ errors, setErrors ] = useState({ title: '', description: '', storyPoints: '' });
-	const { token, toggleModalIsOpen } = useContext(Context);
-	const { currentProject } = useContext(ProjectsContext);
-	const { toggleCreating, updateBacklogIssues, backlogIssuesCollections, currentSprint } = useContext(IssuesContext);
+	const { toggleModalIsOpen } = useContext(Context);
+	const { updateBacklogIssues } = useContext(IssuesContext);
 
 	const handleChange = (event) => {
 		const { value, name } = event.target;
@@ -57,24 +44,11 @@ const CreateIssueForm = () => {
 			return setErrors({ ...errors, ...errorsObject });
 		}
 
-		const result = await createIssue({ ...issue, sprintId: currentSprint.id }, token, currentProject.id);
+		const success = await handleFetchData(issue);
 
-		if (result) {
-			const newIssue = {
-				id: result,
-				...issue,
-				type: parseInt(issue.type),
-				priority: parseInt(issue.priority),
-				status: parseInt(issue.status),
-				storyPoints: parseInt(issue.storyPoints)
-			};
-
-			let newCollection = JSON.parse(JSON.stringify(backlogIssuesCollections));
-			newCollection[currentSprint.index].issues.push(newIssue);
-			updateBacklogIssues(newCollection);
-
+		if (success) {
 			setErrors({ name: '', key: '' });
-			toggleCreating();
+			handleModalClose();
 			toggleModalIsOpen();
 		}
 	};
@@ -82,7 +56,7 @@ const CreateIssueForm = () => {
 	return (
 		<form onSubmit={handleSubmit} className="container px-5 py-2 mx-auto">
 			<div className="flex flex-col text-center w-full mb-4">
-				<p className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Create issue</p>
+				<p className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">{formTitle}</p>
 			</div>
 			<div className="lg:w-2/3 md:w-2/3 mx-auto">
 				<div className="flex flex-wrap -m-2">
@@ -155,7 +129,7 @@ const CreateIssueForm = () => {
 							type="submit"
 							className="flex mx-auto text-white bg-green-400 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg"
 						>
-							Create
+							{buttonTitle}
 						</button>
 					</div>
 				</div>
@@ -164,4 +138,4 @@ const CreateIssueForm = () => {
 	);
 };
 
-export default CreateIssueForm;
+export default IssueForm;

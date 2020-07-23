@@ -7,8 +7,10 @@ const initialState = {
 	boardIssuesCollections: boardIssues,
 	backlogIssuesCollections: backlogIssues,
 	creating: false,
+	updating: false,
 	currentSprint: null,
 	toggleCreating: () => {},
+	toggleUpdating: () => {},
 	saveCurrentIssue: () => {},
 	saveCurrentSprint: () => {},
 	updateBoardIssues: () => {},
@@ -22,10 +24,15 @@ const IssuesContextProvider = ({ children }) => {
 	const [ backlogIssuesCollections, setBacklogIssuesCollections ] = useState(backlogIssues);
 
 	const [ creating, setCreating ] = useState(false);
+	const [ updating, setUpdating ] = useState(false);
 	const [ currentSprint, setCurrentSprint ] = useState(null);
 
 	const toggleCreating = () => {
 		setCreating(!creating);
+	};
+
+	const toggleUpdating = () => {
+		setUpdating(!updating);
 	};
 
 	const saveCurrentSprint = (currentSprint) => setCurrentSprint(currentSprint);
@@ -46,10 +53,12 @@ const IssuesContextProvider = ({ children }) => {
 				backlogIssuesCollections,
 				boardIssuesCollections,
 				creating,
+				updating,
 				currentSprint,
 				updateBacklogIssues,
 				updateBoardIssues,
 				toggleCreating,
+				toggleUpdating,
 				saveCurrentSprint
 			}}
 		>

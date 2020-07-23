@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useContext, Fragment } from 'react';
 import { Context } from '../../providers/global-context.provider';
+import { IssuesContext } from '../../providers/issues-context.provider';
 
 import IssueCard from '../../components/cards/issue-card.component';
 import StatusList from '../../components/board/status-list.component';
@@ -10,8 +11,9 @@ const Board = ({ data = mockStatuses }) => {
 	const [ statusesList, setStatuses ] = useState(data);
 	const [ openedIssue, setOpenedIssue ] = useState(null);
 	const [ dragging, setDragging ] = useState(false);
-	const [ show, setShow ] = useState(false);
 	const { toggleModalIsOpen } = useContext(Context);
+	const { updating, toggleUpdating } = useContext(IssuesContext);
+
 	useEffect(
 		() => {
 			setStatuses(data);
@@ -55,18 +57,14 @@ const Board = ({ data = mockStatuses }) => {
 	};
 
 	const onClose = () => {
+		setOpenedIssue(null);
 		toggleModalIsOpen();
-		setShow(false);
+		toggleUpdating();
 	};
-	const onOpen = (e) => {
-		const currentClicked = e.target;
-		const issueId = currentClicked.id
-			? currentClicked.id
-			: currentClicked.parentNode.id ? currentClicked.parentNode.id : currentClicked.parentNode.parentNode.id;
-		const statusList = statusesList.filter((s) => s.issues.some((i) => i.id === +issueId))[0];
-		const clickedIssue = statusList.issues.filter((i) => i.id === +issueId)[0];
-		setOpenedIssue(clickedIssue);
-		setShow(true);
+
+	const onOpen = (issue) => {
+		setOpenedIssue(issue);
+		toggleUpdating();
 		toggleModalIsOpen();
 	};
 
@@ -77,16 +75,15 @@ const Board = ({ data = mockStatuses }) => {
 
 	const renderIssues = (issues, statusIndex) => {
 		return issues.map((issue, issueIndex) => (
-			<Fragment>
+			<Fragment key={issue.id}>
 				<IssueCard
-					key={issue.id}
 					issue={issue}
-					handleClick={onOpen}
+					handleClick={() => onOpen(issue)}
 					handleDragStart={(e) => handleDragStart(e, { statusIndex, issueIndex })}
 					handleDragEnter={dragging ? (e) => handleDragEnter(e, { statusIndex, issueIndex }) : null}
 					invisible={dragging ? getInvisible({ statusIndex, issueIndex }) : false}
 				/>
-				{!openedIssue ? null : <IssueDetailsModal item={openedIssue} onClose={onClose} show={show} />}
+				{!openedIssue ? null : <IssueDetailsModal item={openedIssue} />}
 			</Fragment>
 		));
 	};

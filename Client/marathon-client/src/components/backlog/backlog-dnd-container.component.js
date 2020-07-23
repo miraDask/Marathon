@@ -22,6 +22,7 @@ const BacklogDndContainer = ({
 	const { toggleCreating, saveCurrentSprint, updateBacklogIssues, backlogIssuesCollections } = useContext(
 		IssuesContext
 	);
+
 	const { toggleModalIsOpen, token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 
@@ -56,9 +57,9 @@ const BacklogDndContainer = ({
 				<div className="">{!sprint ? 'Backlog' : sprint.title}</div>
 				<div className="inline-flex">
 					<ClearButton
-						onClick={!sprint ? handleAddSprint : handleStartSprint}
+						onClick={!sprint ? handleAddSprint : sprintIndex === 0 ? handleStartSprint : null}
 						textSize="text-sm"
-						disabled={!sprint || sprintIndex > 0 ? false : sprint.issues.length > 0 ? false : true}
+						disabled={!sprint ? false : sprintIndex === 0 && sprint.issues.length > 0 ? false : true}
 						addClass="mb-2"
 					>
 						{buttonTitle}

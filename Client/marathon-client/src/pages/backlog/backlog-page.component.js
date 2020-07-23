@@ -8,6 +8,7 @@ import { processBoardIssuesCollections, getNewIssuesCollections } from '../../ut
 import { getProjectDetails } from '../../services/projects.service';
 import { updateIssue } from '../../services/issues.service';
 
+import IssueDetailsModal from '../../components/modals/issue-details-modal.component';
 import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
 import Spinner from '../../components/spinner/spinner.component';
 import MainWrapper from '../../components/main/maim-wrapper.component';
@@ -17,12 +18,14 @@ import NoPlanedSprint from '../../components/sprints/no-planed-sprint.component'
 import BacklogIssueCard from '../../components/cards/backlog-issue-card.component';
 
 const BacklogPage = ({ match }) => {
-	const { token } = useContext(Context);
+	const { token, toggleModalIsOpen } = useContext(Context);
 	const { saveCurrentProject, currentProject } = useContext(ProjectsContext);
-	const { updateBacklogIssues, backlogIssuesCollections } = useContext(IssuesContext);
+	const { updateBacklogIssues, backlogIssuesCollections, saveCurrentSprint, toggleUpdating } = useContext(
+		IssuesContext
+	);
+	const [ openedIssue, setOpenedIssue ] = useState(null);
 	const [ isLoading, setLoading ] = useState(true);
 	const [ dragging, setDragging ] = useState(false);
-	const [ show, setShow ] = useState(false);
 	const dragItem = useRef();
 	const dragItemNode = useRef();
 	const movingItem = useRef();
@@ -71,18 +74,23 @@ const BacklogPage = ({ match }) => {
 
 	const handleDragEnd = () => {
 		setDragging(false);
-
-		console.log('curr: ', movingItem.current);
 		const data = {
 			...movingItem.current,
 			backlogIndex: dragItem.current.issueIndex,
 			sprintId: dragItem.current.sprintId ? dragItem.current.sprintId : null
 		};
-		console.log(data);
+
 		updateIssue(data, token, currentProject.id);
 		dragItem.current = null;
 		dragItemNode.current.removeEventListener('dragend', handleDragEnd);
 		dragItemNode.current = null;
+	};
+
+	const onOpen = (issue, parentIndex) => {
+		saveCurrentSprint({ index: parentIndex });
+		setOpenedIssue(issue);
+		toggleUpdating();
+		toggleModalIsOpen();
 	};
 
 	const getEstimate = (index) => {
@@ -102,17 +110,20 @@ const BacklogPage = ({ match }) => {
 	const renderIssues = (issues, parentIndex, sprintId) =>
 		issues.map((issue, issueIndex) => {
 			return (
-				<BacklogIssueCard
-					key={issue.id}
-					issue={issue}
-					handleDragStart={(e) => handleDragStart(e, { parentIndex, issueIndex, issue })}
-					handleDragEnter={
-						dragging ? (
-							(e) => handleDragEnter(e, { parentIndex, issueIndex, issueId: issue.id, sprintId })
-						) : null
-					}
-					invisible={dragging ? getInvisible({ parentIndex, issueIndex }) : false}
-				/>
+				<Fragment key={issue.id}>
+					<BacklogIssueCard
+						issue={issue}
+						handleClick={() => onOpen(issue, parentIndex)}
+						handleDragStart={(e) => handleDragStart(e, { parentIndex, issueIndex, issue })}
+						handleDragEnter={
+							dragging ? (
+								(e) => handleDragEnter(e, { parentIndex, issueIndex, issueId: issue.id, sprintId })
+							) : null
+						}
+						invisible={dragging ? getInvisible({ parentIndex, issueIndex }) : false}
+					/>
+					{!openedIssue ? null : <IssueDetailsModal item={openedIssue} />}
+				</Fragment>
 			);
 		});
 
