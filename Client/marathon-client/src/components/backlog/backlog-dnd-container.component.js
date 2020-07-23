@@ -20,7 +20,7 @@ const BacklogDndContainer = ({
 	otherProps
 }) => {
 	const { toggleCreating, updateBacklogIssues, backlogIssuesCollections } = useContext(IssuesContext);
-	const { saveCurrentSprint } = useContext(SprintsContext);
+	const { saveCurrentSprint, toggleUpdatingSprint } = useContext(SprintsContext);
 
 	const { toggleModalIsOpen, token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
@@ -39,8 +39,9 @@ const BacklogDndContainer = ({
 		updateBacklogIssues(newCollection);
 	};
 
-	const handleStartSprint = () => {
-		console.log('start sprint');
+	const handleUpdateSprint = () => {
+		toggleUpdatingSprint();
+		saveCurrentSprint(sprint);
 	};
 
 	const handleCreateIssueClick = (e) => {
@@ -56,7 +57,7 @@ const BacklogDndContainer = ({
 				<div className="">{!sprint ? 'Backlog' : sprint.title}</div>
 				<div className="inline-flex">
 					<ClearButton
-						onClick={!sprint ? handleAddSprint : sprintIndex === 0 ? handleStartSprint : null}
+						//onClick={!sprint ? handleAddSprint : sprintIndex === 0 ? handleStartSprint : null}
 						textSize="text-sm"
 						disabled={!sprint ? false : sprintIndex === 0 && sprint.issues.length > 0 ? false : true}
 						addClass="mb-2"
@@ -65,7 +66,7 @@ const BacklogDndContainer = ({
 					</ClearButton>
 					{!sprint ? null : (
 						<div className="inline-flex">
-							<ClearButton textSize="text-sm" addClass="mb-2 ml-2">
+							<ClearButton onClick={handleUpdateSprint} textSize="text-sm" addClass="mb-2 ml-2">
 								<EditIcon />
 							</ClearButton>
 						</div>

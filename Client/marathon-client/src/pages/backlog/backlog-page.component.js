@@ -11,6 +11,7 @@ import { updateIssue } from '../../services/issues.service';
 
 import CreateIssueModal from '../../components/modals/create-issue-modal.component';
 import IssueDetailsModal from '../../components/modals/issue-details-modal.component';
+import EditSprintModal from '../../components/modals/edit-sprint-modal.component';
 import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
 import Spinner from '../../components/spinner/spinner.component';
 import MainWrapper from '../../components/main/maim-wrapper.component';
@@ -23,7 +24,7 @@ const BacklogPage = ({ match }) => {
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { saveCurrentProject, currentProject } = useContext(ProjectsContext);
 	const { updateBacklogIssues, backlogIssuesCollections, toggleUpdating, creating } = useContext(IssuesContext);
-	const { saveCurrentSprint, currentSprint } = useContext(SprintsContext);
+	const { saveCurrentSprint, currentSprint, updatingSprint } = useContext(SprintsContext);
 	const [ openedIssue, setOpenedIssue ] = useState(null);
 	const [ isLoading, setLoading ] = useState(true);
 	const [ dragging, setDragging ] = useState(false);
@@ -88,7 +89,6 @@ const BacklogPage = ({ match }) => {
 	};
 
 	const onOpen = (issue, parentIndex) => {
-		console.log('modal is opened');
 		saveCurrentSprint({ index: parentIndex });
 		setOpenedIssue(issue);
 		toggleUpdating();
@@ -168,6 +168,7 @@ const BacklogPage = ({ match }) => {
 						{renderSprints()}
 						{!openedIssue ? null : <IssueDetailsModal item={openedIssue} />}
 						{creating ? <CreateIssueModal sprintId={!currentSprint ? null : currentSprint.id} /> : null}
+						{updatingSprint ? <EditSprintModal /> : null}
 					</div>
 				) : (
 					<Spinner />

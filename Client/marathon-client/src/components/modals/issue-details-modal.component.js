@@ -69,7 +69,7 @@ const IssueDetailsModal = ({ item }) => {
 			<IssueForm
 				initialIssue={item}
 				handleFetchData={deleting ? handleDeleteIssue : handleUpdateIssue}
-				formTitle="issue"
+				formTitle="issue details"
 				handleModalClose={toggleUpdating}
 				buttonTitle="Edit"
 			>

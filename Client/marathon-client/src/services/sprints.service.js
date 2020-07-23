@@ -19,3 +19,32 @@ export const createSprint = async (projectId, token) => {
 		return error;
 	}
 };
+
+export const updateSprint = async (projectId, token, sprintId, data) => {
+	const headers = getHeaders(token);
+
+	try {
+		const response = await fetcher(API_URL + `/${projectId}/sprints/${sprintId}`, 'PUT', headers, data);
+
+		try {
+			const dataToReturn = await response.json();
+			return dataToReturn;
+		} catch (error) {
+			console.log(error);
+		}
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
+
+export const deleteSprint = async (projectId, token, sprintId) => {
+	const headers = getHeaders(token);
+
+	try {
+		await fetcher(API_URL + `/${projectId}/sprints/${sprintId}`, 'DELETE', headers);
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
