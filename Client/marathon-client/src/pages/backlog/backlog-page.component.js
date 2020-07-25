@@ -5,13 +5,15 @@ import { Context } from '../../providers/global-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
 import { SprintsContext } from '../../providers/sprints-context.provider';
 
-import { processBoardIssuesCollections, getNewIssuesCollections } from '../../utils/issues';
+import { processBacklogIssuesCollections, getNewIssuesCollections } from '../../utils/issues';
 import { getProjectDetails } from '../../services/projects.service';
 import { updateIssue } from '../../services/issues.service';
 
 import CreateIssueModal from '../../components/modals/create-issue-modal.component';
 import IssueDetailsModal from '../../components/modals/issue-details-modal.component';
 import EditSprintModal from '../../components/modals/edit-sprint-modal.component';
+import StartSprintModal from '../../components/modals/start-sprint-modal.component';
+
 import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
 import Spinner from '../../components/spinner/spinner.component';
 import MainWrapper from '../../components/main/maim-wrapper.component';
@@ -24,10 +26,11 @@ const BacklogPage = ({ match }) => {
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { saveCurrentProject, currentProject } = useContext(ProjectsContext);
 	const { updateBacklogIssues, backlogIssuesCollections, toggleUpdating, creating } = useContext(IssuesContext);
-	const { saveCurrentSprint, currentSprint, updatingSprint } = useContext(SprintsContext);
+	const { saveCurrentSprint, currentSprint, updatingSprint, startingSprint } = useContext(SprintsContext);
 	const [ openedIssue, setOpenedIssue ] = useState(null);
 	const [ isLoading, setLoading ] = useState(true);
 	const [ dragging, setDragging ] = useState(false);
+
 	const dragItem = useRef();
 	const dragItemNode = useRef();
 	const movingItem = useRef();
@@ -37,8 +40,7 @@ const BacklogPage = ({ match }) => {
 			const projectId = match.params.projectId;
 			const response = await getProjectDetails(projectId, token);
 			if (response) {
-				console.log(typeof response.sprints[0].startDate);
-				const issuesCollections = processBoardIssuesCollections(response);
+				const issuesCollections = processBacklogIssuesCollections(response);
 				updateBacklogIssues(issuesCollections);
 				saveCurrentProject({ id: response.id, name: response.name, creator: response.creator });
 			}
@@ -78,7 +80,7 @@ const BacklogPage = ({ match }) => {
 		setDragging(false);
 		const data = {
 			...movingItem.current,
-			backlogIndex: dragItem.current.issueIndex,
+			backlogIndex: dragItem.current.index,
 			sprintId: dragItem.current.sprintId ? dragItem.current.sprintId : null
 		};
 
@@ -106,23 +108,23 @@ const BacklogPage = ({ match }) => {
 
 	const getInvisible = (params) => {
 		const currentItem = dragItem.current;
-		return currentItem.parentIndex === params.parentIndex && currentItem.issueIndex === params.issueIndex;
+		return currentItem.parentIndex === params.parentIndex && currentItem.index === params.index;
 	};
 
 	const renderIssues = (issues, parentIndex, sprintId) =>
-		issues.map((issue, issueIndex) => {
+		issues.map((issue, index) => {
 			return (
 				<Fragment key={issue.id}>
 					<BacklogIssueCard
 						issue={issue}
 						handleClick={() => onOpen(issue, parentIndex)}
-						handleDragStart={(e) => handleDragStart(e, { parentIndex, issueIndex, issue })}
+						handleDragStart={(e) => handleDragStart(e, { parentIndex, index, issue })}
 						handleDragEnter={
 							dragging ? (
-								(e) => handleDragEnter(e, { parentIndex, issueIndex, issueId: issue.id, sprintId })
+								(e) => handleDragEnter(e, { parentIndex, index, issueId: issue.id, sprintId })
 							) : null
 						}
-						invisible={dragging ? getInvisible({ parentIndex, issueIndex }) : false}
+						invisible={dragging ? getInvisible({ parentIndex, index }) : false}
 					/>
 				</Fragment>
 			);
@@ -141,7 +143,7 @@ const BacklogPage = ({ match }) => {
 					estimate={issues.length > 0 ? getEstimate(parentIndex) : 0}
 					onDragEnter={
 						dragging && !sprint.issues.length ? (
-							(e) => handleDragEnter(e, { parentIndex, issueIndex: 0, sprintId: sprint.id })
+							(e) => handleDragEnter(e, { parentIndex, index: 0, sprintId: sprint.id })
 						) : null
 					}
 				>
@@ -166,6 +168,7 @@ const BacklogPage = ({ match }) => {
 				{!isLoading ? (
 					<div className="overflow-y-auto h-screen">
 						{renderSprints()}
+						{startingSprint ? <StartSprintModal /> : null}
 						{!openedIssue ? null : <IssueDetailsModal item={openedIssue} />}
 						{creating ? <CreateIssueModal sprintId={!currentSprint ? null : currentSprint.id} /> : null}
 						{updatingSprint ? <EditSprintModal /> : null}

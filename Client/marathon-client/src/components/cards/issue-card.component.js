@@ -18,7 +18,7 @@ const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleC
 		>
 			<div>
 				<div className="text-gray-900">{title}</div>
-				<div className="mr-2 mt-1">{assignee}</div>
+				<div className="mr-2 mt-1">{assignee ? assignee.username : 'unassigned'}</div>
 			</div>
 			<div>
 				<IssueIcon type={type} size="h-5 w-5" />

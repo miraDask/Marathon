@@ -20,7 +20,7 @@ const BacklogDndContainer = ({
 	otherProps
 }) => {
 	const { toggleCreating, updateBacklogIssues, backlogIssuesCollections } = useContext(IssuesContext);
-	const { saveCurrentSprint, toggleUpdatingSprint } = useContext(SprintsContext);
+	const { saveCurrentSprint, toggleUpdatingSprint, toggleStartingSprint } = useContext(SprintsContext);
 
 	const { toggleModalIsOpen, token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
@@ -40,7 +40,9 @@ const BacklogDndContainer = ({
 	};
 
 	const handleStartSprint = () => {
-		console.log('sprint starts');
+		toggleStartingSprint();
+		toggleModalIsOpen();
+		saveCurrentSprint(sprint);
 	};
 
 	const handleUpdateSprint = () => {

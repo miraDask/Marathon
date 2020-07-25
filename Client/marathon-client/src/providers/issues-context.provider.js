@@ -1,6 +1,9 @@
 import React, { createContext, useState } from 'react';
+import { initialStatuses } from '../data/constants';
 
-const boardIssues = localStorage.getItem('boardIssues') ? JSON.parse(localStorage.getItem('boardIssues')) : [];
+const boardIssues = localStorage.getItem('boardIssues')
+	? JSON.parse(localStorage.getItem('boardIssues'))
+	: initialStatuses;
 const backlogIssues = localStorage.getItem('backlogIssues') ? JSON.parse(localStorage.getItem('backlogIssues')) : [];
 
 const initialState = {

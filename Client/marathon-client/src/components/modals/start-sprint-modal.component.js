@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-
-import { deleteSprint, updateSprint } from '../../services/sprints.service';
+import { useHistory } from 'react-router-dom';
+import { updateSprint } from '../../services/sprints.service';
 
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
@@ -9,13 +9,17 @@ import { IssuesContext } from '../../providers/issues-context.provider';
 
 import ModalContainer from '../containers/modal-container.component';
 import SprintForm from '../forms/update-sprint-form.component';
-const EditSprintModal = () => {
+
+const StartSprintModal = () => {
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 	const { backlogIssuesCollections, updateBacklogIssues } = useContext(IssuesContext);
-	const { currentSprint, toggleUpdatingSprint, updatingSprint } = useContext(SprintsContext);
+	const { currentSprint, toggleStartingSprint, startingSprint, saveActiveSprintId } = useContext(SprintsContext);
+	const history = useHistory();
 
-	const handleUpdateSprint = async (sprint) => {
+	const handleStartSprint = async (sprint) => {
+		saveActiveSprintId(sprint.id);
+		//TODO check whether sprint is modified then update
 		try {
 			await updateSprint(currentProject.id, token, currentSprint.id, sprint);
 			let newCollection = JSON.parse(JSON.stringify(backlogIssuesCollections));
@@ -41,39 +45,23 @@ const EditSprintModal = () => {
 	};
 
 	const handleClose = () => {
-		toggleUpdatingSprint();
+		toggleStartingSprint();
 		toggleModalIsOpen();
 	};
 
-	const handleDeleteSprint = async (e) => {
-		e.preventDefault();
-		try {
-			await deleteSprint(currentProject.id, token, currentSprint.id);
-			let newCollection = JSON.parse(JSON.stringify(backlogIssuesCollections));
-			newCollection = newCollection.filter((x) => x.id !== currentSprint.id);
-			updateBacklogIssues(newCollection);
-			handleClose();
-			return true;
-		} catch (error) {
-			return false;
-		}
+	const successFunc = () => {
+		history.push(`/user/dashboard/${currentProject.id}/board`);
 	};
 
 	return (
-		<ModalContainer onClose={handleClose} show={updatingSprint} addBgColor="bg-black bg-opacity-25">
-			<SprintForm handleUpdateSprint={handleUpdateSprint} showDateInputs={currentSprint.startDate}>
+		<ModalContainer onClose={handleClose} show={startingSprint} addBgColor="bg-black bg-opacity-25">
+			<SprintForm showDateInputs={true} handleUpdateSprint={handleStartSprint} successFunc={successFunc}>
 				<div className="flex md:mt-4 mt-6">
 					<button
-						onClick={handleDeleteSprint}
+						type="submit"
 						className="inline-block mx-auto text-white bg-red-400 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg"
 					>
-						Delete
-					</button>
-					<button
-						type="submit"
-						className="inline-block mx-auto text-white bg-green-400 ml-6 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg"
-					>
-						Edit
+						Start
 					</button>
 				</div>
 			</SprintForm>
@@ -81,4 +69,4 @@ const EditSprintModal = () => {
 	);
 };
 
-export default EditSprintModal;
+export default StartSprintModal;

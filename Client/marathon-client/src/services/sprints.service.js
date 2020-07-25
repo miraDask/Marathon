@@ -20,6 +20,23 @@ export const createSprint = async (projectId, token) => {
 	}
 };
 
+export const getSprintDetails = async (projectId, token, sprintId) => {
+	const headers = getHeaders(token);
+	try {
+		const response = await fetcher(API_URL + `/${projectId}/sprints/${sprintId}`, 'GET', headers);
+
+		try {
+			const dataToReturn = await response.json();
+			return dataToReturn;
+		} catch (error) {
+			console.log(error);
+		}
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
+
 export const updateSprint = async (projectId, token, sprintId, data) => {
 	const headers = getHeaders(token);
 

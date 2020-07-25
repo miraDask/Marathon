@@ -1,25 +1,26 @@
 import React, { useState, useRef, useEffect, useContext, Fragment } from 'react';
 import { Context } from '../../providers/global-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
+import { getNewIssuesCollections } from '../../utils/issues';
 
 import IssueCard from '../../components/cards/issue-card.component';
 import StatusList from '../../components/board/status-list.component';
 import IssueDetailsModal from '../modals/issue-details-modal.component';
 import { mockStatuses } from '../../data/mock-data';
 
-const Board = ({ data = mockStatuses }) => {
-	const [ statusesList, setStatuses ] = useState(data);
+const Board = () => {
+	//const [ statusesList, setStatuses ] = useState(data);
 	const [ openedIssue, setOpenedIssue ] = useState(null);
 	const [ dragging, setDragging ] = useState(false);
 	const { toggleModalIsOpen } = useContext(Context);
-	const { toggleUpdating } = useContext(IssuesContext);
+	const { toggleUpdating, boardIssuesCollections, updateBoardIssues } = useContext(IssuesContext);
 
-	useEffect(
-		() => {
-			setStatuses(data);
-		},
-		[ setStatuses, data ]
-	);
+	// useEffect(
+	// 	() => {
+	// 		setStatuses(data);
+	// 	},
+	// 	[ setStatuses, data ]
+	// );
 
 	const dragItem = useRef();
 	const dragItemNode = useRef();
@@ -36,17 +37,9 @@ const Board = ({ data = mockStatuses }) => {
 
 	const handleDragEnter = (e, targetItem) => {
 		if (dragItemNode.current !== e.target) {
-			setStatuses((oldList) => {
-				let newList = JSON.parse(JSON.stringify(oldList));
-				newList[targetItem.statusIndex].issues.splice(
-					targetItem.issueIndex,
-					0,
-					newList[dragItem.current.statusIndex].issues.splice(dragItem.current.issueIndex, 1)[0]
-				);
-				dragItem.current = targetItem;
-				localStorage.setItem('List', JSON.stringify(newList));
-				return newList;
-			});
+			const newBacklogCollection = getNewIssuesCollections(boardIssuesCollections, dragItem, targetItem);
+			updateBoardIssues(newBacklogCollection);
+			dragItem.current = targetItem;
 		}
 	};
 	const handleDragEnd = () => {
@@ -64,41 +57,38 @@ const Board = ({ data = mockStatuses }) => {
 
 	const getInvisible = (params) => {
 		const currentItem = dragItem.current;
-		return currentItem.statusIndex === params.statusIndex && currentItem.issueIndex === params.issueIndex;
+		return currentItem.parentIndex === params.parentIndex && currentItem.index === params.index;
 	};
 
-	const renderIssues = (issues, statusIndex) => {
-		return issues.map((issue, issueIndex) => (
-			<Fragment key={issue.id}>
-				<IssueCard
-					issue={issue}
-					handleClick={() => onOpen(issue)}
-					handleDragStart={(e) => handleDragStart(e, { statusIndex, issueIndex })}
-					handleDragEnter={dragging ? (e) => handleDragEnter(e, { statusIndex, issueIndex }) : null}
-					invisible={dragging ? getInvisible({ statusIndex, issueIndex }) : false}
-				/>
-			</Fragment>
-		));
+	const renderIssues = (issues, parentIndex) => {
+		return issues.map(
+			(issue, index) =>
+				issue ? (
+					<Fragment key={issue.id}>
+						<IssueCard
+							issue={issue}
+							handleClick={() => onOpen(issue)}
+							handleDragStart={(e) => handleDragStart(e, { parentIndex, index })}
+							handleDragEnter={dragging ? (e) => handleDragEnter(e, { parentIndex, index }) : null}
+							invisible={dragging ? getInvisible({ parentIndex, index }) : false}
+						/>
+					</Fragment>
+				) : null
+		);
 	};
 
 	const renderStatuses = () => {
-		return !statusesList ? (
-			<StatusList title="TODO" key="TODO" />
-		) : (
-			statusesList.map((status, statusIndex) => (
-				<StatusList
-					key={status.title}
-					title={status.title}
-					onDragEnter={
-						dragging && !status.issues.length ? (
-							(e) => handleDragEnter(e, { statusIndex, issueIndex: 0 })
-						) : null
-					}
-				>
-					{renderIssues(status.issues, statusIndex)}
-				</StatusList>
-			))
-		);
+		return boardIssuesCollections.map((status, parentIndex) => (
+			<StatusList
+				key={status.title}
+				title={status.title}
+				onDragEnter={
+					dragging && !status.issues.length ? (e) => handleDragEnter(e, { parentIndex, index: 0 }) : null
+				}
+			>
+				{renderIssues(status.issues, parentIndex)}
+			</StatusList>
+		));
 	};
 
 	return (

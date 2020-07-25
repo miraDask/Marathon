@@ -13,7 +13,7 @@ import ErrorMessageContainer from '../messages/form-input-error-message.componen
 import IssueFormsInput from '../inputs/issue-forms-input.component';
 import CustomLabel from '../labels/custom-label.component';
 
-const SprintForm = ({ handleUpdateSprint, children }) => {
+const SprintForm = ({ handleUpdateSprint, children, showDateInputs, successFunc = null }) => {
 	const [ errors, setErrors ] = useState({ title: '', description: '', storyPoints: '' });
 	const { toggleModalIsOpen } = useContext(Context);
 	const { currentSprint, toggleUpdatingSprint } = useContext(SprintsContext);
@@ -68,6 +68,9 @@ const SprintForm = ({ handleUpdateSprint, children }) => {
 			setErrors({ name: '', key: '' });
 			toggleUpdatingSprint();
 			toggleModalIsOpen();
+			if (successFunc) {
+				successFunc();
+			}
 		}
 	};
 
@@ -131,7 +134,7 @@ const SprintForm = ({ handleUpdateSprint, children }) => {
 						/>
 						{errors.title ? <ErrorMessageContainer>{errors.title}</ErrorMessageContainer> : null}
 					</div>
-					{currentSprint.startDate ? renderDateInputs() : null}
+					{showDateInputs ? renderDateInputs() : null}
 					<div className="p-2 w-full">
 						<CustomLabel labelFor="goal">Goal</CustomLabel>
 						<textarea
