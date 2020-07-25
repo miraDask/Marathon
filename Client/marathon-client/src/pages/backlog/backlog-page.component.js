@@ -37,7 +37,7 @@ const BacklogPage = ({ match }) => {
 			const projectId = match.params.projectId;
 			const response = await getProjectDetails(projectId, token);
 			if (response) {
-				console.log(response);
+				console.log(typeof response.sprints[0].startDate);
 				const issuesCollections = processBoardIssuesCollections(response);
 				updateBacklogIssues(issuesCollections);
 				saveCurrentProject({ id: response.id, name: response.name, creator: response.creator });

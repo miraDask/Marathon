@@ -1,24 +1,28 @@
 import React, { useState, useContext, Fragment } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from 'react-datepicker';
+import moment from 'moment/moment.js';
 
 import { Context } from '../../providers/global-context.provider';
 import { SprintsContext } from '../../providers/sprints-context.provider';
 
 import { validateGoal, validateTitle, validateStartDate, validateEndDate } from '../../utils/validations/sprints';
-import { getEmptyInputsErrorsObject } from '../../utils/errors/issues';
+import { getEmptyInputsErrorsObject } from '../../utils/errors/sprints';
 
 import ErrorMessageContainer from '../messages/form-input-error-message.component';
 import IssueFormsInput from '../inputs/issue-forms-input.component';
 import CustomLabel from '../labels/custom-label.component';
 
-const SprintForm = ({ handleFetchData, children }) => {
+const SprintForm = ({ handleUpdateSprint, children }) => {
 	const [ errors, setErrors ] = useState({ title: '', description: '', storyPoints: '' });
 	const { toggleModalIsOpen } = useContext(Context);
-	const { currentSprint, toggleUpdatingSprint, updatingSprint } = useContext(SprintsContext);
+	const { currentSprint, toggleUpdatingSprint } = useContext(SprintsContext);
 	const [ sprint, setSprint ] = useState(currentSprint);
+	console.log(currentSprint);
 
 	const minDate = Date.now();
+	const startDate = sprint.startDate ? moment(sprint.startDate).toDate() : null;
+	const endDate = sprint.endDate ? moment(sprint.endDate).toDate() : null;
 
 	const handleChange = (event) => {
 		const { value, name } = event.target;
@@ -52,19 +56,55 @@ const SprintForm = ({ handleFetchData, children }) => {
 			return;
 		}
 
-		const { title, goal } = sprint;
-		let errorsObject = getEmptyInputsErrorsObject({ title, goal });
+		const { title, goal, startDate, endDate } = sprint;
+		const objectToValidate = currentSprint.startDate ? { title, goal, startDate, endDate } : { title, goal };
+		let errorsObject = getEmptyInputsErrorsObject(objectToValidate);
 		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
 			return setErrors({ ...errors, ...errorsObject });
 		}
 
-		const success = await handleFetchData(sprint);
+		const success = await handleUpdateSprint(sprint);
 
 		if (success) {
 			setErrors({ name: '', key: '' });
 			toggleUpdatingSprint();
 			toggleModalIsOpen();
 		}
+	};
+
+	const renderDateInputs = () => {
+		return (
+			<div>
+				<div className="p-2 w-4/6">
+					<CustomLabel labelFor="title">start date</CustomLabel>
+					<DatePicker
+						name="startDate"
+						minDate={minDate}
+						onBlur={(event) => handleOnBlur(event, validateStartDate, { startDate: sprint.startDate })}
+						dateFormat="dd/MM/yyyy"
+						placeholderText="dd/MM/yyyy"
+						className="w-full bg-gray-100 rounded border border-gray-400 focus:outline-none focus:border-teal-500 text-base px-4 py-2"
+						selected={startDate}
+						onChange={handleStartDateChange}
+					/>
+					{errors.startDate ? <ErrorMessageContainer>{errors.startDate}</ErrorMessageContainer> : null}
+				</div>
+				<div className="p-2 w-4/6">
+					<CustomLabel labelFor="title">end date</CustomLabel>
+					<DatePicker
+						name="endDate"
+						minDate={minDate}
+						onBlur={(event) => handleOnBlur(event, validateEndDate, { endDate: sprint.endDate })}
+						dateFormat="dd/MM/yyyy"
+						placeholderText="dd/MM/yyyy"
+						className="w-full bg-gray-100 rounded border border-gray-400 focus:outline-none focus:border-teal-500 text-base px-4 py-2 resize-none block"
+						selected={endDate}
+						onChange={handleEndDateChange}
+					/>
+					{errors.endDate ? <ErrorMessageContainer>{errors.endDate}</ErrorMessageContainer> : null}
+				</div>
+			</div>
+		);
 	};
 
 	return (
@@ -92,44 +132,7 @@ const SprintForm = ({ handleFetchData, children }) => {
 						/>
 						{errors.title ? <ErrorMessageContainer>{errors.title}</ErrorMessageContainer> : null}
 					</div>
-					{currentSprint.startDate ? (
-						<Fragment>
-							<div className="p-2 w-4/6">
-								<CustomLabel labelFor="title">start date</CustomLabel>
-								<DatePicker
-									name="startDate"
-									minDate={minDate}
-									onBlur={(event) =>
-										handleOnBlur(event, validateStartDate, { startDate: sprint.startDate })}
-									dateFormat="dd/MM/yyyy"
-									placeholderText="dd/MM/yyyy"
-									className="w-full bg-gray-100 rounded border border-gray-400 focus:outline-none focus:border-teal-500 text-base px-4 py-2"
-									selected={sprint.startDate}
-									onChange={handleStartDateChange}
-								/>
-								{errors.startDate ? (
-									<ErrorMessageContainer>{errors.startDate}</ErrorMessageContainer>
-								) : null}
-							</div>
-							<div className="p-2 w-4/6">
-								<CustomLabel labelFor="title">end date</CustomLabel>
-								<DatePicker
-									name="endDate"
-									minDate={minDate}
-									onBlur={(event) =>
-										handleOnBlur(event, validateEndDate, { endDate: sprint.endDate })}
-									dateFormat="dd/MM/yyyy"
-									placeholderText="dd/MM/yyyy"
-									className="w-full bg-gray-100 rounded border border-gray-400 focus:outline-none focus:border-teal-500 text-base px-4 py-2 resize-none block"
-									selected={sprint.endDate}
-									onChange={handleEndDateChange}
-								/>
-								{errors.endDate ? (
-									<ErrorMessageContainer>{errors.endDate}</ErrorMessageContainer>
-								) : null}
-							</div>
-						</Fragment>
-					) : null}
+					{currentSprint.startDate ? renderDateInputs() : null}
 					<div className="p-2 w-full">
 						<CustomLabel labelFor="goal">Goal</CustomLabel>
 						<textarea

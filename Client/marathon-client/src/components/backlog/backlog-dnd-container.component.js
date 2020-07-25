@@ -39,8 +39,13 @@ const BacklogDndContainer = ({
 		updateBacklogIssues(newCollection);
 	};
 
+	const handleStartSprint = () => {
+		console.log('sprint starts');
+	};
+
 	const handleUpdateSprint = () => {
 		toggleUpdatingSprint();
+		toggleModalIsOpen();
 		saveCurrentSprint(sprint);
 	};
 
@@ -57,7 +62,7 @@ const BacklogDndContainer = ({
 				<div className="">{!sprint ? 'Backlog' : sprint.title}</div>
 				<div className="inline-flex">
 					<ClearButton
-						//onClick={!sprint ? handleAddSprint : sprintIndex === 0 ? handleStartSprint : null}
+						onClick={!sprint ? handleAddSprint : sprintIndex === 0 ? handleStartSprint : null}
 						textSize="text-sm"
 						disabled={!sprint ? false : sprintIndex === 0 && sprint.issues.length > 0 ? false : true}
 						addClass="mb-2"

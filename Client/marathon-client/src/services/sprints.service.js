@@ -24,14 +24,7 @@ export const updateSprint = async (projectId, token, sprintId, data) => {
 	const headers = getHeaders(token);
 
 	try {
-		const response = await fetcher(API_URL + `/${projectId}/sprints/${sprintId}`, 'PUT', headers, data);
-
-		try {
-			const dataToReturn = await response.json();
-			return dataToReturn;
-		} catch (error) {
-			console.log(error);
-		}
+		await fetcher(API_URL + `/${projectId}/sprints/${sprintId}`, 'PUT', headers, data);
 	} catch (error) {
 		console.log(error);
 		return error;

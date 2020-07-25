@@ -14,11 +14,6 @@ const EditSprintModal = () => {
 	const { currentProject } = useContext(ProjectsContext);
 	const { backlogIssuesCollections, updateBacklogIssues } = useContext(IssuesContext);
 	const { currentSprint, toggleUpdatingSprint, updatingSprint } = useContext(SprintsContext);
-	const [ deleting, setDeleting ] = useState(false);
-
-	const handleDeleteSprintClick = () => {
-		setDeleting(true);
-	};
 
 	const handleUpdateSprint = async (sprint) => {
 		try {
@@ -50,13 +45,14 @@ const EditSprintModal = () => {
 		toggleModalIsOpen();
 	};
 
-	const handleDeleteSprint = async () => {
+	const handleDeleteSprint = async (e) => {
+		e.preventDefault();
 		try {
 			await deleteSprint(currentProject.id, token, currentSprint.id);
 			let newCollection = JSON.parse(JSON.stringify(backlogIssuesCollections));
 			newCollection = newCollection.filter((x) => x.id !== currentSprint.id);
 			updateBacklogIssues(newCollection);
-			setDeleting(false);
+			handleClose();
 			return true;
 		} catch (error) {
 			return false;
@@ -65,11 +61,10 @@ const EditSprintModal = () => {
 
 	return (
 		<ModalContainer onClose={handleClose} show={updatingSprint} addBgColor="bg-black bg-opacity-25">
-			<SprintForm handleFetchData={deleting ? handleDeleteSprint : handleUpdateSprint}>
+			<SprintForm handleUpdateSprint={handleUpdateSprint}>
 				<div className="flex md:mt-4 mt-6">
 					<button
-						type="submit"
-						onClick={handleDeleteSprintClick}
+						onClick={handleDeleteSprint}
 						className="inline-block mx-auto text-white bg-red-400 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg"
 					>
 						Delete
