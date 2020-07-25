@@ -18,7 +18,6 @@ const SprintForm = ({ handleUpdateSprint, children }) => {
 	const { toggleModalIsOpen } = useContext(Context);
 	const { currentSprint, toggleUpdatingSprint } = useContext(SprintsContext);
 	const [ sprint, setSprint ] = useState(currentSprint);
-	console.log(currentSprint);
 
 	const minDate = Date.now();
 	const startDate = sprint.startDate ? moment(sprint.startDate).toDate() : null;
@@ -42,10 +41,10 @@ const SprintForm = ({ handleUpdateSprint, children }) => {
 
 	const handleOnBlur = (event, validationFunc, data) => {
 		const { name } = event.target;
-		const { error } = validationFunc(data);
+		const validationResult = validationFunc(data);
 
-		if (error) {
-			return setErrors({ ...errors, [name]: error });
+		if (validationResult.error) {
+			return setErrors({ ...errors, [name]: validationResult.error });
 		}
 	};
 

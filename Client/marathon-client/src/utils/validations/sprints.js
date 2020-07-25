@@ -27,16 +27,20 @@ export const validateTitle = ({ title }) => {
 	return getValidationResult(isValid, ERROR_MESSAGES.SPRINT.TITLE);
 };
 
-export const validateStartDate = ({ date }) => {
-	if (!date) {
+export const validateStartDate = ({ startDate }) => {
+	if (!startDate) {
 		return getValidationResult(false, ERROR_MESSAGES.SPRINT.START_DATE_REQUIRED);
 	}
+
+	return true;
 };
 
-export const validateEndDate = ({ date }) => {
-	if (!date) {
+export const validateEndDate = ({ endDate }) => {
+	if (!endDate) {
 		return getValidationResult(false, ERROR_MESSAGES.SPRINT.END_DATE_REQUIRED);
 	}
+
+	return true;
 };
 
 export const validateGoal = ({ goal }) => {
