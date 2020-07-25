@@ -66,7 +66,6 @@ const SprintForm = ({ handleUpdateSprint, children, showDateInputs, successFunc 
 
 		if (success) {
 			setErrors({ name: '', key: '' });
-			toggleUpdatingSprint();
 			toggleModalIsOpen();
 			if (successFunc) {
 				successFunc();

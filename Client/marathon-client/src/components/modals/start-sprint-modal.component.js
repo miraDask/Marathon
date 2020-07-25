@@ -50,6 +50,7 @@ const StartSprintModal = () => {
 	};
 
 	const successFunc = () => {
+		toggleStartingSprint();
 		history.push(`/user/dashboard/${currentProject.id}/board`);
 	};
 

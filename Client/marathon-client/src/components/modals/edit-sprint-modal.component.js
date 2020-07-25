@@ -59,9 +59,17 @@ const EditSprintModal = () => {
 		}
 	};
 
+	const successFunc = () => {
+		toggleUpdatingSprint();
+	};
+
 	return (
 		<ModalContainer onClose={handleClose} show={updatingSprint} addBgColor="bg-black bg-opacity-25">
-			<SprintForm handleUpdateSprint={handleUpdateSprint} showDateInputs={currentSprint.startDate}>
+			<SprintForm
+				handleUpdateSprint={handleUpdateSprint}
+				showDateInputs={currentSprint.startDate}
+				successFunc={successFunc}
+			>
 				<div className="flex md:mt-4 mt-6">
 					<button
 						onClick={handleDeleteSprint}
