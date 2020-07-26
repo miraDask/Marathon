@@ -149,17 +149,21 @@
                         Status = x.Status,
                         BacklogIndex = x.BacklogIndex,
                         StatusIndex = x.StatusIndex,
-                        AssigneeId = x.AssigneeId,
-                        Description = x.Description,
-                        ParentIssueId = x.ParentIssueId,
-                        SprintId = x.SprintId,
+                        Assignee = new UserListingServerModel
+                        {
+                            Id = x.Assignee.Id,
+                            UserName = x.Assignee.UserName,
+                            ImageUrl = x.Assignee.ImageUrl,
+                        },
                     }).OrderBy(x => x.BacklogIndex),
-                    Sprints = x.Sprints.Select(x => new SprintWithIssuesServiceModel
+                    Sprints = x.Sprints.Where(x => !x.Archived).OrderBy(x => x.CreatedOn)
+                    .Select(x => new SprintWithIssuesServiceModel
                     {
                         Id = x.Id,
                         Title = x.Title,
                         StartDate = x.StartDate,
                         EndDate = x.EndDate,
+                        Active = x.Active,
                         Goal = x.Goal,
                         Issues = x.Issues.Select(x => new IssueListingServiceModel
                         {
@@ -171,12 +175,17 @@
                             Status = x.Status,
                             BacklogIndex = x.BacklogIndex,
                             StatusIndex = x.StatusIndex,
-                            AssigneeId = x.AssigneeId,
+                            Assignee = new UserListingServerModel
+                            {
+                                Id = x.Assignee.Id,
+                                UserName = x.Assignee.UserName,
+                                ImageUrl = x.Assignee.ImageUrl,
+                            },
                             Description = x.Description,
                             ParentIssueId = x.ParentIssueId,
                             SprintId = x.SprintId,
                         }).OrderBy(x => x.BacklogIndex),
-                    }),
+                    }).ToList(),
                 })
                 .FirstOrDefaultAsync();
 
@@ -332,7 +341,7 @@
                 .FirstOrDefaultAsync();
 
         private async Task<Project> GetByIdAsync(int id)
-     => await this.dbContext
+         => await this.dbContext
                   .Projects
                   .Where(x => x.Id == id)
                   .FirstOrDefaultAsync();

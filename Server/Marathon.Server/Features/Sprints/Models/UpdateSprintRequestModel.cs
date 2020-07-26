@@ -11,8 +11,6 @@
         [MaxLength(TitleMaxLength)]
         public string Title { get; set; }
 
-        [MinLength(GoalMinLength)]
-        [MaxLength(GoalMaxLength)]
         public string Goal { get; set; }
 
         public DateTime? StartDate { get; set; }

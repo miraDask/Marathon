@@ -1,6 +1,7 @@
 ﻿namespace Marathon.Server.Features.Issues.Models
 {
     using Marathon.Server.Data.Enumerations;
+    using Marathon.Server.Features.Identity.Models;
 
     public class IssueListingServiceModel
     {
@@ -14,7 +15,7 @@
 
         public int StatusIndex { get; set; }
 
-        public string AssigneeId { get; set; }
+        public UserListingServerModel Assignee { get; set; }
 
         public int? SprintId { get; set; }
 

@@ -11,16 +11,16 @@
 
         public string Title { get; set; }
 
-        public string Goal { get; set; }
-
-        public int? DurationInWeeks { get; set; }
-
-        public DateTime? StartDate { get; set; }
-
-        public DateTime? EndDate { get; set; }
+        public int RemainingDays { get; set; }
 
         public int? Estimate { get; set; }
 
-        public virtual IEnumerable<IssueListingServiceModel> Issues { get; set; }
+        public virtual SprintStatusesListingModel TodoIssues { get; set; }
+
+        public virtual SprintStatusesListingModel DevelopmentIssues { get; set; }
+
+        public virtual SprintStatusesListingModel TestingIssues { get; set; }
+
+        public virtual SprintStatusesListingModel DoneIssues { get; set; }
     }
 }

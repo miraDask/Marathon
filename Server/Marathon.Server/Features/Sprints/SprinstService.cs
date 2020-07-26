@@ -6,8 +6,10 @@
     using System.Threading.Tasks;
 
     using Marathon.Server.Data;
+    using Marathon.Server.Data.Enumerations;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Features.Sprints.Models;
     using Microsoft.EntityFrameworkCore;
@@ -36,6 +38,8 @@
                 DurationInWeeks = null,
                 StartDate = null,
                 EndDate = null,
+                Archived = false,
+                Active = false,
             };
 
             await this.dbContext.AddAsync(sprint);
@@ -113,18 +117,92 @@
                 {
                     Id = x.Id,
                     Title = x.Title,
-                    Goal = x.Goal,
-                    DurationInWeeks = x.DurationInWeeks,
-                    StartDate = x.StartDate,
-                    EndDate = x.EndDate,
-                    Issues = x.Issues.Select(x => new IssueListingServiceModel
-                    {
-                        Id = x.Id,
-                        Title = x.Title,
-                        StoryPoints = x.StoryPoints,
-                        Status = x.Status,
-                    }),
+                    RemainingDays = ((DateTime)x.EndDate - (DateTime)x.StartDate).Days,
                     Estimate = x.Issues.Sum(x => x.StoryPoints),
+                    TodoIssues = new SprintStatusesListingModel
+                    {
+                        Title = Enum.GetName(typeof(Status), 0),
+                        Issues = x.Issues.Where(x => x.Status == Status.ToDo).Select(x => new IssueListingServiceModel
+                        {
+                            Title = x.Title,
+                            Id = x.Id,
+                            StoryPoints = x.StoryPoints,
+                            Type = x.Type,
+                            Priority = x.Priority,
+                            Status = x.Status,
+                            BacklogIndex = x.BacklogIndex,
+                            StatusIndex = x.StatusIndex,
+                            Assignee = new UserListingServerModel
+                            {
+                                Id = x.Assignee.Id,
+                                UserName = x.Assignee.UserName,
+                                ImageUrl = x.Assignee.ImageUrl,
+                            },
+                        }),
+                    },
+                    DevelopmentIssues = new SprintStatusesListingModel
+                    {
+                        Title = Enum.GetName(typeof(Status), 1),
+                        Issues = x.Issues.Where(x => x.Status == Status.Development).Select(x => new IssueListingServiceModel
+                        {
+                            Title = x.Title,
+                            Id = x.Id,
+                            StoryPoints = x.StoryPoints,
+                            Type = x.Type,
+                            Priority = x.Priority,
+                            Status = x.Status,
+                            BacklogIndex = x.BacklogIndex,
+                            StatusIndex = x.StatusIndex,
+                            Assignee = new UserListingServerModel
+                            {
+                                Id = x.Assignee.Id,
+                                UserName = x.Assignee.UserName,
+                                ImageUrl = x.Assignee.ImageUrl,
+                            },
+                        }),
+                    },
+                    TestingIssues = new SprintStatusesListingModel
+                    {
+                        Title = Enum.GetName(typeof(Status), 2),
+                        Issues = x.Issues.Where(x => x.Status == Status.Testing).Select(x => new IssueListingServiceModel
+                        {
+                            Title = x.Title,
+                            Id = x.Id,
+                            StoryPoints = x.StoryPoints,
+                            Type = x.Type,
+                            Priority = x.Priority,
+                            Status = x.Status,
+                            BacklogIndex = x.BacklogIndex,
+                            StatusIndex = x.StatusIndex,
+                            Assignee = new UserListingServerModel
+                            {
+                                Id = x.Assignee.Id,
+                                UserName = x.Assignee.UserName,
+                                ImageUrl = x.Assignee.ImageUrl,
+                            },
+                        }),
+                    },
+                    DoneIssues = new SprintStatusesListingModel
+                    {
+                        Title = Enum.GetName(typeof(Status), 3),
+                        Issues = x.Issues.Where(x => x.Status == Status.Done).Select(x => new IssueListingServiceModel
+                        {
+                            Title = x.Title,
+                            Id = x.Id,
+                            StoryPoints = x.StoryPoints,
+                            Type = x.Type,
+                            Priority = x.Priority,
+                            Status = x.Status,
+                            BacklogIndex = x.BacklogIndex,
+                            StatusIndex = x.StatusIndex,
+                            Assignee = new UserListingServerModel
+                            {
+                                Id = x.Assignee.Id,
+                                UserName = x.Assignee.UserName,
+                                ImageUrl = x.Assignee.ImageUrl,
+                            },
+                        }),
+                    },
                 })
                 .FirstOrDefaultAsync();
 
@@ -215,8 +293,35 @@
             sprint.Goal = goal;
             sprint.StartDate = startDate;
             sprint.EndDate = endDate;
+            sprint.Active = startDate != null;
             sprint.ModifiedOn = DateTime.UtcNow;
 
+            this.dbContext.Update(sprint);
+            await this.dbContext.SaveChangesAsync();
+
+            return new ResultModel<bool>
+            {
+                Success = true,
+            };
+        }
+
+        public async Task<ResultModel<bool>> ArchiveAsync(int sprintId, int projectId)
+        {
+            var sprint = await this.GetByIdAndProjectIdAsync(sprintId, projectId);
+
+            if (sprint == null)
+            {
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { Errors.InvalidSprintId },
+                };
+            }
+
+            sprint.Active = false;
+            sprint.Archived = true;
+            sprint.ModifiedOn = DateTime.UtcNow;
+
+            this.dbContext.Update(sprint);
             await this.dbContext.SaveChangesAsync();
 
             return new ResultModel<bool>

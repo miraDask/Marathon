@@ -31,6 +31,10 @@
 
         public DateTime? EndDate { get; set; }
 
+        public bool Active { get; set; }
+
+        public bool Archived { get; set; }
+
         public virtual ICollection<Issue> Issues { get; set; }
     }
 }
