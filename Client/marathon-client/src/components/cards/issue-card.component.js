@@ -5,6 +5,7 @@ import IssueIcon from '../../components/icons/issue-icon.component';
 
 const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleClick }) => {
 	const { id, title, assignee, priority, type, storyPoints } = issue;
+	console.log(issue);
 	return (
 		<div
 			id={id}
@@ -18,7 +19,7 @@ const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleC
 		>
 			<div>
 				<div className="text-gray-900">{title}</div>
-				<div className="mr-2 mt-1">{assignee ? assignee.username : 'unassigned'}</div>
+				<div className="mr-2 mt-1">{assignee.username ? assignee.username : 'unassigned'}</div>
 			</div>
 			<div>
 				<IssueIcon type={type} size="h-5 w-5" />

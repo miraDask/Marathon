@@ -58,6 +58,20 @@ const BacklogDndContainer = ({
 		toggleModalIsOpen();
 	};
 
+	const getDisabledButton = () => {
+		if (!sprint) {
+			return false;
+		}
+
+		if (sprintIndex === 0 && sprint.issues.length > 0 && !sprint.active) {
+			return false;
+		}
+
+		if ((sprintIndex === 0 && sprint.issues.length === 0) || sprint.active || sprintIndex > 0) {
+			return true;
+		}
+	};
+
 	return (
 		<div className={`lg:mx-24 lg:w-5/6 text-right md:w-full w-full ${top}`} {...otherProps}>
 			<div className="flex justify-between text-lg">
@@ -66,7 +80,7 @@ const BacklogDndContainer = ({
 					<ClearButton
 						onClick={!sprint ? handleAddSprint : sprintIndex === 0 ? handleStartSprint : null}
 						textSize="text-sm"
-						disabled={!sprint ? false : sprintIndex === 0 && sprint.issues.length > 0 ? false : true}
+						disabled={getDisabledButton()}
 						addClass="mb-2"
 					>
 						{buttonTitle}

@@ -30,7 +30,7 @@ const SignInForm = () => {
 				saveHasProjects();
 			};
 		},
-		[ hasProjects ]
+		[ hasProjects, saveHasProjects ]
 	);
 	const handleChange = (event) => {
 		const { value, name } = event.target;

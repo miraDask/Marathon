@@ -26,7 +26,9 @@ const BacklogPage = ({ match }) => {
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { saveCurrentProject, currentProject } = useContext(ProjectsContext);
 	const { updateBacklogIssues, backlogIssuesCollections, toggleUpdating, creating } = useContext(IssuesContext);
-	const { saveCurrentSprint, currentSprint, updatingSprint, startingSprint } = useContext(SprintsContext);
+	const { saveCurrentSprint, currentSprint, updatingSprint, startingSprint, saveActiveSprintId } = useContext(
+		SprintsContext
+	);
 	const [ openedIssue, setOpenedIssue ] = useState(null);
 	const [ isLoading, setLoading ] = useState(true);
 	const [ dragging, setDragging ] = useState(false);
@@ -42,7 +44,18 @@ const BacklogPage = ({ match }) => {
 			if (response) {
 				const issuesCollections = processBacklogIssuesCollections(response);
 				updateBacklogIssues(issuesCollections);
-				saveCurrentProject({ id: response.id, name: response.name, creator: response.creator });
+
+				const activeSprint = response.sprints.filter((x) => x.active)[0];
+				saveCurrentProject({
+					id: response.id,
+					name: response.name,
+					creator: response.creator,
+					activeSprintId: activeSprint ? activeSprint.id : null
+				});
+
+				if (activeSprint) {
+					saveActiveSprintId(activeSprint.id);
+				}
 			}
 		};
 		getCurrentProjectDetails();

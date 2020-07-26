@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext, Fragment } from 'react';
+import React, { useState, useRef, useContext, Fragment } from 'react';
 import { Context } from '../../providers/global-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
 import { getNewIssuesCollections } from '../../utils/issues';
@@ -6,21 +6,12 @@ import { getNewIssuesCollections } from '../../utils/issues';
 import IssueCard from '../../components/cards/issue-card.component';
 import StatusList from '../../components/board/status-list.component';
 import IssueDetailsModal from '../modals/issue-details-modal.component';
-import { mockStatuses } from '../../data/mock-data';
 
 const Board = () => {
-	//const [ statusesList, setStatuses ] = useState(data);
 	const [ openedIssue, setOpenedIssue ] = useState(null);
 	const [ dragging, setDragging ] = useState(false);
 	const { toggleModalIsOpen } = useContext(Context);
 	const { toggleUpdating, boardIssuesCollections, updateBoardIssues } = useContext(IssuesContext);
-
-	// useEffect(
-	// 	() => {
-	// 		setStatuses(data);
-	// 	},
-	// 	[ setStatuses, data ]
-	// );
 
 	const dragItem = useRef();
 	const dragItemNode = useRef();

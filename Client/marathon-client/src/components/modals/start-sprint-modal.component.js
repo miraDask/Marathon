@@ -12,7 +12,7 @@ import SprintForm from '../forms/update-sprint-form.component';
 
 const StartSprintModal = () => {
 	const { token, toggleModalIsOpen } = useContext(Context);
-	const { currentProject } = useContext(ProjectsContext);
+	const { currentProject, saveCurrentProject } = useContext(ProjectsContext);
 	const { backlogIssuesCollections, updateBacklogIssues } = useContext(IssuesContext);
 	const { currentSprint, toggleStartingSprint, startingSprint, saveActiveSprintId } = useContext(SprintsContext);
 	const history = useHistory();
@@ -34,10 +34,12 @@ const StartSprintModal = () => {
 				title: sprint.title,
 				startDate: sprint.startDate,
 				endDate: sprint.endDate,
-				goal: sprint.goal
+				goal: sprint.goal,
+				active: true
 			};
 			newCollection.splice(sprintIndex, 1, sprintToUpdate);
 			updateBacklogIssues(newCollection);
+			saveCurrentProject({ ...currentProject, activeSprintId: sprintToUpdate.id });
 			return true;
 		} catch (error) {
 			return false;

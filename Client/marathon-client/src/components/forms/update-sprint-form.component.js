@@ -16,7 +16,7 @@ import CustomLabel from '../labels/custom-label.component';
 const SprintForm = ({ handleUpdateSprint, children, showDateInputs, successFunc = null }) => {
 	const [ errors, setErrors ] = useState({ title: '', description: '', storyPoints: '' });
 	const { toggleModalIsOpen } = useContext(Context);
-	const { currentSprint, toggleUpdatingSprint } = useContext(SprintsContext);
+	const { currentSprint } = useContext(SprintsContext);
 	const [ sprint, setSprint ] = useState(currentSprint);
 
 	const minDate = Date.now();
@@ -56,8 +56,7 @@ const SprintForm = ({ handleUpdateSprint, children, showDateInputs, successFunc 
 		}
 
 		const { title, goal, startDate, endDate } = sprint;
-		const objectToValidate = currentSprint.startDate ? { title, goal, startDate, endDate } : { title, goal };
-		let errorsObject = getEmptyInputsErrorsObject(objectToValidate);
+		let errorsObject = getEmptyInputsErrorsObject({ title, goal, startDate, endDate });
 		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
 			return setErrors({ ...errors, ...errorsObject });
 		}
@@ -75,7 +74,7 @@ const SprintForm = ({ handleUpdateSprint, children, showDateInputs, successFunc 
 
 	const renderDateInputs = () => {
 		return (
-			<div>
+			<Fragment>
 				<div className="p-2 w-4/6">
 					<CustomLabel labelFor="title">start date</CustomLabel>
 					<DatePicker
@@ -104,7 +103,7 @@ const SprintForm = ({ handleUpdateSprint, children, showDateInputs, successFunc 
 					/>
 					{errors.endDate ? <ErrorMessageContainer>{errors.endDate}</ErrorMessageContainer> : null}
 				</div>
-			</div>
+			</Fragment>
 		);
 	};
 
