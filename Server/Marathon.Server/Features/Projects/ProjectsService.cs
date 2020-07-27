@@ -136,7 +136,7 @@
                     Creator = new UserListingServerModel
                     {
                         Id = x.Creator.Id,
-                        UserName = x.Creator.UserName,
+                        FullName = x.Creator.FullName,
                         ImageUrl = x.Creator.ImageUrl,
                     },
                     Issues = x.Issues.Where(x => x.SprintId == null).Select(x => new IssueListingServiceModel
@@ -152,7 +152,7 @@
                         Assignee = new UserListingServerModel
                         {
                             Id = x.Assignee.Id,
-                            UserName = x.Assignee.UserName,
+                            FullName = x.Assignee.FullName,
                             ImageUrl = x.Assignee.ImageUrl,
                         },
                     }).OrderBy(x => x.BacklogIndex),
@@ -178,7 +178,7 @@
                             Assignee = new UserListingServerModel
                             {
                                 Id = x.Assignee.Id,
-                                UserName = x.Assignee.UserName,
+                                FullName = x.Assignee.FullName,
                                 ImageUrl = x.Assignee.ImageUrl,
                             },
                             Description = x.Description,

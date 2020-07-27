@@ -166,7 +166,7 @@
                     TeamUsers = x.TeamsUsers.Select(x => new UserListingServerModel()
                     {
                         Id = x.User.Id,
-                        UserName = x.User.UserName,
+                        FullName = x.User.FullName,
                         ImageUrl = x.User.ImageUrl,
                     }),
                 })

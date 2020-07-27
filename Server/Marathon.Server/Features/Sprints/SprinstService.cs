@@ -126,6 +126,7 @@
                         {
                             Title = x.Title,
                             Id = x.Id,
+                            Description = x.Description,
                             StoryPoints = x.StoryPoints,
                             Type = x.Type,
                             Priority = x.Priority,
@@ -135,7 +136,7 @@
                             Assignee = new UserListingServerModel
                             {
                                 Id = x.Assignee.Id,
-                                UserName = x.Assignee.UserName,
+                                FullName = x.Assignee.FullName,
                                 ImageUrl = x.Assignee.ImageUrl,
                             },
                         }),
@@ -147,6 +148,7 @@
                         {
                             Title = x.Title,
                             Id = x.Id,
+                            Description = x.Description,
                             StoryPoints = x.StoryPoints,
                             Type = x.Type,
                             Priority = x.Priority,
@@ -156,7 +158,7 @@
                             Assignee = new UserListingServerModel
                             {
                                 Id = x.Assignee.Id,
-                                UserName = x.Assignee.UserName,
+                                FullName = x.Assignee.FullName,
                                 ImageUrl = x.Assignee.ImageUrl,
                             },
                         }),
@@ -168,6 +170,7 @@
                         {
                             Title = x.Title,
                             Id = x.Id,
+                            Description = x.Description,
                             StoryPoints = x.StoryPoints,
                             Type = x.Type,
                             Priority = x.Priority,
@@ -177,7 +180,7 @@
                             Assignee = new UserListingServerModel
                             {
                                 Id = x.Assignee.Id,
-                                UserName = x.Assignee.UserName,
+                                FullName = x.Assignee.FullName,
                                 ImageUrl = x.Assignee.ImageUrl,
                             },
                         }),
@@ -189,6 +192,7 @@
                         {
                             Title = x.Title,
                             Id = x.Id,
+                            Description = x.Description,
                             StoryPoints = x.StoryPoints,
                             Type = x.Type,
                             Priority = x.Priority,
@@ -198,7 +202,7 @@
                             Assignee = new UserListingServerModel
                             {
                                 Id = x.Assignee.Id,
-                                UserName = x.Assignee.UserName,
+                                FullName = x.Assignee.FullName,
                                 ImageUrl = x.Assignee.ImageUrl,
                             },
                         }),

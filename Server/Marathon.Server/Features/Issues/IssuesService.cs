@@ -33,7 +33,7 @@
 
         public async Task<int> CreateAsync(int projectId, string userId, CreateIssueRequestModel model)
         {
-            var backLogIndex = model.SprintId == null ? await this.projectsService.GetIssuesWithoutSprintsCount(projectId) 
+            var backLogIndex = model.SprintId == null ? await this.projectsService.GetIssuesWithoutSprintsCount(projectId)
                 : await this.sprintsService.GetIssuesCount((int)model.SprintId);
 
             var issue = new Issue
@@ -145,13 +145,13 @@
                     Reporter = new UserListingServerModel
                     {
                         Id = x.Reporter.Id,
-                        UserName = x.Reporter.UserName,
+                        FullName = x.Reporter.FullName,
                         ImageUrl = x.Reporter.ImageUrl,
                     },
                     Assignee = new UserListingServerModel
                     {
                         Id = x.Assignee.Id,
-                        UserName = x.Assignee.UserName,
+                        FullName = x.Assignee.FullName,
                         ImageUrl = x.Assignee.ImageUrl,
                     },
                     ChildIssues = x.ChildIssues.Select(x => new IssueListingServiceModel
@@ -284,12 +284,6 @@
             {
                 issues.ForEach(x =>
                 {
-                    //if (x.BacklogIndex > oldIndex)
-                    //{
-                    //    x.BacklogIndex -= 1;
-                    //    this.dbContext.Update(x);
-                    //}
-                    //else
                     if (x.BacklogIndex >= newIndex && x.BacklogIndex < oldIndex)
                     {
                         x.BacklogIndex += 1;
