@@ -25,11 +25,18 @@ import BacklogIssueCard from '../../components/cards/backlog-issue-card.componen
 const BacklogPage = ({ match }) => {
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { saveCurrentProject, currentProject } = useContext(ProjectsContext);
-	const { updateBacklogIssues, backlogIssuesCollections, toggleUpdating, creating } = useContext(IssuesContext);
-	const { saveCurrentSprint, currentSprint, updatingSprint, startingSprint, saveActiveSprintId } = useContext(
+	const {
+		backlogIssuesCollections,
+		creating,
+		openedIssue,
+		toggleUpdating,
+		saveOpenedIssue,
+		updateBacklogIssues
+	} = useContext(IssuesContext);
+	const { currentSprint, updatingSprint, startingSprint, saveCurrentSprint, saveActiveSprintId } = useContext(
 		SprintsContext
 	);
-	const [ openedIssue, setOpenedIssue ] = useState(null);
+
 	const [ isLoading, setLoading ] = useState(true);
 	const [ dragging, setDragging ] = useState(false);
 
@@ -105,7 +112,7 @@ const BacklogPage = ({ match }) => {
 
 	const onOpen = (issue, parentIndex) => {
 		saveCurrentSprint({ index: parentIndex });
-		setOpenedIssue(issue);
+		saveOpenedIssue(issue);
 		toggleUpdating();
 		toggleModalIsOpen();
 	};

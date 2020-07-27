@@ -8,10 +8,10 @@ import StatusList from '../../components/board/status-list.component';
 import IssueDetailsModal from '../modals/issue-details-modal.component';
 
 const Board = () => {
-	const [ openedIssue, setOpenedIssue ] = useState(null);
+	const { openedIssue } = useContext(IssuesContext);
 	const [ dragging, setDragging ] = useState(false);
 	const { toggleModalIsOpen } = useContext(Context);
-	const { toggleUpdating, boardIssuesCollections, updateBoardIssues } = useContext(IssuesContext);
+	const { toggleUpdating, boardIssuesCollections, updateBoardIssues, saveOpenedIssue } = useContext(IssuesContext);
 
 	const dragItem = useRef();
 	const dragItemNode = useRef();
@@ -41,7 +41,7 @@ const Board = () => {
 	};
 
 	const onOpen = (issue) => {
-		setOpenedIssue(issue);
+		saveOpenedIssue(issue);
 		toggleUpdating();
 		toggleModalIsOpen();
 	};
@@ -85,7 +85,7 @@ const Board = () => {
 	return (
 		<div className="container px-5 py-4 mx-auto">
 			<div className="flex flex-wrap m-4 md:mb-4">{renderStatuses()}</div>
-			{!openedIssue ? null : <IssueDetailsModal item={openedIssue} />}
+			{!openedIssue ? null : <IssueDetailsModal />}
 		</div>
 	);
 };

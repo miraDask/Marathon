@@ -9,8 +9,10 @@ const backlogIssues = localStorage.getItem('backlogIssues') ? JSON.parse(localSt
 const initialState = {
 	boardIssuesCollections: boardIssues,
 	backlogIssuesCollections: backlogIssues,
+	openedIssue: null,
 	creating: false,
 	updating: false,
+	saveOpenedIssue: () => {},
 	toggleCreating: () => {},
 	toggleUpdating: () => {},
 	saveCurrentIssue: () => {},
@@ -23,7 +25,7 @@ export const IssuesContext = createContext(initialState);
 const IssuesContextProvider = ({ children }) => {
 	const [ boardIssuesCollections, setBoardIssuesCollections ] = useState(boardIssues);
 	const [ backlogIssuesCollections, setBacklogIssuesCollections ] = useState(backlogIssues);
-
+	const [ openedIssue, setOpenedIssue ] = useState(null);
 	const [ creating, setCreating ] = useState(false);
 	const [ updating, setUpdating ] = useState(false);
 
@@ -34,6 +36,8 @@ const IssuesContextProvider = ({ children }) => {
 	const toggleUpdating = () => {
 		setUpdating(!updating);
 	};
+
+	const saveOpenedIssue = (issue) => setOpenedIssue(issue);
 
 	const updateBoardIssues = (newIssuesList) => {
 		setBoardIssuesCollections(newIssuesList);
@@ -52,6 +56,8 @@ const IssuesContextProvider = ({ children }) => {
 				boardIssuesCollections,
 				creating,
 				updating,
+				openedIssue,
+				saveOpenedIssue,
 				updateBacklogIssues,
 				updateBoardIssues,
 				toggleCreating,

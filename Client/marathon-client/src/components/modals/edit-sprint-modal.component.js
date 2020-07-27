@@ -9,9 +9,12 @@ import { IssuesContext } from '../../providers/issues-context.provider';
 
 import ModalContainer from '../containers/modal-container.component';
 import SprintForm from '../forms/update-sprint-form.component';
+import DeleteButton from '../buttons/delete-button.component';
+import EditButton from '../buttons/edit-button.component';
+
 const EditSprintModal = () => {
 	const { token, toggleModalIsOpen } = useContext(Context);
-	const { currentProject } = useContext(ProjectsContext);
+	const { currentProject, saveCurrentProject } = useContext(ProjectsContext);
 	const { backlogIssuesCollections, updateBacklogIssues } = useContext(IssuesContext);
 	const { currentSprint, toggleUpdatingSprint, updatingSprint } = useContext(SprintsContext);
 
@@ -52,6 +55,7 @@ const EditSprintModal = () => {
 			let newCollection = JSON.parse(JSON.stringify(backlogIssuesCollections));
 			newCollection = newCollection.filter((x) => x.id !== currentSprint.id);
 			updateBacklogIssues(newCollection);
+			saveCurrentProject({ ...currentProject, activeSprintId: null });
 			handleClose();
 			return true;
 		} catch (error) {
@@ -71,18 +75,8 @@ const EditSprintModal = () => {
 				successFunc={successFunc}
 			>
 				<div className="flex md:mt-4 mt-6">
-					<button
-						onClick={handleDeleteSprint}
-						className="inline-block mx-auto text-white bg-red-400 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg"
-					>
-						Delete
-					</button>
-					<button
-						type="submit"
-						className="inline-block mx-auto text-white bg-green-400 ml-6 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg"
-					>
-						Edit
-					</button>
+					<DeleteButton handleDelete={handleDeleteSprint} />
+					<EditButton />
 				</div>
 			</SprintForm>
 		</ModalContainer>

@@ -8,6 +8,15 @@ import { SprintsContext } from '../../providers/sprints-context.provider';
 
 import ClearButton from '../buttons/button-clear.component';
 import { ReactComponent as EditIcon } from '../../assets/icon-edit.svg';
+const initialIssue = {
+	title: '',
+	description: '',
+	type: 0,
+	priority: 0,
+	status: 0,
+	storyPoints: 0,
+	sprintId: ''
+};
 
 const BacklogDndContainer = ({
 	onDragEnter,
@@ -19,7 +28,9 @@ const BacklogDndContainer = ({
 	children,
 	otherProps
 }) => {
-	const { toggleCreating, updateBacklogIssues, backlogIssuesCollections } = useContext(IssuesContext);
+	const { toggleCreating, updateBacklogIssues, backlogIssuesCollections, saveOpenedIssue } = useContext(
+		IssuesContext
+	);
 	const { saveCurrentSprint, toggleUpdatingSprint, toggleStartingSprint } = useContext(SprintsContext);
 
 	const { toggleModalIsOpen, token } = useContext(Context);
@@ -54,6 +65,7 @@ const BacklogDndContainer = ({
 	const handleCreateIssueClick = (e) => {
 		e.preventDefault();
 		saveCurrentSprint({ id: sprint ? sprint.id : null, index: sprintIndex });
+		saveOpenedIssue(initialIssue);
 		toggleCreating();
 		toggleModalIsOpen();
 	};

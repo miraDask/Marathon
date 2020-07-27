@@ -11,10 +11,17 @@ import IssueForm from '../forms/issue-form.component';
 import DeleteButton from '../buttons/delete-button.component';
 import EditButton from '../buttons/edit-button.component';
 
-const IssueEditModal = ({ item }) => {
+const IssueEditModal = () => {
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
-	const { backlogIssuesCollections, updateBacklogIssues, toggleUpdating, updating } = useContext(IssuesContext);
+	const {
+		backlogIssuesCollections,
+		updateBacklogIssues,
+		toggleUpdating,
+		updating,
+		openedIssue,
+		saveOpenedIssue
+	} = useContext(IssuesContext);
 	const { currentSprint } = useContext(SprintsContext);
 	const [ deleting, setDeleting ] = useState(false);
 
@@ -43,6 +50,7 @@ const IssueEditModal = ({ item }) => {
 
 	const handleClose = () => {
 		toggleUpdating();
+		saveOpenedIssue(null);
 		toggleModalIsOpen();
 	};
 
@@ -52,11 +60,11 @@ const IssueEditModal = ({ item }) => {
 
 	const handleDeleteIssue = async () => {
 		try {
-			await deleteIssue(item.id, token, currentProject.id);
+			await deleteIssue(openedIssue.id, token, currentProject.id);
 
 			let newCollection = JSON.parse(JSON.stringify(backlogIssuesCollections));
 			let sprint = newCollection[currentSprint.index];
-			sprint.issues.splice(item.backlogIndex, 1);
+			sprint.issues.splice(openedIssue.backlogIndex, 1);
 			newCollection[currentSprint.index] = sprint;
 			updateBacklogIssues(newCollection);
 			setDeleting(false);
@@ -70,11 +78,10 @@ const IssueEditModal = ({ item }) => {
 		<ModalContainer onClose={handleClose} show={updating} addBgColor="bg-black bg-opacity-25">
 			<IssueForm
 				disabled={false}
-				initialIssue={item}
+				initialIssue={openedIssue}
 				handleFetchData={deleting ? handleDeleteIssue : handleUpdateIssue}
 				formTitle="issue details"
 				handleModalClose={toggleUpdating}
-				buttonTitle="Edit"
 			>
 				<div className="flex md:mt-4 mt-6">
 					<DeleteButton handleDelete={handleDeleteClicked} />

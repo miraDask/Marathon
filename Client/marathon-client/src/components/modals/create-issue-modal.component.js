@@ -15,16 +15,6 @@ const CreateIssueModal = () => {
 	const { toggleModalIsOpen, token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 
-	const initialIssue = {
-		title: '',
-		description: '',
-		type: 0,
-		priority: 0,
-		status: 0,
-		storyPoints: 0,
-		sprintId: ''
-	};
-
 	const handleCreateIssue = async (issue) => {
 		const result = await createIssue({ ...issue, sprintId: currentSprint.id }, token, currentProject.id);
 
@@ -55,7 +45,6 @@ const CreateIssueModal = () => {
 	return (
 		<ModalContainer onClose={handleClose} show={creating} addBgColor="bg-black bg-opacity-25">
 			<IssueForm
-				initialIssue={initialIssue}
 				handleFetchData={handleCreateIssue}
 				formTitle="Create issue"
 				handleModalClose={toggleCreating}

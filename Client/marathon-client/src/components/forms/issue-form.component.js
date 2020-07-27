@@ -1,5 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Context } from '../../providers/global-context.provider';
+import { IssuesContext } from '../../providers/issues-context.provider';
 
 import { validateDescription, validateTitle, validatePoints } from '../../utils/validations/issue';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/issues';
@@ -10,10 +11,15 @@ import IssueFormsInput from '../inputs/issue-forms-input.component';
 import CustomLabel from '../labels/custom-label.component';
 import CustomSelect from '../select/custom-select.component';
 
-const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose, children, disabled = null }) => {
-	const [ issue, setIssue ] = useState(initialIssue);
+const IssueForm = ({ handleFetchData, formTitle, handleModalClose, children, disabled = null }) => {
+	const { openedIssue } = useContext(IssuesContext);
+	const [ issue, setIssue ] = useState(openedIssue);
 	const [ errors, setErrors ] = useState({ title: '', description: '', storyPoints: '' });
 	const { toggleModalIsOpen } = useContext(Context);
+
+	useEffect(() => {
+		setIssue(openedIssue);
+	}, []);
 
 	const handleChange = (event) => {
 		const { value, name } = event.target;

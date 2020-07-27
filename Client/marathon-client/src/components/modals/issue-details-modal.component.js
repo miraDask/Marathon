@@ -6,24 +6,23 @@ import { IssuesContext } from '../../providers/issues-context.provider';
 import ModalContainer from '../containers/modal-container.component';
 import IssueForm from '../forms/issue-form.component';
 
-const IssueDetailsModal = ({ item }) => {
+const IssueDetailsModal = () => {
 	const { toggleModalIsOpen } = useContext(Context);
-	const { toggleUpdating, updating } = useContext(IssuesContext);
+	const { toggleUpdating, updating, saveOpenedIssue } = useContext(IssuesContext);
 
 	const handleClose = () => {
 		toggleModalIsOpen();
 		toggleUpdating();
+		saveOpenedIssue(null);
 	};
 
 	return (
 		<ModalContainer onClose={handleClose} show={updating} addBgColor="bg-black bg-opacity-25">
 			<IssueForm
 				disabled={true}
-				initialIssue={item}
 				handleFetchData={null}
 				formTitle="issue details"
 				handleModalClose={toggleUpdating}
-				buttonTitle="Edit"
 			/>
 		</ModalContainer>
 	);
