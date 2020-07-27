@@ -8,7 +8,6 @@
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
-    using Marathon.Server.Features.Projects;
     using Marathon.Server.Features.Tokens;
 
     using Microsoft.AspNetCore.Identity;
@@ -140,6 +139,17 @@
                 },
                 Success = true,
             };
+        }
+
+        public async Task<UserListingServerModel> GetAssignee(string id)
+        {
+            return await this.dbContext.Users.Where(x => x.Id == id).Select(x => new UserListingServerModel
+            {
+                Id = x.Id,
+                FullName = x.FullName,
+                ImageUrl = x.ImageUrl,
+            })
+            .FirstOrDefaultAsync();
         }
 
         public async Task RemoveClaimFromUserAsync(string userId, string claimType, string claimValue)

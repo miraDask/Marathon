@@ -139,7 +139,7 @@
                                 FullName = x.Assignee.FullName,
                                 ImageUrl = x.Assignee.ImageUrl,
                             },
-                        }),
+                        }).OrderBy(x => x.StatusIndex),
                     },
                     DevelopmentIssues = new SprintStatusesListingModel
                     {
@@ -161,7 +161,7 @@
                                 FullName = x.Assignee.FullName,
                                 ImageUrl = x.Assignee.ImageUrl,
                             },
-                        }),
+                        }).OrderBy(x => x.StatusIndex),
                     },
                     TestingIssues = new SprintStatusesListingModel
                     {
@@ -183,7 +183,7 @@
                                 FullName = x.Assignee.FullName,
                                 ImageUrl = x.Assignee.ImageUrl,
                             },
-                        }),
+                        }).OrderBy(x => x.StatusIndex),
                     },
                     DoneIssues = new SprintStatusesListingModel
                     {
@@ -205,7 +205,7 @@
                                 FullName = x.Assignee.FullName,
                                 ImageUrl = x.Assignee.ImageUrl,
                             },
-                        }),
+                        }).OrderBy(x => x.StatusIndex),
                     },
                 })
                 .FirstOrDefaultAsync();

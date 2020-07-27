@@ -9,6 +9,7 @@
     using Marathon.Server.Data.Enumerations;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Features.Projects;
@@ -23,12 +24,18 @@
         private readonly MarathonDbContext dbContext;
         private readonly IProjectsService projectsService;
         private readonly ISprintsService sprintsService;
+        private readonly IIdentityService identityService;
 
-        public IssuesService(MarathonDbContext dbContext, IProjectsService projectsService, ISprintsService sprintsService)
+        public IssuesService(
+            MarathonDbContext dbContext,
+            IProjectsService projectsService,
+            ISprintsService sprintsService,
+            IIdentityService identityService)
         {
             this.dbContext = dbContext;
             this.projectsService = projectsService;
             this.sprintsService = sprintsService;
+            this.identityService = identityService;
         }
 
         public async Task<int> CreateAsync(int projectId, string userId, CreateIssueRequestModel model)
@@ -223,26 +230,45 @@
             };
         }
 
-        public async Task<ResultModel<bool>> ChangeStatusAsync(int issueId, Status status, int projectId)
+        public async Task<ResultModel<UserListingServerModel>> ChangeStatusAsync(int issueId, Status status, int statusIndex, int projectId, string userId)
         {
             var issue = await this.GetByIdAndProjectIdAsync(issueId, projectId);
 
             if (issue == null)
             {
-                return new ResultModel<bool>
+                return new ResultModel<UserListingServerModel>
                 {
                     Errors = new string[] { InvalidIssueId },
                 };
             }
 
+            if (issue.Status != status)
+            {
+                await this.ReorderOldStatusIndexes(projectId, issue.StatusIndex, issue.Status);
+                await this.ReorderNewStatusIndexes(projectId, statusIndex, status);
+            }
+            else
+            {
+                await this.ReorderSameStatusIndexes(projectId, issue.Id, issue.StatusIndex, statusIndex, status);
+            }
+
             issue.Status = status;
+            issue.AssigneeId = status == Status.ToDo ? null : userId;
+            issue.StatusIndex = statusIndex;
             issue.ModifiedOn = DateTime.UtcNow;
 
+            this.dbContext.Update(issue);
             await this.dbContext.SaveChangesAsync();
 
-            return new ResultModel<bool>
+            return new ResultModel<UserListingServerModel>
             {
                 Success = true,
+                Result = issue.AssigneeId != null ? await this.identityService.GetAssignee(userId) 
+                : new UserListingServerModel {
+                    Id = null,
+                    FullName = null,
+                    ImageUrl = null,
+                },
             };
         }
 
@@ -260,6 +286,20 @@
             await this.dbContext.SaveChangesAsync();
         }
 
+        private async Task ReorderOldStatusIndexes(int projectId, int oldIndex, Status oldStatus)
+        {
+            var issues = await this.dbContext.Issues
+                .Where(x => x.ProjectId == projectId && x.Status == oldStatus && x.StatusIndex > oldIndex)
+                .ToListAsync();
+
+            issues.ForEach(x =>
+            {
+                x.StatusIndex -= 1;
+                this.dbContext.Update(x);
+            });
+            await this.dbContext.SaveChangesAsync();
+        }
+
         private async Task ReorderNewSprintBackLogIndexes(int projectId, int newIndex, int? newSprintId)
         {
             var issues = await this.dbContext.Issues
@@ -269,6 +309,20 @@
             issues.ForEach(x =>
             {
                 x.BacklogIndex += 1;
+                this.dbContext.Update(x);
+            });
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        private async Task ReorderNewStatusIndexes(int projectId, int newIndex, Status newStatus)
+        {
+            var issues = await this.dbContext.Issues
+                .Where(x => x.ProjectId == projectId && x.Status == newStatus && x.StatusIndex >= newIndex)
+                .ToListAsync();
+
+            issues.ForEach(x =>
+            {
+                x.StatusIndex += 1;
                 this.dbContext.Update(x);
             });
             await this.dbContext.SaveChangesAsync();
@@ -298,6 +352,38 @@
                     if (x.BacklogIndex > oldIndex && x.BacklogIndex <= newIndex)
                     {
                         x.BacklogIndex -= 1;
+                        this.dbContext.Update(x);
+                    }
+                });
+            }
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        private async Task ReorderSameStatusIndexes(int projectId, int issueId, int oldIndex, int newIndex, Status status)
+        {
+            var issues = await this.dbContext.Issues
+                .Where(x => x.ProjectId == projectId && x.Status == status && x.Id != issueId)
+                .ToListAsync();
+
+            if (newIndex < oldIndex)
+            {
+                issues.ForEach(x =>
+                {
+                    if (x.StatusIndex >= newIndex && x.StatusIndex < oldIndex)
+                    {
+                        x.StatusIndex += 1;
+                        this.dbContext.Update(x);
+                    }
+                });
+            }
+            else if (newIndex > oldIndex)
+            {
+                issues.ForEach(x =>
+                {
+                    if (x.StatusIndex > oldIndex && x.StatusIndex <= newIndex)
+                    {
+                        x.StatusIndex -= 1;
                         this.dbContext.Update(x);
                     }
                 });

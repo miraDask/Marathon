@@ -5,6 +5,8 @@
 
     using Marathon.Server.Features.Common;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Identity;
+    using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Infrastructure.Extensions;
     using Marathon.Server.Infrastructure.Filters;
@@ -157,9 +159,11 @@
         [HttpPatch]
         [Route(Issues.ChangeStatus)]
         [HasProjectTeamAuthorizationAttribute]
-        public async Task<ActionResult> ChangeStatus(int issueId, int projectId, [FromBody] ChangeStatusRequestModel model)
+        public async Task<ActionResult<UserListingServerModel>> ChangeStatus(int issueId, int projectId, [FromBody] ChangeStatusRequestModel model)
         {
-            var updateRequest = await this.issuesService.ChangeStatusAsync(issueId, model.Status, projectId);
+            var userId = this.User.GetId();
+
+            var updateRequest = await this.issuesService.ChangeStatusAsync(issueId, model.Status, model.StatusIndex, projectId, userId);
 
             if (!updateRequest.Success)
             {
@@ -168,8 +172,8 @@
                     Errors = updateRequest.Errors,
                 });
             }
-
-            return this.Ok();
+            
+            return this.Ok(updateRequest.Result);
         }
     }
 }

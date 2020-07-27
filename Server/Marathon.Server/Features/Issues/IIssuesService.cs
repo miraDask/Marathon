@@ -5,6 +5,7 @@
 
     using Marathon.Server.Data.Enumerations;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
 
     public interface IIssuesService
@@ -13,7 +14,7 @@
 
         Task<ResultModel<bool>> UpdateAsync(int issueId, int projectId, UpdateIssueRequestModel updateIssueRequestModel);
 
-        Task<ResultModel<bool>> ChangeStatusAsync(int issueId, Status status, int projectId);
+        Task<ResultModel<UserListingServerModel>> ChangeStatusAsync(int issueId, Status status, int statusIndex, int projectId, string userId);
 
         Task<ResultModel<bool>> DeleteAsync(int issueId, int projectId);
 

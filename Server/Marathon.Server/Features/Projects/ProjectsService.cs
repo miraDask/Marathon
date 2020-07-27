@@ -144,6 +144,7 @@
                         Title = x.Title,
                         Id = x.Id,
                         StoryPoints = x.StoryPoints,
+                        Description = x.Description,
                         Type = x.Type,
                         Priority = x.Priority,
                         Status = x.Status,

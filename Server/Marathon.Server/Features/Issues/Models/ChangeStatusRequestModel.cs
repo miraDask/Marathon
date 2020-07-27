@@ -5,5 +5,7 @@
     public class ChangeStatusRequestModel
     {
         public Status Status { get; set; }
+
+        public int StatusIndex { get; set; }
     }
 }
