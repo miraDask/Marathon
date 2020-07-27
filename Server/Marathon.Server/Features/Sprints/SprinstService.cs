@@ -117,7 +117,7 @@
                 {
                     Id = x.Id,
                     Title = x.Title,
-                    RemainingDays = ((DateTime)x.EndDate - (DateTime)x.StartDate).Days,
+                    RemainingDays = ((DateTime)x.EndDate - DateTime.Now).Days,
                     Estimate = x.Issues.Sum(x => x.StoryPoints),
                     TodoIssues = new SprintStatusesListingModel
                     {
