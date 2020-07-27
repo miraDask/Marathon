@@ -1,12 +1,15 @@
 import React, { useContext, useState, useEffect } from 'react';
 
 import { IssuesContext } from '../../providers/issues-context.provider';
+import { Context } from '../../providers/global-context.provider';
 
 import PriorityIcon from '../../components/icons/priority-icon.component';
 import IssueIcon from '../../components/icons/issue-icon.component';
+import Avatar from '../../components/user/user-avatar.component';
 
 const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleClick }) => {
 	const { newAssignee, saveNewAssignee } = useContext(IssuesContext);
+	const { isModalOpen } = useContext(Context);
 	const [ assignee, setAssignee ] = useState(issue.assignee);
 	const { id, title, priority, type, storyPoints } = issue;
 
@@ -24,6 +27,9 @@ const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleC
 		[ newAssignee ]
 	);
 
+	const renderAssignee = () =>
+		assignee.fullName ? <Avatar size="w-8 h-8" user={assignee} bgColor="green-400" /> : 'unassigned';
+
 	return (
 		<div
 			id={id}
@@ -37,7 +43,7 @@ const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleC
 		>
 			<div>
 				<div className="text-gray-900 text-left">{title}</div>
-				<div className="mr-2 mt-1 text-left">{assignee.fullName ? assignee.fullName : 'unassigned'}</div>
+				<div className="mt-2 text-left">{!isModalOpen ? renderAssignee() : null}</div>
 			</div>
 			<div>
 				<IssueIcon type={type} size="h-5 w-5" />

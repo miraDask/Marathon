@@ -12,9 +12,11 @@ import MainWrapper from '../../components/main/maim-wrapper.component';
 import Board from '../../components/board/board.component';
 import PageTopicContainer from '../../components/containers/page-topic-container.component';
 import FormButton from '../../components/buttons/form-button.component';
+import InfoMessageContainer from '../../components/messages/form-input-info-message.component';
 
 const BoardPage = ({ match }) => {
 	const [ title, setTitle ] = useState('');
+	const [ remainingDays, setRemainingDays ] = useState('');
 	const { token } = useContext(Context);
 	const { updateBoardIssues, newAssignee } = useContext(IssuesContext);
 	const { currentProject } = useContext(ProjectsContext);
@@ -28,6 +30,7 @@ const BoardPage = ({ match }) => {
 					const statusesCollection = processBoardIssuesCollections(response);
 					updateBoardIssues(statusesCollection);
 					setTitle(response.title);
+					setRemainingDays(response.remainingDays);
 					console.log('response', response);
 				}
 			};
@@ -45,6 +48,9 @@ const BoardPage = ({ match }) => {
 			<DashboardNavBar otherClasses="w-full" />
 			<MainWrapper>
 				<PageTopicContainer size="lg:w-5/6" title={`${currentProject.name} / ${title}`}>
+					{remainingDays ? (
+						<InfoMessageContainer addClass="mr-4">{'Remaining days ' + remainingDays}</InfoMessageContainer>
+					) : null}
 					<FormButton
 						disabled={!currentProject.activeSprintId}
 						addClass={!currentProject.activeSprintId ? 'cursor-not-allowed' : ''}
