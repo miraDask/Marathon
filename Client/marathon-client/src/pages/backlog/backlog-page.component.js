@@ -5,6 +5,7 @@ import { Context } from '../../providers/global-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
 import { SprintsContext } from '../../providers/sprints-context.provider';
 
+import { initialStatuses } from '../../data/constants';
 import { processBacklogIssuesCollections, getNewIssuesCollections } from '../../utils/issues';
 import { getProjectDetails } from '../../services/projects.service';
 import { updateIssue } from '../../services/issues.service';
@@ -31,7 +32,8 @@ const BacklogPage = ({ match }) => {
 		openedIssue,
 		toggleUpdating,
 		saveOpenedIssue,
-		updateBacklogIssues
+		updateBacklogIssues,
+		updateBoardIssues
 	} = useContext(IssuesContext);
 	const { currentSprint, updatingSprint, startingSprint, saveCurrentSprint, saveActiveSprintId } = useContext(
 		SprintsContext
@@ -51,7 +53,7 @@ const BacklogPage = ({ match }) => {
 			if (response) {
 				const issuesCollections = processBacklogIssuesCollections(response);
 				updateBacklogIssues(issuesCollections);
-
+				updateBoardIssues(initialStatuses);
 				const activeSprint = response.sprints.filter((x) => x.active)[0];
 				saveCurrentProject({
 					id: response.id,

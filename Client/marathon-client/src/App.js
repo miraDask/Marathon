@@ -10,7 +10,7 @@ import SprintsContextProvider from '../src/providers/sprints-context.provider';
 
 const App = () => {
 	return (
-		<div>
+		<div className="flex flex-col min-h-screen">
 			<ProjectsContextProvider>
 				<Navigation />
 				<IssuesContextProvider>

@@ -43,6 +43,10 @@ const BoardPage = ({ match }) => {
 		[ newAssignee ]
 	);
 
+	const handleCompleteSprint = () => {
+		console.log(`Sprint with id: ${currentProject.activeSprintId} completed!`);
+	};
+
 	return (
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
@@ -52,6 +56,7 @@ const BoardPage = ({ match }) => {
 						<InfoMessageContainer addClass="mr-4">{'Remaining days ' + remainingDays}</InfoMessageContainer>
 					) : null}
 					<FormButton
+						onClick={handleCompleteSprint}
 						disabled={!currentProject.activeSprintId}
 						addClass={!currentProject.activeSprintId ? 'cursor-not-allowed' : ''}
 						textSize="text-md"
