@@ -5,7 +5,6 @@ import { getSprintDetails } from '../../services/sprints.service';
 import { processBoardIssuesCollections } from '../../utils/issues';
 
 import { Context } from '../../providers/global-context.provider';
-import { SprintsContext } from '../../providers/sprints-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 

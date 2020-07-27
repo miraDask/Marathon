@@ -10,7 +10,7 @@ import { getProjectDetails } from '../../services/projects.service';
 import { updateIssue } from '../../services/issues.service';
 
 import CreateIssueModal from '../../components/modals/create-issue-modal.component';
-import IssueDetailsModal from '../../components/modals/issue-details-modal.component';
+import IssueEditModal from '../../components/modals/issue-edit-modal.component';
 import EditSprintModal from '../../components/modals/edit-sprint-modal.component';
 import StartSprintModal from '../../components/modals/start-sprint-modal.component';
 
@@ -182,7 +182,7 @@ const BacklogPage = ({ match }) => {
 					<div className="overflow-y-auto h-screen">
 						{renderSprints()}
 						{startingSprint ? <StartSprintModal /> : null}
-						{!openedIssue ? null : <IssueDetailsModal item={openedIssue} />}
+						{!openedIssue ? null : <IssueEditModal item={openedIssue} />}
 						{creating ? <CreateIssueModal sprintId={!currentSprint ? null : currentSprint.id} /> : null}
 						{updatingSprint ? <EditSprintModal /> : null}
 					</div>

@@ -10,7 +10,7 @@ import IssueFormsInput from '../inputs/issue-forms-input.component';
 import CustomLabel from '../labels/custom-label.component';
 import CustomSelect from '../select/custom-select.component';
 
-const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose, children }) => {
+const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose, children, disabled = null }) => {
 	const [ issue, setIssue ] = useState(initialIssue);
 	const [ errors, setErrors ] = useState({ title: '', description: '', storyPoints: '' });
 	const { toggleModalIsOpen } = useContext(Context);
@@ -68,6 +68,7 @@ const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose,
 					<div className="p-2 w-4/6">
 						<CustomLabel labelFor="title">Title</CustomLabel>
 						<IssueFormsInput
+							disabled={disabled}
 							handleChange={handleChange}
 							handleOnBlur={(event) => handleOnBlur(event, validateTitle, { title: issue.title })}
 							placeholder="Title"
@@ -80,6 +81,7 @@ const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose,
 					<div className="p-2 w-2/6">
 						<CustomLabel labelFor="storyPoints">Story Points</CustomLabel>
 						<IssueFormsInput
+							disabled={disabled}
 							handleChange={handleChange}
 							handleOnBlur={(event) =>
 								handleOnBlur(event, validatePoints, { storyPoints: issue.storyPoints })}
@@ -94,6 +96,7 @@ const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose,
 					</div>
 					<div className="p-2 w-full">
 						<textarea
+							disabled={disabled}
 							onChange={handleChange}
 							onBlur={(event) =>
 								handleOnBlur(event, validateDescription, { description: issue.description })}
@@ -108,10 +111,17 @@ const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose,
 					</div>
 					<div className="p-2 w-full">
 						<div className="flex flex-wrap -mx-3 mb-2">
-							<CustomSelect options={types} value={issue.type} name="type" handleChange={handleChange}>
+							<CustomSelect
+								disabled={disabled}
+								options={types}
+								value={issue.type}
+								name="type"
+								handleChange={handleChange}
+							>
 								<CustomLabel>Type</CustomLabel>
 							</CustomSelect>
 							<CustomSelect
+								disabled={disabled}
 								options={priorities}
 								value={issue.priority}
 								name="priority"
@@ -120,6 +130,7 @@ const IssueForm = ({ initialIssue, handleFetchData, formTitle, handleModalClose,
 								<CustomLabel>Priority</CustomLabel>
 							</CustomSelect>
 							<CustomSelect
+								disabled={disabled}
 								options={statuses}
 								value={issue.status}
 								name="status"

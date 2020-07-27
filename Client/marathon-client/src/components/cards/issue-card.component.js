@@ -5,7 +5,7 @@ import IssueIcon from '../../components/icons/issue-icon.component';
 
 const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleClick }) => {
 	const { id, title, assignee, priority, type, storyPoints } = issue;
-	console.log(issue);
+	console.log('issue-card', issue);
 	return (
 		<div
 			id={id}
@@ -18,8 +18,8 @@ const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleC
 				: ''} mx-auto cursor-pointer flex p-3 hover:bg-blue-200 bg-white rounded-lg shadow-xl mb-2 justify-between`}
 		>
 			<div>
-				<div className="text-gray-900">{title}</div>
-				<div className="mr-2 mt-1">{assignee.username ? assignee.username : 'unassigned'}</div>
+				<div className="text-gray-900 text-left">{title}</div>
+				<div className="mr-2 mt-1">{`assignee: ${assignee.username ? assignee.username : 'unassigned'}`}</div>
 			</div>
 			<div>
 				<IssueIcon type={type} size="h-5 w-5" />
