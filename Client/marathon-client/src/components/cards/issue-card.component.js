@@ -1,11 +1,29 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+
+import { IssuesContext } from '../../providers/issues-context.provider';
 
 import PriorityIcon from '../../components/icons/priority-icon.component';
 import IssueIcon from '../../components/icons/issue-icon.component';
 
 const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleClick }) => {
-	const { id, title, assignee, priority, type, storyPoints } = issue;
-	console.log('issue-card', issue);
+	const { newAssignee, saveNewAssignee } = useContext(IssuesContext);
+	const [ assignee, setAssignee ] = useState(issue.assignee);
+	const { id, title, priority, type, storyPoints } = issue;
+
+	useEffect(
+		() => {
+			if (newAssignee) {
+				const assignedUser = newAssignee.issueId === id ? newAssignee : issue.assignee;
+				setAssignee(assignedUser);
+			}
+			return () => {
+				saveNewAssignee(null);
+			};
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[ newAssignee ]
+	);
+
 	return (
 		<div
 			id={id}
@@ -19,7 +37,7 @@ const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleC
 		>
 			<div>
 				<div className="text-gray-900 text-left">{title}</div>
-				<div className="mr-2 mt-1">{`assignee: ${assignee.username ? assignee.username : 'unassigned'}`}</div>
+				<div className="mr-2 mt-1 text-left">{assignee.fullName ? assignee.fullName : 'unassigned'}</div>
 			</div>
 			<div>
 				<IssueIcon type={type} size="h-5 w-5" />

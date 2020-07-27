@@ -96,7 +96,7 @@ const BacklogPage = ({ match }) => {
 		}
 	};
 
-	const handleDragEnd = () => {
+	const handleDragEnd = async () => {
 		setDragging(false);
 		const data = {
 			...movingItem.current,
@@ -104,7 +104,7 @@ const BacklogPage = ({ match }) => {
 			sprintId: dragItem.current.sprintId ? dragItem.current.sprintId : null
 		};
 
-		updateIssue(data, token, currentProject.id);
+		await updateIssue(data, token, currentProject.id);
 		dragItem.current = null;
 		dragItemNode.current.removeEventListener('dragend', handleDragEnd);
 		dragItemNode.current = null;

@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useContext, useState } from 'react';
 
-import { initialStatuses } from '../../data/constants';
 import { getSprintDetails } from '../../services/sprints.service';
 import { processBoardIssuesCollections } from '../../utils/issues';
 
@@ -17,28 +16,29 @@ import FormButton from '../../components/buttons/form-button.component';
 const BoardPage = ({ match }) => {
 	const [ title, setTitle ] = useState('');
 	const { token } = useContext(Context);
-	const { updateBoardIssues } = useContext(IssuesContext);
+	const { updateBoardIssues, newAssignee } = useContext(IssuesContext);
 	const { currentProject } = useContext(ProjectsContext);
 
-	useEffect(() => {
-		const getActiveSprintDetails = async () => {
-			const projectId = match.params.projectId;
-			const response = await getSprintDetails(projectId, token, currentProject.activeSprintId);
-			if (response) {
-				const statusesCollection = processBoardIssuesCollections(response);
-				updateBoardIssues(statusesCollection);
-				setTitle(response.title);
-				console.log('response', response);
-			}
-		};
+	useEffect(
+		() => {
+			const getActiveSprintDetails = async () => {
+				const projectId = match.params.projectId;
+				const response = await getSprintDetails(projectId, token, currentProject.activeSprintId);
+				if (response) {
+					const statusesCollection = processBoardIssuesCollections(response);
+					updateBoardIssues(statusesCollection);
+					setTitle(response.title);
+					console.log('response', response);
+				}
+			};
 
-		if (currentProject.activeSprintId) {
-			getActiveSprintDetails();
-		} else {
-			updateBoardIssues(initialStatuses);
-		}
+			if (currentProject.activeSprintId) {
+				getActiveSprintDetails();
+			}
+		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+		[ newAssignee ]
+	);
 
 	return (
 		<Fragment>

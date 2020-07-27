@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 
+import { initialIssue } from '../../data/constants';
 import { createSprint } from '../../services/sprints.service';
 import { IssuesContext } from '../../providers/issues-context.provider';
 import { Context } from '../../providers/global-context.provider';
@@ -8,15 +9,6 @@ import { SprintsContext } from '../../providers/sprints-context.provider';
 
 import ClearButton from '../buttons/button-clear.component';
 import { ReactComponent as EditIcon } from '../../assets/icon-edit.svg';
-const initialIssue = {
-	title: '',
-	description: '',
-	type: 0,
-	priority: 0,
-	status: 0,
-	storyPoints: 0,
-	sprintId: ''
-};
 
 const BacklogDndContainer = ({
 	onDragEnter,

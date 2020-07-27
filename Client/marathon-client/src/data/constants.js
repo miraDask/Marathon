@@ -8,3 +8,13 @@ export const initialStatuses = [
 	{ title: 'Testing', issues: [] },
 	{ title: 'Done', issues: [] }
 ];
+
+export const initialIssue = {
+	title: '',
+	description: '',
+	type: 0,
+	priority: 0,
+	status: 0,
+	storyPoints: 0,
+	sprintId: ''
+};

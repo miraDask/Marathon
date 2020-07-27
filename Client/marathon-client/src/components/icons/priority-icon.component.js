@@ -12,7 +12,7 @@ const COLORS = {
 
 const PriorityIcon = ({ priority, size }) => {
 	const getIcon = () => {
-		switch (priority) {
+		switch (+priority) {
 			case 3:
 			case 4:
 				return <ArrowDownIcon className={`${size} rounded-full bg-${COLORS[priority]} p-1`} />;

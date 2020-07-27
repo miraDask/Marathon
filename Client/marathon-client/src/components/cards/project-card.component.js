@@ -20,7 +20,7 @@ const initialIsEditClicked = false;
 
 const ProjectCard = ({ project }) => {
 	const history = useHistory();
-	const { updateProjects, deleteFromProjects } = useContext(ProjectsContext);
+	const { updateProjects, deleteFromProjects, currentProject, saveCurrentProject } = useContext(ProjectsContext);
 	const { token } = useContext(Context);
 	const [ isEditClicked, setIsEditClicked ] = useState(initialIsEditClicked);
 	const [ editHidden, setEditHidden ] = useState(false);
@@ -83,6 +83,9 @@ const ProjectCard = ({ project }) => {
 		try {
 			await deleteProject(token, id);
 			deleteFromProjects(id);
+			if (currentProject.id === +id) {
+				saveCurrentProject(null);
+			}
 			history.push('/user/projects');
 		} catch (error) {
 			console.log(error);

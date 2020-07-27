@@ -17,9 +17,12 @@ const IssueForm = ({ handleFetchData, formTitle, handleModalClose, children, dis
 	const [ errors, setErrors ] = useState({ title: '', description: '', storyPoints: '' });
 	const { toggleModalIsOpen } = useContext(Context);
 
-	useEffect(() => {
-		setIssue(openedIssue);
-	}, []);
+	useEffect(
+		() => {
+			setIssue(openedIssue);
+		},
+		[ openedIssue ]
+	);
 
 	const handleChange = (event) => {
 		const { value, name } = event.target;

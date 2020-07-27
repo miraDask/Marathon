@@ -12,9 +12,12 @@ export const processBoardIssuesCollections = (sprint) => {
 	return [ sprint.todoIssues, sprint.developmentIssues, sprint.testingIssues, sprint.doneIssues ];
 };
 
-export const getNewIssuesCollections = (oldList, dragItem, targetItem) => {
+export const getNewIssuesCollections = (oldList, dragItem, targetItem, assignee = null) => {
 	let newList = JSON.parse(JSON.stringify(oldList));
-	const movedIssue = newList[dragItem.current.parentIndex].issues.splice(dragItem.current.index, 1)[0];
+	let movedIssue = newList[dragItem.current.parentIndex].issues.splice(dragItem.current.index, 1)[0];
+	if (assignee) {
+		movedIssue = { ...movedIssue, assignee: assignee };
+	}
 	newList[targetItem.parentIndex].issues.splice(targetItem.index, 0, movedIssue);
 	return newList;
 };

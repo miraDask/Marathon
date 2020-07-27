@@ -44,6 +44,24 @@ export const updateIssue = async (data, token, projectId) => {
 	}
 };
 
+export const changeIssueStatus = async (data, token, projectId, id) => {
+	const headers = getHeaders(token);
+	const url = getUrl(projectId);
+
+	try {
+		const response = await fetcher(url + `/${id}`, 'PATCH', headers, data);
+		try {
+			const dataToReturn = await response.json();
+			return dataToReturn;
+		} catch (error) {
+			console.log(error);
+		}
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
+
 export const deleteIssue = async (id, token, projectId) => {
 	const headers = getHeaders(token);
 	const url = getUrl(projectId);
