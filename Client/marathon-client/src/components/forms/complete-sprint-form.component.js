@@ -80,28 +80,30 @@ const CompleteSprintForm = ({ children }) => {
 					<span className="inline-block">issue was incomplete</span>{' '}
 				</div>
 				<div className="flex flex-wrap -m-2">
-					<div className="p-2 w-full">
-						<InfoMessageContainer addClass="mb-2">
-							Select where all the incomplete issues should be moved:
-						</InfoMessageContainer>
-						<div className="flex flex-wrap -mx-3 mb-2">
-							{sprints ? (
-								<CustomSelect
-									disabled={false}
-									label={<CustomLabel labelFor="sprintId">Move to:</CustomLabel>}
-									value={sprintId}
-									name="sprintId"
-									handleChange={handleChange}
-								>
-									{sprints.map((x) => (
-										<option key={x.title} value={x.id}>
-											{x.title}
-										</option>
-									))}
-								</CustomSelect>
-							) : null}
+					{uncompleted > 0 ? (
+						<div className="p-2 w-full">
+							<InfoMessageContainer addClass="mb-2">
+								Select where all the incomplete issues should be moved:
+							</InfoMessageContainer>
+							<div className="flex flex-wrap -mx-3 mb-2">
+								{sprints ? (
+									<CustomSelect
+										disabled={false}
+										label={<CustomLabel labelFor="sprintId">Move to:</CustomLabel>}
+										value={sprintId}
+										name="sprintId"
+										handleChange={handleChange}
+									>
+										{sprints.map((x) => (
+											<option key={x.title} value={x.id}>
+												{x.title}
+											</option>
+										))}
+									</CustomSelect>
+								) : null}
+							</div>
 						</div>
-					</div>
+					) : null}
 					<div className="p-2 w-full">{children}</div>
 				</div>
 			</div>
