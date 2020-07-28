@@ -11,7 +11,7 @@ import ModalContainer from '../containers/modal-container.component';
 import SprintForm from '../forms/update-sprint-form.component';
 
 const StartSprintModal = () => {
-	const { token, toggleModalIsOpen } = useContext(Context);
+	const { token, toggleModalIsOpen, saveAlert } = useContext(Context);
 	const { currentProject, saveCurrentProject } = useContext(ProjectsContext);
 	const { backlogIssuesCollections, updateBacklogIssues } = useContext(IssuesContext);
 	const { currentSprint, toggleStartingSprint, startingSprint, saveActiveSprintId } = useContext(SprintsContext);
@@ -53,7 +53,8 @@ const StartSprintModal = () => {
 
 	const successFunc = () => {
 		toggleStartingSprint();
-		history.push(`/user/dashboard/${currentProject.id}/board`);
+		saveAlert('Sprint successfully started');
+		history.push(`/user/dashboard/${currentProject.id}/board`, { showAlert: true });
 	};
 
 	return (

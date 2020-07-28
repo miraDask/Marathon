@@ -1,9 +1,9 @@
 import React, { Fragment, useState, useContext } from 'react';
 import { Context } from '../../providers/global-context.provider';
 
-const Alert = ({ color }) => {
+const Alert = ({ color, show }) => {
 	const { alertMessage, saveAlert } = useContext(Context);
-	const [ showAlert, setShowAlert ] = useState(alertMessage);
+	const [ showAlert, setShowAlert ] = useState(show);
 
 	const handleClick = () => {
 		saveAlert(null);

@@ -24,7 +24,7 @@ import BacklogDndContainer from '../../components/backlog/backlog-dnd-container.
 import NoPlanedSprint from '../../components/sprints/no-planed-sprint.component';
 import BacklogIssueCard from '../../components/cards/backlog-issue-card.component';
 
-const BacklogPage = ({ match }) => {
+const BacklogPage = ({ match, location }) => {
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { saveCurrentProject, currentProject } = useContext(ProjectsContext);
 	const {
@@ -36,14 +36,9 @@ const BacklogPage = ({ match }) => {
 		updateBacklogIssues,
 		updateBoardIssues
 	} = useContext(IssuesContext);
-	const {
-		currentSprint,
-		completingSprint,
-		updatingSprint,
-		startingSprint,
-		saveCurrentSprint,
-		saveActiveSprintId
-	} = useContext(SprintsContext);
+	const { currentSprint, updatingSprint, startingSprint, saveCurrentSprint, saveActiveSprintId } = useContext(
+		SprintsContext
+	);
 
 	const [ isLoading, setLoading ] = useState(true);
 	const [ dragging, setDragging ] = useState(false);
@@ -51,6 +46,7 @@ const BacklogPage = ({ match }) => {
 	const dragItem = useRef();
 	const dragItemNode = useRef();
 	const movingItem = useRef();
+	const showAlert = location.state ? location.state.showAlert : false;
 
 	useEffect(() => {
 		const getCurrentProjectDetails = async () => {
@@ -195,11 +191,9 @@ const BacklogPage = ({ match }) => {
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
 			<MainWrapper>
-				{
-					<div className="px-16 pt-6 justify-evenly">
-						<Alert color="teal" show={completingSprint} />
-					</div>
-				}
+				<div className="px-16 pt-6 justify-evenly">
+					<Alert color="teal" show={showAlert} />
+				</div>
 				<PageTopicContainer size="lg:w-5/6" title={`Backlog / ${!currentProject ? '' : currentProject.name}`} />
 				{!isLoading ? (
 					<div className="overflow-y-auto h-screen">

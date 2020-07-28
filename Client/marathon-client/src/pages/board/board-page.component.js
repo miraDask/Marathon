@@ -8,6 +8,7 @@ import { IssuesContext } from '../../providers/issues-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { SprintsContext } from '../../providers/sprints-context.provider';
 
+import Alert from '../../components/messages/alert.component';
 import NoActiveSprint from '../../components/board/no-active-sprint.component';
 import CompleteSprintModal from '../../components/modals/complete-sprint-modal.component';
 import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
@@ -17,13 +18,14 @@ import PageTopicContainer from '../../components/containers/page-topic-container
 import FormButton from '../../components/buttons/form-button.component';
 import InfoMessageContainer from '../../components/messages/form-input-info-message.component';
 
-const BoardPage = ({ match }) => {
+const BoardPage = ({ match, location }) => {
 	const [ title, setTitle ] = useState('');
 	const [ remainingDays, setRemainingDays ] = useState('');
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { updateBoardIssues, newAssignee } = useContext(IssuesContext);
 	const { currentProject } = useContext(ProjectsContext);
 	const { toggleCompletingSprint } = useContext(SprintsContext);
+	const showAlert = location.state ? location.state.showAlert : false;
 
 	useEffect(
 		() => {
@@ -59,6 +61,9 @@ const BoardPage = ({ match }) => {
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
 			<MainWrapper>
+				<div className="px-16 pt-6 justify-evenly">
+					<Alert color="teal" show={showAlert} />
+				</div>
 				<PageTopicContainer
 					size="lg:w-5/6"
 					title={!currentProject.activeSprintId ? 'Active Sprint' : `${currentProject.key} / ${title}`}

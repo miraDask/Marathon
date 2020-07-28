@@ -47,7 +47,7 @@ const CompleteSprintForm = ({ children }) => {
 			toggleModalIsOpen();
 			toggleCompletingSprint();
 			saveAlert('Sprint successfully completed');
-			history.push(`/user/dashboard/${currentProject.id}/backlog`);
+			history.push(`/user/dashboard/${currentProject.id}/backlog`, { showAlert: true });
 		} catch (error) {
 			return;
 		}
