@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { completeSprint } from '../../services/sprints.service';
+import { getCompleteSprintFormOptions } from '../../utils/sprints';
+import { getCompletedIssuesCount, getUnCompletedIssuesCount } from '../../utils/issues';
 
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
@@ -13,7 +15,7 @@ import InfoMessageContainer from '../messages/form-input-info-message.component'
 
 const CompleteSprintForm = ({ children }) => {
 	const { currentProject } = useContext(ProjectsContext);
-	const { toggleModalIsOpen, saveAlert } = useContext(Context);
+	const { token, toggleModalIsOpen, saveAlert } = useContext(Context);
 	const { backlogIssuesCollections, boardIssuesCollections } = useContext(IssuesContext);
 	const { toggleCompletingSprint } = useContext(SprintsContext);
 	const [ sprintId, setSprintId ] = useState(null);
@@ -23,19 +25,9 @@ const CompleteSprintForm = ({ children }) => {
 	const history = useHistory();
 
 	useEffect(() => {
-		const mappedSprints = backlogIssuesCollections
-			.filter((x) => x.id !== currentProject.activeSprintId)
-			.map((x, i) => {
-				return {
-					id: i < backlogIssuesCollections[backlogIssuesCollections.length - 1] ? x.id : '',
-					title: i < backlogIssuesCollections[backlogIssuesCollections.length - 1] ? x.title : 'Backlog'
-				};
-			});
-
-		const completedIssuesCount = boardIssuesCollections.filter((x) => x.title === 'Done')[0].issues.length;
-		const unCompletedIssuesCount = boardIssuesCollections.filter((x) => x.title !== 'ToDo').reduce((acc, curr) => {
-			return acc + curr.issues.length;
-		}, 0);
+		const mappedSprints = getCompleteSprintFormOptions(backlogIssuesCollections, currentProject.activeSprintId);
+		const completedIssuesCount = getCompletedIssuesCount(boardIssuesCollections);
+		const unCompletedIssuesCount = getUnCompletedIssuesCount(boardIssuesCollections);
 		setCompleted(completedIssuesCount);
 		setUncompleted(unCompletedIssuesCount);
 		setSprints(mappedSprints);
@@ -49,13 +41,15 @@ const CompleteSprintForm = ({ children }) => {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const success = await completeSprint();
 
-		if (success) {
+		try {
+			await completeSprint(currentProject.id, token, currentProject.activeSprintId, sprintId);
 			toggleModalIsOpen();
 			toggleCompletingSprint();
-			saveAlert('Sprint successfully completed!');
+			saveAlert('Sprint successfully completed');
 			history.push(`/user/dashboard/${currentProject.id}/backlog`);
+		} catch (error) {
+			return;
 		}
 	};
 
@@ -100,7 +94,7 @@ const CompleteSprintForm = ({ children }) => {
 									handleChange={handleChange}
 								>
 									{sprints.map((x) => (
-										<option key={x.id} value={x.id}>
+										<option key={x.title} value={x.id}>
 											{x.title}
 										</option>
 									))}

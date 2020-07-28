@@ -42,8 +42,7 @@ const BacklogPage = ({ match }) => {
 		updatingSprint,
 		startingSprint,
 		saveCurrentSprint,
-		saveActiveSprintId,
-		toggleCompletingSprint
+		saveActiveSprintId
 	} = useContext(SprintsContext);
 
 	const [ isLoading, setLoading ] = useState(true);
@@ -198,7 +197,7 @@ const BacklogPage = ({ match }) => {
 			<MainWrapper>
 				{
 					<div className="px-16 pt-6 justify-evenly">
-						<Alert color="teal" show={completingSprint} onClose={() => toggleCompletingSprint()} />
+						<Alert color="teal" show={completingSprint} />
 					</div>
 				}
 				<PageTopicContainer size="lg:w-5/6" title={`Backlog / ${!currentProject ? '' : currentProject.name}`} />

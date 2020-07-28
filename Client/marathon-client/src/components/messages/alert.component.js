@@ -1,12 +1,11 @@
 import React, { Fragment, useState, useContext } from 'react';
 import { Context } from '../../providers/global-context.provider';
 
-const Alert = ({ color, onClose }) => {
+const Alert = ({ color }) => {
 	const { alertMessage, saveAlert } = useContext(Context);
 	const [ showAlert, setShowAlert ] = useState(alertMessage);
 
 	const handleClick = () => {
-		onClose();
 		saveAlert(null);
 		setShowAlert(false);
 	};
@@ -36,10 +35,3 @@ const Alert = ({ color, onClose }) => {
 };
 
 export default Alert;
-// export default function ClosingAlert() {
-//   return (
-//     <>
-//       return <Alert color="pink" />;
-//     </>
-//   );
-// }

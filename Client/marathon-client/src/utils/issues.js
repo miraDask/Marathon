@@ -21,3 +21,13 @@ export const getNewIssuesCollections = (oldList, dragItem, targetItem, assignee 
 	newList[targetItem.parentIndex].issues.splice(targetItem.index, 0, movedIssue);
 	return newList;
 };
+
+export const getUnCompletedIssuesCount = (collection) => {
+	return collection.filter((x) => x.title !== 'Done').reduce((acc, curr) => {
+		return acc + curr.issues.length;
+	}, 0);
+};
+
+export const getCompletedIssuesCount = (collection) => {
+	return collection.filter((x) => x.title === 'Done')[0].issues.length;
+};

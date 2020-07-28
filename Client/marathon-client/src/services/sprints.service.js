@@ -20,7 +20,18 @@ export const createSprint = async (projectId, token) => {
 	}
 };
 
-export const completeSprint = async () => true;
+export const completeSprint = async (projectId, token, sprintId, newSprintId) => {
+	const headers = getHeaders(token);
+
+	try {
+		await fetcher(API_URL + `/${projectId}/sprints/${sprintId}`, 'PATCH', headers, {
+			newSprintId: newSprintId === '' ? null : newSprintId
+		});
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
 
 export const getSprintDetails = async (projectId, token, sprintId) => {
 	const headers = getHeaders(token);

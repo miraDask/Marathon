@@ -23,7 +23,6 @@ const BoardPage = ({ match }) => {
 	const { updateBoardIssues, newAssignee } = useContext(IssuesContext);
 	const { currentProject } = useContext(ProjectsContext);
 	const { toggleCompletingSprint } = useContext(SprintsContext);
-	const history = useHistory();
 
 	useEffect(
 		() => {
@@ -53,8 +52,6 @@ const BoardPage = ({ match }) => {
 		}
 		toggleCompletingSprint();
 		toggleModalIsOpen();
-		// console.log(`Sprint with id: ${currentProject.activeSprintId} completed!`);
-		// history.push(`/user/dashboard/${currentProject.id}/backlog`);
 	};
 
 	return (
