@@ -13,7 +13,6 @@
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Features.Projects;
-    using Marathon.Server.Features.Sprints;
     using Marathon.Server.Features.Sprints.Models;
     using Microsoft.EntityFrameworkCore;
 
@@ -22,26 +21,18 @@
     public class IssuesService : IIssuesService
     {
         private readonly MarathonDbContext dbContext;
-        private readonly IProjectsService projectsService;
-        private readonly ISprintsService sprintsService;
         private readonly IIdentityService identityService;
 
-        public IssuesService(
-            MarathonDbContext dbContext,
-            IProjectsService projectsService,
-            ISprintsService sprintsService,
-            IIdentityService identityService)
+        public IssuesService(MarathonDbContext dbContext,IIdentityService identityService)
         {
             this.dbContext = dbContext;
-            this.projectsService = projectsService;
-            this.sprintsService = sprintsService;
             this.identityService = identityService;
         }
 
         public async Task<int> CreateAsync(int projectId, string userId, CreateIssueRequestModel model)
         {
-            var backLogIndex = model.SprintId == null ? await this.projectsService.GetIssuesWithoutSprintsCount(projectId)
-                : await this.sprintsService.GetIssuesCount((int)model.SprintId);
+            var backLogIndex = model.SprintId == null ? await this.GetIssuesWithoutSprintsCount(projectId)
+                : await this.GetIssuesCount((int)model.SprintId);
 
             var issue = new Issue
             {
@@ -57,7 +48,7 @@
                 ParentIssueId = null,
                 ProjectId = projectId,
                 BacklogIndex = backLogIndex,
-                StatusIndex = await this.projectsService.GetIssuesByStatusCount(projectId, model.Status),
+                StatusIndex = await this.GetIssuesByStatusCount(projectId, model.Status),
             };
 
             this.dbContext.Issues.Add(issue);
@@ -230,6 +221,19 @@
             };
         }
 
+        public async Task ChangeIssuesSprint(int oldSprintId, int? newSprintId)
+        {
+            var issues = await this.dbContext.Issues.Where(x => x.SprintId == oldSprintId && x.Status != Status.Done).ToListAsync();
+
+            issues.ForEach(x =>
+            {
+                x.SprintId = newSprintId;
+                this.dbContext.Update(x);
+            });
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
         public async Task<ResultModel<UserListingServerModel>> ChangeStatusAsync(int issueId, Status status, int statusIndex, int projectId, string userId)
         {
             var issue = await this.GetByIdAndProjectIdAsync(issueId, projectId);
@@ -264,7 +268,8 @@
             {
                 Success = true,
                 Result = issue.AssigneeId != null ? await this.identityService.GetAssignee(userId) 
-                : new UserListingServerModel {
+                : new UserListingServerModel
+                {
                     Id = null,
                     FullName = null,
                     ImageUrl = null,
@@ -394,5 +399,20 @@
 
         private async Task<Issue> GetByIdAndProjectIdAsync(int issueId, int projectId)
             => await this.dbContext.Issues.FirstOrDefaultAsync(x => x.Id == issueId && x.ProjectId == projectId);
+
+        private async Task<int> GetIssuesCount(int sprintId)
+        => await this.dbContext.Issues
+                     .Where(x => x.SprintId == sprintId)
+                     .CountAsync();
+
+        private async Task<int> GetIssuesWithoutSprintsCount(int projectId)
+        => await this.dbContext.Issues
+                .Where(x => x.ProjectId == projectId && x.SprintId == null)
+                .CountAsync();
+
+        private async Task<int> GetIssuesByStatusCount(int projectId, Status status)
+         => await this.dbContext.Issues
+                .Where(x => x.ProjectId == projectId && x.Status == status)
+                .CountAsync();
     }
 }

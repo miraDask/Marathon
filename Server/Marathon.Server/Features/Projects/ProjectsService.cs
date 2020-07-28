@@ -329,18 +329,6 @@
             };
         }
 
-        public async Task<int> GetIssuesWithoutSprintsCount(int id)
-        => await this.dbContext.Projects
-                .Where(x => x.Id == id)
-                .Select(x => x.Issues.Where(x => x.SprintId == null).Count())
-                .FirstOrDefaultAsync();
-
-        public async Task<int> GetIssuesByStatusCount(int id, Status status)
-         => await this.dbContext.Projects
-                .Where(x => x.Id == id)
-                .Select(x => x.Issues.Where(x => x.Status == status).Count())
-                .FirstOrDefaultAsync();
-
         private async Task<Project> GetByIdAsync(int id)
          => await this.dbContext
                   .Projects

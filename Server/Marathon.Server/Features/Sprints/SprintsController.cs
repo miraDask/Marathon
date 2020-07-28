@@ -121,6 +121,36 @@
         }
 
         /// <summary>
+        /// Update current sprint.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="projectId"></param>
+        /// <param name="sprintId"></param>
+        /// <response code="200">Successfully updated.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpPatch]
+        [Route(Sprints.Update)]
+        [HasProjectAdminAuthorization]
+        public async Task<ActionResult> Complete(int projectId, int sprintId, [FromBody] CompleteSprintRequestModel input)
+        {
+            var completeRequest = await this.sprintService.CompleteAsync(
+                sprintId,
+                input.NewSprintId,
+                projectId);
+
+            if (!completeRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = completeRequest.Errors,
+                });
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
         /// Delete current sprint.
         /// </summary>
         /// <param name="projectId"></param>
@@ -140,59 +170,6 @@
                 return this.BadRequest(new ErrorsResponseModel
                 {
                     Errors = deleteRequest.Errors,
-                });
-            }
-
-            return this.Ok();
-        }
-
-        /// <summary>
-        /// Assign current Issue to current Sprint.
-        /// </summary>
-        /// <param name="projectId"></param>
-        /// <param name="sprintId"></param>
-        /// <param name="issueId"></param>
-        /// <response code="200"> Successfully assigned issue to sprint.</response>
-        /// <response code="400"> Bad Reaquest.</response>
-        /// <response code="401"> Unauthorized request.</response>
-        [HttpPost]
-        [Route(Sprints.AssignIssue)]
-        [HasProjectAdminAuthorization]
-        public async Task<ActionResult> AssignIssueToSprint(int projectId, int sprintId, int issueId)
-        {
-            var assignIssueRequest = await this.sprintService.AssignIssueToSprintAsync(projectId, sprintId, issueId);
-
-            if (!assignIssueRequest.Success)
-            {
-                return this.BadRequest(new ErrorsResponseModel
-                {
-                    Errors = assignIssueRequest.Errors,
-                });
-            }
-
-            return this.Ok();
-        }
-
-        /// <summary>
-        /// Remove current Issue from current Sprint.
-        /// </summary>
-        /// <param name="sprintId"></param>
-        /// <param name="issueId"></param>
-        /// <response code="200"> Successfully removed issue from sprint.</response>
-        /// <response code="400"> Bad Reaquest.</response>
-        /// <response code="401"> Unauthorized request.</response>
-        [HttpDelete]
-        [Route(Sprints.RemoveIssue)]
-        [HasProjectAdminAuthorization]
-        public async Task<ActionResult<int>> RemoveIssueFromSprint(int sprintId, int issueId)
-        {
-            var removeIssueRequest = await this.sprintService.RemoveIssueFromSprintAsync(sprintId, issueId);
-
-            if (!removeIssueRequest.Success)
-            {
-                return this.BadRequest(new ErrorsResponseModel
-                {
-                    Errors = removeIssueRequest.Errors,
                 });
             }
 

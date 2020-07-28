@@ -15,16 +15,10 @@
 
         Task<ResultModel<bool>> DeleteAsync(int sprintId, int projectId);
 
-        Task<ResultModel<bool>> ArchiveAsync(int sprintId, int projectId);
-
-        Task<int> GetIssuesCount(int sprintId);
+        Task<ResultModel<bool>> CompleteAsync(int oldSprintId, int? newSprintId, int projectId);
 
         Task<ResultModel<IEnumerable<SprintListingServiceModel>>> GetAllByProjecIdAsync(int projectId);
 
         Task<ResultModel<SprintDetailsServiceModel>> GetDetailsAsync(int sprintId, int projectId);
-
-        Task<ResultModel<bool>> AssignIssueToSprintAsync(int projectId, int sprintId, int issueId);
-
-        Task<ResultModel<bool>> RemoveIssueFromSprintAsync(int sprintId, int issueId);
     }
 }

@@ -10,6 +10,7 @@
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
+    using Marathon.Server.Features.Issues;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Features.Sprints.Models;
     using Microsoft.EntityFrameworkCore;
@@ -18,12 +19,13 @@
 
     public class SprinstService : ISprintsService
     {
-        private const int DaysInWeek = 7;
         private readonly MarathonDbContext dbContext;
+        private readonly IIssuesService issuesService;
 
-        public SprinstService(MarathonDbContext dbContext)
+        public SprinstService(MarathonDbContext dbContext, IIssuesService issuesService)
         {
             this.dbContext = dbContext;
+            this.issuesService = issuesService;
         }
 
         public async Task<SprintListingServiceModel> CreateAsync(int projectId)
@@ -225,62 +227,6 @@
             };
         }
 
-        public async Task<ResultModel<bool>> AssignIssueToSprintAsync(int projectId, int sprintId, int issueId)
-        {
-            var sprint = await this.GetByIdAndProjectIdAsync(sprintId, projectId);
-
-            if (sprint == null)
-            {
-                return new ResultModel<bool>
-                {
-                    Errors = new string[] { Errors.InvalidSprintId },
-                };
-            }
-
-            var issue = await this.dbContext.Issues.FirstOrDefaultAsync(x => x.Id == issueId && x.ProjectId == projectId);
-
-            if (issue == null)
-            {
-                return new ResultModel<bool>
-                {
-                    Errors = new string[] { Errors.InvalidIssueId },
-                };
-            }
-
-            issue.SprintId = sprintId;
-
-            this.dbContext.Update(issue);
-            await this.dbContext.SaveChangesAsync();
-
-            return new ResultModel<bool>
-            {
-                Success = true,
-            };
-        }
-
-        public async Task<ResultModel<bool>> RemoveIssueFromSprintAsync(int sprintId, int issueId)
-        {
-            var issue = await this.dbContext.Issues.FirstOrDefaultAsync(x => x.Id == issueId && x.SprintId == sprintId);
-
-            if (issue == null)
-            {
-                return new ResultModel<bool>
-                {
-                    Errors = new string[] { Errors.InvalidIssueId },
-                };
-            }
-
-            issue.SprintId = null;
-            this.dbContext.Update(issue);
-
-            await this.dbContext.SaveChangesAsync();
-
-            return new ResultModel<bool>
-            {
-                Success = true,
-            };
-        }
-
         public async Task<ResultModel<bool>> UpdateAsync(int sprintId, int projectId, string title, string goal, DateTime? startDate, DateTime? endDate)
         {
             var sprint = await this.GetByIdAndProjectIdAsync(sprintId, projectId);
@@ -309,9 +255,10 @@
             };
         }
 
-        public async Task<ResultModel<bool>> ArchiveAsync(int sprintId, int projectId)
+
+        public async Task<ResultModel<bool>> CompleteAsync(int oldSprintId, int? newSprintId, int projectId)
         {
-            var sprint = await this.GetByIdAndProjectIdAsync(sprintId, projectId);
+            var sprint = await this.GetByIdAndProjectIdAsync(oldSprintId, projectId);
 
             if (sprint == null)
             {
@@ -320,6 +267,8 @@
                     Errors = new string[] { Errors.InvalidSprintId },
                 };
             }
+
+            await this.issuesService.ChangeIssuesSprint(oldSprintId, newSprintId);
 
             sprint.Active = false;
             sprint.Archived = true;
@@ -334,26 +283,9 @@
             };
         }
 
-        public async Task<int> GetIssuesCount(int sprintId)
-        => await this.dbContext.Sprints
-                .Where(x => x.Id == sprintId)
-                .Select(x => x.Issues.Count())
-                .FirstOrDefaultAsync();
-
         private async Task<Sprint> GetByIdAndProjectIdAsync(int sprintId, int projectId)
          => await this.dbContext
                       .Sprints
                       .FirstOrDefaultAsync(x => x.Id == sprintId && x.ProjectId == projectId);
-
-        private DateTime? GetEndDate(DateTime? startDate, int? weeks)
-        {
-            if (startDate == null)
-            {
-                return startDate;
-            }
-
-            var convertedStartDate = (DateTime)startDate;
-            return convertedStartDate.Add(TimeSpan.FromDays((int)weeks * DaysInWeek)).ToUniversalTime();
-        }
     }
 }

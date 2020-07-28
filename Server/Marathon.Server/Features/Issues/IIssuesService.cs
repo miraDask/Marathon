@@ -21,5 +21,7 @@
         Task<ResultModel<IEnumerable<IssueListingServiceModel>>> GetAllByProjecIdAsync(int id);
 
         Task<ResultModel<IssueDetailsServiceModel>> GetDetailsAsync(int id, int projectId);
+
+        Task ChangeIssuesSprint(int oldSprintId, int? newSprintId);
     }
 }
