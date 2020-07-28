@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useContext, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+
 import { getSprintDetails } from '../../services/sprints.service';
 import { processBoardIssuesCollections } from '../../utils/issues';
 
@@ -8,6 +8,7 @@ import { IssuesContext } from '../../providers/issues-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { SprintsContext } from '../../providers/sprints-context.provider';
 
+import NoActiveSprint from '../../components/board/no-active-sprint.component';
 import CompleteSprintModal from '../../components/modals/complete-sprint-modal.component';
 import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
 import MainWrapper from '../../components/main/main-wrapper.component';
@@ -58,7 +59,10 @@ const BoardPage = ({ match }) => {
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
 			<MainWrapper>
-				<PageTopicContainer size="lg:w-5/6" title={`${currentProject.key} / ${title}`}>
+				<PageTopicContainer
+					size="lg:w-5/6"
+					title={!currentProject.activeSprintId ? 'Active Sprint' : `${currentProject.key} / ${title}`}
+				>
 					{remainingDays ? (
 						<InfoMessageContainer addClass="mr-4">{'Remaining days ' + remainingDays}</InfoMessageContainer>
 					) : null}
@@ -74,6 +78,7 @@ const BoardPage = ({ match }) => {
 
 				<div className="container px-6 mb-8 mx-auto flex flex-wrap">
 					<Board />
+					{!currentProject.activeSprintId ? <NoActiveSprint /> : null}
 					<CompleteSprintModal />
 				</div>
 			</MainWrapper>
