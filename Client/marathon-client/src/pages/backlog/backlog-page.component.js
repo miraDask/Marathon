@@ -15,9 +15,10 @@ import IssueEditModal from '../../components/modals/issue-edit-modal.component';
 import EditSprintModal from '../../components/modals/edit-sprint-modal.component';
 import StartSprintModal from '../../components/modals/start-sprint-modal.component';
 
+import Alert from '../../components/messages/alert.component';
 import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
 import Spinner from '../../components/spinner/spinner.component';
-import MainWrapper from '../../components/main/maim-wrapper.component';
+import MainWrapper from '../../components/main/main-wrapper.component';
 import PageTopicContainer from '../../components/containers/page-topic-container.component';
 import BacklogDndContainer from '../../components/backlog/backlog-dnd-container.component';
 import NoPlanedSprint from '../../components/sprints/no-planed-sprint.component';
@@ -35,9 +36,15 @@ const BacklogPage = ({ match }) => {
 		updateBacklogIssues,
 		updateBoardIssues
 	} = useContext(IssuesContext);
-	const { currentSprint, updatingSprint, startingSprint, saveCurrentSprint, saveActiveSprintId } = useContext(
-		SprintsContext
-	);
+	const {
+		currentSprint,
+		completingSprint,
+		updatingSprint,
+		startingSprint,
+		saveCurrentSprint,
+		saveActiveSprintId,
+		toggleCompletingSprint
+	} = useContext(SprintsContext);
 
 	const [ isLoading, setLoading ] = useState(true);
 	const [ dragging, setDragging ] = useState(false);
@@ -58,6 +65,7 @@ const BacklogPage = ({ match }) => {
 				saveCurrentProject({
 					id: response.id,
 					name: response.name,
+					key: response.key,
 					creator: response.creator,
 					activeSprintId: activeSprint ? activeSprint.id : null
 				});
@@ -65,6 +73,8 @@ const BacklogPage = ({ match }) => {
 				if (activeSprint) {
 					saveActiveSprintId(activeSprint.id);
 				}
+
+				console.log('Reload');
 			}
 		};
 		getCurrentProjectDetails();
@@ -186,6 +196,9 @@ const BacklogPage = ({ match }) => {
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
 			<MainWrapper>
+				<div className="px-16 pt-6 justify-evenly">
+					<Alert color="teal" text="test" show={completingSprint} onClose={() => toggleCompletingSprint()} />
+				</div>
 				<PageTopicContainer size="lg:w-5/6" title={`Backlog / ${!currentProject ? '' : currentProject.name}`} />
 				{!isLoading ? (
 					<div className="overflow-y-auto h-screen">

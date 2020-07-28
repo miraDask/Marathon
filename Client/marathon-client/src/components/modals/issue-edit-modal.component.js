@@ -9,7 +9,7 @@ import { SprintsContext } from '../../providers/sprints-context.provider';
 import ModalContainer from '../containers/modal-container.component';
 import IssueForm from '../forms/issue-form.component';
 import DeleteButton from '../buttons/delete-button.component';
-import EditButton from '../buttons/edit-button.component';
+import SubmitButton from '../buttons/submit-button.component';
 
 const IssueEditModal = () => {
 	const { token, toggleModalIsOpen } = useContext(Context);
@@ -85,7 +85,7 @@ const IssueEditModal = () => {
 			>
 				<div className="flex md:mt-4 mt-6">
 					<DeleteButton handleDelete={handleDeleteClicked} />
-					<EditButton />
+					<SubmitButton left="ml-6">Edit</SubmitButton>
 				</div>
 			</IssueForm>
 		</ModalContainer>

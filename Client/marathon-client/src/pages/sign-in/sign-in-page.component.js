@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ReactComponent as Image } from '../../assets/watermelon-pack-illustration-10.svg';
-import MainWrapper from '../../components/main/maim-wrapper.component';
+import MainWrapper from '../../components/main/main-wrapper.component';
 import SignInForm from '../../components/forms/sign-in-form.component';
 
 const SignInPage = () => {

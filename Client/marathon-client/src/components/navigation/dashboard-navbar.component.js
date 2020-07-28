@@ -11,6 +11,7 @@ const DashboardNavBar = ({ otherClasses }) => {
 	const [ boardLinkIsClicked, setBoardLinkIsClicked ] = useState(false);
 	const [ teamLinkIsClicked, setTeamLinkIsClicked ] = useState(false);
 	const [ backlogLinkIsClicked, setBacklogLinkIsClicked ] = useState(false);
+	const [ archiveLinkIsClicked, setArchiveLinkIsClicked ] = useState(false);
 	const { pathname } = useLocation();
 	const { projectId } = useParams();
 	const id = currentProject ? currentProject.id : projectId;
@@ -22,33 +23,46 @@ const DashboardNavBar = ({ otherClasses }) => {
 				case 'board':
 					setBoardLinkIsClicked(true);
 					break;
-				case 'team':
+				case 'teams':
 					setTeamLinkIsClicked(true);
 					break;
 				case 'backlog':
 					setBacklogLinkIsClicked(true);
+					break;
+				case 'archive':
+					setArchiveLinkIsClicked(true);
 					break;
 			}
 		},
 		[ pathname ]
 	);
 
+	const handleArchiveLinkClick = () => {
+		setArchiveLinkIsClicked(true);
+		setBoardLinkIsClicked(false);
+		setBacklogLinkIsClicked(false);
+		setTeamLinkIsClicked(false);
+	};
+
 	const handleBoardLinkClick = () => {
 		setBoardLinkIsClicked(true);
 		setBacklogLinkIsClicked(false);
 		setTeamLinkIsClicked(false);
+		setArchiveLinkIsClicked(false);
 	};
 
 	const handleBacklogLinkClick = () => {
 		setBacklogLinkIsClicked(true);
 		setBoardLinkIsClicked(false);
 		setTeamLinkIsClicked(false);
+		setArchiveLinkIsClicked(false);
 	};
 
 	const handleTeamLinkClick = () => {
 		setTeamLinkIsClicked(true);
 		setBoardLinkIsClicked(false);
 		setBacklogLinkIsClicked(false);
+		setArchiveLinkIsClicked(false);
 	};
 
 	return (
@@ -74,7 +88,14 @@ const DashboardNavBar = ({ otherClasses }) => {
 						type={teamLinkIsClicked ? 'active' : 'inactive'}
 						to={`/user/dashboard/${id}/teams`}
 					>
-						Team
+						Teams
+					</DashboardNavItem>
+					<DashboardNavItem
+						handleClick={handleArchiveLinkClick}
+						type={archiveLinkIsClicked ? 'active' : 'inactive'}
+						to={`/user/dashboard/${id}/archive`}
+					>
+						Archive
 					</DashboardNavItem>
 				</ul>
 			</div>

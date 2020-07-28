@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import MainWrapper from '../../components/main/maim-wrapper.component';
+import MainWrapper from '../../components/main/main-wrapper.component';
 import CreateProjectForm from '../../components/forms/create-project-form.component';
 
 const CreateProjectPage = () => {

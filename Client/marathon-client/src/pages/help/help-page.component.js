@@ -1,5 +1,5 @@
 import React from 'react';
-import MainWrapper from '../../components/main/maim-wrapper.component';
+import MainWrapper from '../../components/main/main-wrapper.component';
 import { ReactComponent as Image } from '../../assets/watermelon-pack-illustration-05.svg';
 import StepsContainer from '../../components/steps/steps-container.component';
 

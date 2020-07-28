@@ -61,6 +61,14 @@ const IssueForm = ({ handleFetchData, formTitle, handleModalClose, children, dis
 		}
 	};
 
+	const getOptions = (options) => {
+		return options.map((option, index) => (
+			<option key={index} value={index}>
+				{option}
+			</option>
+		));
+	};
+
 	return (
 		<form
 			onSubmit={handleSubmit}
@@ -122,30 +130,30 @@ const IssueForm = ({ handleFetchData, formTitle, handleModalClose, children, dis
 						<div className="flex flex-wrap -mx-3 mb-2">
 							<CustomSelect
 								disabled={disabled}
-								options={types}
+								label={<CustomLabel>Type</CustomLabel>}
 								value={issue.type}
 								name="type"
 								handleChange={handleChange}
 							>
-								<CustomLabel>Type</CustomLabel>
+								{getOptions(types)}
 							</CustomSelect>
 							<CustomSelect
 								disabled={disabled}
-								options={priorities}
+								label={<CustomLabel>Priority</CustomLabel>}
 								value={issue.priority}
 								name="priority"
 								handleChange={handleChange}
 							>
-								<CustomLabel>Priority</CustomLabel>
+								{getOptions(priorities)}
 							</CustomSelect>
 							<CustomSelect
 								disabled={disabled}
-								options={statuses}
+								label={<CustomLabel>Status</CustomLabel>}
 								value={issue.status}
 								name="status"
 								handleChange={handleChange}
 							>
-								<CustomLabel>Status</CustomLabel>
+								{getOptions(statuses)}
 							</CustomSelect>
 						</div>
 					</div>

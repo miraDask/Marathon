@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import MainWrapper from '../../components/main/maim-wrapper.component';
+import MainWrapper from '../../components/main/main-wrapper.component';
 import HomeHero from '../../components/home/home-hero.component';
 import StepsContainer from '../../components/steps/steps-container.component';
 import About from '../../components/home/about.component';

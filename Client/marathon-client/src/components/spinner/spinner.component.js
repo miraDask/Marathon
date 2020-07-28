@@ -1,5 +1,5 @@
 import React from 'react';
-import MainWrapper from '../../components/main/maim-wrapper.component';
+import MainWrapper from '../main/main-wrapper.component';
 const Spinner = ({ color }) => (
 	<MainWrapper>
 		<div className="container mx-auto flex flex-col px-5 py-24 justify-center items-center">

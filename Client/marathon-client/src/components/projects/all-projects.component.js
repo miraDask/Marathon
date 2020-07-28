@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
 import InfoMessageContainer from '../messages/form-input-info-message.component';
-import MainWrapper from '../../components/main/maim-wrapper.component';
+import MainWrapper from '../main/main-wrapper.component';
 import FormButton from '../../components/buttons/form-button.component';
 import NavLink from '../../components/navigation/nav-link.component';
 import ProjectCard from '../../components/cards/project-card.component';

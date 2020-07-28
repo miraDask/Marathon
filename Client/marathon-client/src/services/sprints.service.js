@@ -20,6 +20,8 @@ export const createSprint = async (projectId, token) => {
 	}
 };
 
+export const completeSprint = async () => true;
+
 export const getSprintDetails = async (projectId, token, sprintId) => {
 	const headers = getHeaders(token);
 	try {

@@ -1,14 +1,16 @@
 import React, { Fragment, useEffect, useContext, useState } from 'react';
-
+import { useHistory } from 'react-router-dom';
 import { getSprintDetails } from '../../services/sprints.service';
 import { processBoardIssuesCollections } from '../../utils/issues';
 
 import { Context } from '../../providers/global-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
+import { SprintsContext } from '../../providers/sprints-context.provider';
 
+import CompleteSprintModal from '../../components/modals/complete-sprint-modal.component';
 import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
-import MainWrapper from '../../components/main/maim-wrapper.component';
+import MainWrapper from '../../components/main/main-wrapper.component';
 import Board from '../../components/board/board.component';
 import PageTopicContainer from '../../components/containers/page-topic-container.component';
 import FormButton from '../../components/buttons/form-button.component';
@@ -17,9 +19,11 @@ import InfoMessageContainer from '../../components/messages/form-input-info-mess
 const BoardPage = ({ match }) => {
 	const [ title, setTitle ] = useState('');
 	const [ remainingDays, setRemainingDays ] = useState('');
-	const { token } = useContext(Context);
+	const { token, toggleModalIsOpen } = useContext(Context);
 	const { updateBoardIssues, newAssignee } = useContext(IssuesContext);
 	const { currentProject } = useContext(ProjectsContext);
+	const { toggleCompletingSprint } = useContext(SprintsContext);
+	const history = useHistory();
 
 	useEffect(
 		() => {
@@ -44,14 +48,17 @@ const BoardPage = ({ match }) => {
 	);
 
 	const handleCompleteSprint = () => {
-		console.log(`Sprint with id: ${currentProject.activeSprintId} completed!`);
+		toggleCompletingSprint();
+		toggleModalIsOpen();
+		// console.log(`Sprint with id: ${currentProject.activeSprintId} completed!`);
+		// history.push(`/user/dashboard/${currentProject.id}/backlog`);
 	};
 
 	return (
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
 			<MainWrapper>
-				<PageTopicContainer size="lg:w-5/6" title={`${currentProject.name} / ${title}`}>
+				<PageTopicContainer size="lg:w-5/6" title={`${currentProject.key} / ${title}`}>
 					{remainingDays ? (
 						<InfoMessageContainer addClass="mr-4">{'Remaining days ' + remainingDays}</InfoMessageContainer>
 					) : null}
@@ -67,6 +74,7 @@ const BoardPage = ({ match }) => {
 
 				<div className="container px-6 mb-8 mx-auto flex flex-wrap">
 					<Board />
+					<CompleteSprintModal />
 				</div>
 			</MainWrapper>
 		</Fragment>
