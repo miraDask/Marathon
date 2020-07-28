@@ -196,9 +196,11 @@ const BacklogPage = ({ match }) => {
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
 			<MainWrapper>
-				<div className="px-16 pt-6 justify-evenly">
-					<Alert color="teal" text="test" show={completingSprint} onClose={() => toggleCompletingSprint()} />
-				</div>
+				{
+					<div className="px-16 pt-6 justify-evenly">
+						<Alert color="teal" show={completingSprint} onClose={() => toggleCompletingSprint()} />
+					</div>
+				}
 				<PageTopicContainer size="lg:w-5/6" title={`Backlog / ${!currentProject ? '' : currentProject.name}`} />
 				{!isLoading ? (
 					<div className="overflow-y-auto h-screen">

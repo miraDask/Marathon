@@ -48,6 +48,9 @@ const BoardPage = ({ match }) => {
 	);
 
 	const handleCompleteSprint = () => {
+		if (!currentProject.activeSprintId) {
+			return;
+		}
 		toggleCompletingSprint();
 		toggleModalIsOpen();
 		// console.log(`Sprint with id: ${currentProject.activeSprintId} completed!`);

@@ -9,7 +9,9 @@ const initialState = {
 	token: lastToken,
 	email: userEmail,
 	fullName: name,
+	alertMessage: null,
 	isLoggedIn: isLogged,
+	saveAlert: () => {},
 	toggleModalIsOpen: () => {},
 	toggleLoggedIn: () => {},
 	saveToken: () => {}
@@ -23,6 +25,11 @@ const GlobalContextProvider = ({ children }) => {
 	const [ fullName, setName ] = useState(name);
 	const [ isLoggedIn, setLoggedIn ] = useState(isLogged);
 	const [ isModalOpen, setModalOpen ] = useState(false);
+	const [ alertMessage, setAlert ] = useState(null);
+
+	const saveAlert = (message) => {
+		setAlert(message);
+	};
 
 	const toggleLoggedIn = (email, userFullName) => {
 		if (!isLoggedIn) {
@@ -66,6 +73,8 @@ const GlobalContextProvider = ({ children }) => {
 				fullName,
 				isLoggedIn,
 				isModalOpen,
+				alertMessage,
+				saveAlert,
 				toggleLoggedIn,
 				saveToken,
 				toggleModalIsOpen
