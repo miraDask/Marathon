@@ -14,7 +14,7 @@ const NoActiveSprint = () => {
 					There are no active sprints
 				</h4>
 				<p class="mb-8 leading-relaxed">
-					Start sprints in the{' '}
+					Start sprint in the{' '}
 					<NavLink to={`/user/dashboard/${currentProject.id}/backlog`} textColor="green-400">
 						<span className="text-lg">Backlog</span>
 					</NavLink>

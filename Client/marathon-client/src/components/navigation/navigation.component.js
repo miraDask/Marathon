@@ -37,7 +37,7 @@ const Navigation = () => {
 						<NavLink to="/user/projects" textColor="teal-600" hoverColor="green-400">
 							Projects
 						</NavLink>
-						<NavLink to="/user/teams" textColor="teal-600" hoverColor="green-400">
+						<NavLink to="/user/people" textColor="teal-600" hoverColor="green-400">
 							People
 						</NavLink>
 					</div>

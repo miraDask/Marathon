@@ -24,6 +24,7 @@ const DashboardNavBar = ({ otherClasses }) => {
 					setBoardLinkIsClicked(true);
 					break;
 				case 'teams':
+				case 'create':
 					setTeamLinkIsClicked(true);
 					break;
 				case 'backlog':
