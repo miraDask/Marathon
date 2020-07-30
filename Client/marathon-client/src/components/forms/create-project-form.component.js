@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import useFormProcessor from '../../hooks/useFormProcessor';
 
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
@@ -21,61 +22,39 @@ const initialProject = {
 
 const CreateProjectForm = () => {
 	const history = useHistory();
+	const { data, errors, handleChange, handleOnBlur, handleSubmit } = useFormProcessor(initialProject, initialProject);
 	const { saveToken, token } = useContext(Context);
 	const { updateProjects, saveHasProjects } = useContext(ProjectsContext);
-	const [ project, setProject ] = useState(initialProject);
-	const [ errors, setErrors ] = useState({ name: '', key: '' });
 
-	const handleChange = (event) => {
-		const { value, name } = event.target;
-		setProject({ ...project, [name]: value });
-		setErrors({ ...errors, [name]: '' });
+	const getErrors = () => {
+		const { name, key } = data;
+		return getEmptyInputsErrorsObject({ name, key });
 	};
 
-	const handleOnBlur = (event, validationFunc, data) => {
-		const { name } = event.target;
-		const { error } = validationFunc(data);
-
-		if (error) {
-			return setErrors({ ...errors, [name]: error });
-		}
-	};
-
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		if (Object.keys(errors).some((key) => errors[key] !== '')) {
-			return;
-		}
-
-		const { name, key } = project;
-		let errorsObject = getEmptyInputsErrorsObject({ name, key });
-		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
-			return setErrors({ ...errors, ...errorsObject });
-		}
-
+	const handleCreateProject = async () => {
+		const { name, key } = data;
 		const result = await createProject({ name, key }, token);
 
 		if (result.token) {
 			saveToken(result.token);
 			saveHasProjects();
 			updateProjects({ name, key }, result.id);
-			setErrors({ name: '', key: '' });
 			history.push('/user/projects');
 		}
 	};
 
 	return (
 		<form
-			onSubmit={handleSubmit}
+			onSubmit={(e) => handleSubmit(e, getErrors(), handleCreateProject)}
 			className="lg:w-2/6 md:w-1/2 rounded-lg p-8 flex flex-col md:ml-0 w-full mt-10 md:mt-0"
 		>
 			<h2 className="text-gray-900 text-lg font-medium title-font mb-5">CREATE PROJECT</h2>
 			<FormInput
 				handleChange={handleChange}
-				handleOnBlur={(event) => handleOnBlur(event, validateName, { name: project.name })}
+				handleOnBlur={(event) => handleOnBlur(event, validateName, { name: data.name })}
 				type="text"
 				name="name"
-				value={project.name}
+				value={data.name}
 				placeholder="Project Name"
 			/>
 			{errors.name ? <ErrorMessageContainer>{errors.name}</ErrorMessageContainer> : null}
@@ -84,9 +63,9 @@ const CreateProjectForm = () => {
 				type="text"
 				name="key"
 				placeholder="Key"
-				value={project.key}
+				value={data.key}
 				handleChange={handleChange}
-				handleOnBlur={(event) => handleOnBlur(event, validateKey, { key: project.key })}
+				handleOnBlur={(event) => handleOnBlur(event, validateKey, { key: data.key })}
 			/>
 			{errors.key ? (
 				<ErrorMessageContainer>{errors.key}</ErrorMessageContainer>

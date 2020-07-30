@@ -1,4 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
+import useFormProcessor from '../../hooks/useFormProcessor';
+
 import { Context } from '../../providers/global-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
 
@@ -11,48 +13,29 @@ import IssueFormsInput from '../inputs/issue-forms-input.component';
 import CustomLabel from '../labels/custom-label.component';
 import CustomSelect from '../select/custom-select.component';
 
+const initialErrors = { title: '', description: '', storyPoints: '' };
 const IssueForm = ({ handleFetchData, formTitle, handleModalClose, children, disabled = null }) => {
 	const { openedIssue } = useContext(IssuesContext);
-	const [ issue, setIssue ] = useState(openedIssue);
-	const [ errors, setErrors ] = useState({ title: '', description: '', storyPoints: '' });
+	const { data, errors, setErrors, setData, handleChange, handleOnBlur, handleSubmit } = useFormProcessor(
+		initialErrors,
+		openedIssue
+	);
 	const { toggleModalIsOpen } = useContext(Context);
 
 	useEffect(
 		() => {
-			setIssue(openedIssue);
+			setData(openedIssue);
 		},
-		[ openedIssue ]
+		[ openedIssue, setData ]
 	);
 
-	const handleChange = (event) => {
-		const { value, name } = event.target;
-		setIssue({ ...issue, [name]: value });
-		setErrors({ ...errors, [name]: '' });
+	const getErrors = () => {
+		const { title, description } = data;
+		return getEmptyInputsErrorsObject({ title, description });
 	};
 
-	const handleOnBlur = (event, validationFunc, data) => {
-		const { name } = event.target;
-		const { error } = validationFunc(data);
-
-		if (error) {
-			return setErrors({ ...errors, [name]: error });
-		}
-	};
-
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-
-		if (Object.keys(errors).some((key) => errors[key] !== '')) {
-			return;
-		}
-
-		const { title, description } = issue;
-		let errorsObject = getEmptyInputsErrorsObject({ title, description });
-		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
-			return setErrors({ ...errors, ...errorsObject });
-		}
-
-		const success = await handleFetchData(issue);
+	const handleFetchAsync = async () => {
+		const success = await handleFetchData(data);
 
 		if (success) {
 			setErrors({ name: '', key: '' });
@@ -71,7 +54,7 @@ const IssueForm = ({ handleFetchData, formTitle, handleModalClose, children, dis
 
 	return (
 		<form
-			onSubmit={handleSubmit}
+			onSubmit={(e) => handleSubmit(e, getErrors(), handleFetchAsync)}
 			className="container px-5 py-2 mx-auto"
 			onKeyPress={(e) => {
 				e.key === 'Enter' && e.preventDefault();
@@ -87,11 +70,11 @@ const IssueForm = ({ handleFetchData, formTitle, handleModalClose, children, dis
 						<IssueFormsInput
 							disabled={disabled}
 							handleChange={handleChange}
-							handleOnBlur={(event) => handleOnBlur(event, validateTitle, { title: issue.title })}
+							handleOnBlur={(event) => handleOnBlur(event, validateTitle, { title: data.title })}
 							placeholder="Title"
 							type="text"
 							name="title"
-							value={issue.title}
+							value={data.title}
 						/>
 						{errors.title ? <ErrorMessageContainer>{errors.title}</ErrorMessageContainer> : null}
 					</div>
@@ -101,11 +84,11 @@ const IssueForm = ({ handleFetchData, formTitle, handleModalClose, children, dis
 							disabled={disabled}
 							handleChange={handleChange}
 							handleOnBlur={(event) =>
-								handleOnBlur(event, validatePoints, { storyPoints: issue.storyPoints })}
+								handleOnBlur(event, validatePoints, { storyPoints: data.storyPoints })}
 							placeholder="1, 2, 3, 5, 8, …"
 							type="number"
 							name="storyPoints"
-							value={issue.storyPoints}
+							value={data.storyPoints}
 						/>
 						{errors.storyPoints ? (
 							<ErrorMessageContainer>{errors.storyPoints}</ErrorMessageContainer>
@@ -116,11 +99,11 @@ const IssueForm = ({ handleFetchData, formTitle, handleModalClose, children, dis
 							disabled={disabled}
 							onChange={handleChange}
 							onBlur={(event) =>
-								handleOnBlur(event, validateDescription, { description: issue.description })}
+								handleOnBlur(event, validateDescription, { description: data.description })}
 							name="description"
 							className="w-full bg-gray-100 rounded border border-gray-400 focus:outline-none h-24 focus:border-teal-500 text-base px-4 py-2 resize-none block"
 							placeholder="Description"
-							value={issue.description}
+							value={data.description}
 						/>
 						{errors.description ? (
 							<ErrorMessageContainer>{errors.description}</ErrorMessageContainer>
@@ -131,7 +114,7 @@ const IssueForm = ({ handleFetchData, formTitle, handleModalClose, children, dis
 							<CustomSelect
 								disabled={disabled}
 								label={<CustomLabel>Type</CustomLabel>}
-								value={issue.type}
+								value={data.type}
 								name="type"
 								handleChange={handleChange}
 							>
@@ -140,7 +123,7 @@ const IssueForm = ({ handleFetchData, formTitle, handleModalClose, children, dis
 							<CustomSelect
 								disabled={disabled}
 								label={<CustomLabel>Priority</CustomLabel>}
-								value={issue.priority}
+								value={data.priority}
 								name="priority"
 								handleChange={handleChange}
 							>
@@ -149,7 +132,7 @@ const IssueForm = ({ handleFetchData, formTitle, handleModalClose, children, dis
 							<CustomSelect
 								disabled={disabled}
 								label={<CustomLabel>Status</CustomLabel>}
-								value={issue.status}
+								value={data.status}
 								name="status"
 								handleChange={handleChange}
 							>
