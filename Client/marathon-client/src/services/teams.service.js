@@ -48,3 +48,25 @@ export const getAllTeams = async (projectId, token) => {
 		return error;
 	}
 };
+
+export const updateTeam = async (projectId, token, teamId, data) => {
+	const headers = getHeaders(token);
+
+	try {
+		await fetcher(API_URL + `/${projectId}/teams/${teamId}`, 'PUT', headers, data);
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
+
+export const deleteTeam = async (projectId, token, teamId) => {
+	const headers = getHeaders(token);
+
+	try {
+		await fetcher(API_URL + `/${projectId}/teams/${teamId}`, 'DELETE', headers);
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};

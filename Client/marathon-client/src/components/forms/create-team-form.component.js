@@ -33,7 +33,8 @@ const CreateTeamForm = () => {
 		const result = await createTeam(currentProject.id, token, { title: data.title, imageUrl: '' });
 		console.log(result);
 		if (result) {
-			history.push(`/user/teams/${result}`);
+			//history.push(`/user/teams/${result}`);
+			history.push(`/user/dashboard/${currentProject.id}/teams`);
 		}
 	};
 

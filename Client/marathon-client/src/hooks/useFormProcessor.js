@@ -26,11 +26,12 @@ const useFormProcessor = (initialError, initialData) => {
 		}
 
 		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
-			return setErrors({ ...errors, ...errorsObject });
+			setErrors({ ...errors, ...errorsObject });
+			return false;
 		}
 
 		await fetchFunc();
-		return true;
+		return { success: true };
 	};
 
 	return {

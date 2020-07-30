@@ -5,19 +5,20 @@ import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
 import { useHistory } from 'react-router-dom';
-import { deleteProject, updateProject } from '../../services/projects.service';
-import { getEmptyInputsErrorsObject } from '../../utils/errors/project';
-import { validateKey, validateName } from '../../utils/validations/project';
+import { updateTeam, deleteTeam } from '../../services/teams.service';
+import { getEmptyInputsErrorsObject } from '../../utils/errors/teams';
+import { validateTitle } from '../../utils/validations/teams';
 
 import ErrorMessageContainer from '../messages/form-input-error-message.component';
 import FormInput from '../inputs/form-input.component';
 import NavLink from '../navigation/nav-link.component';
 import CardFormContainer from '../containers/card-form-container.component';
+import TeamsPage from '../../pages/teams/teams-page.component';
 
 const initialIsEditClicked = false;
 const initialError = { name: '', key: '' };
 
-const ProjectCard = ({ initialData }) => {
+const TeamCard = ({ initialData, setTeams }) => {
 	const {
 		data,
 		errors,
@@ -29,8 +30,10 @@ const ProjectCard = ({ initialData }) => {
 	} = useFormProcessor(initialError, {
 		...initialData
 	});
-	const { updateProjects, deleteFromProjects, currentProject, saveCurrentProject } = useContext(ProjectsContext);
+
 	const { token } = useContext(Context);
+	const { currentProject } = useContext(ProjectsContext);
+
 	const [ isEditClicked, setIsEditClicked ] = useState(initialIsEditClicked);
 	const history = useHistory();
 	const dataIdRef = useRef(null);
@@ -40,11 +43,10 @@ const ProjectCard = ({ initialData }) => {
 	};
 
 	const handleUpdate = async () => {
-		const { name, key } = data;
+		const { title } = data;
 		const id = dataIdRef.current;
 		try {
-			await updateProject(id, { name, key }, token);
-			updateProjects(data, id);
+			await updateTeam(currentProject.id, token, id, { title, imageUrl: '' });
 		} catch (error) {
 			console.log(error);
 		}
@@ -53,12 +55,13 @@ const ProjectCard = ({ initialData }) => {
 	const handleDeleteClick = async () => {
 		const id = dataIdRef.current;
 		try {
-			await deleteProject(token, id);
-			deleteFromProjects(id);
-			if (currentProject.id === +id) {
-				saveCurrentProject(null);
-			}
-			history.push('/user/projects');
+			await deleteTeam(currentProject.id, token, id);
+			setTeams((oldTeamList) => {
+				let newTeamList = oldTeamList.filter((x) => x.id !== +dataIdRef.current);
+				return newTeamList.length > 0 ? [] : null;
+			});
+			//history.push(`/user/dashboard/${currentProject.id}/teams`);
+			//history.push(`/user/dashboard/${currentProject.id}/teams`);
 		} catch (error) {
 			console.log(error);
 		}
@@ -75,17 +78,16 @@ const ProjectCard = ({ initialData }) => {
 			setData={setData}
 			setErrors={setErrors}
 			handleDeleteClick={handleDeleteClick}
-			handleSubmit={(e) =>
-				handleSubmit(e, getEmptyInputsErrorsObject({ name: data.name, key: data.key }), handleUpdate)}
+			handleSubmit={(e) => handleSubmit(e, getEmptyInputsErrorsObject({ title: data.title }), handleUpdate)}
 		>
 			<div className="pt-1">
 				{!isEditClicked ? (
 					<NavLink
-						to={`/user/dashboard/${data.id}/backlog`}
+						to={`/user/dashboard/${currentProject.id}/teams/${data.id}`}
 						hoverColor="green-400"
 						otherClasses="cursor-pointer text-xl text-gray-900 leading-tight"
 					>
-						{data.name}
+						{data.title}
 					</NavLink>
 				) : (
 					<div>
@@ -93,35 +95,18 @@ const ProjectCard = ({ initialData }) => {
 							autoFocus
 							className="focus:outline-none p-1 pl-2 text-xl text-black leading-tight"
 							type="text"
-							name="name"
-							value={data.name}
+							name="title"
+							value={data.title}
 							onChange={handleChange}
-							handleOnBlur={(event) => handleOnBlur(event, validateName, { name: data.name })}
-							placeholder="Project Name"
+							handleOnBlur={(event) => handleOnBlur(event, validateTitle, { title: data.title })}
+							placeholder="Team Title"
 						/>
-						{errors.name ? <ErrorMessageContainer>{errors.name}</ErrorMessageContainer> : null}
+						{errors.title ? <ErrorMessageContainer>{errors.title}</ErrorMessageContainer> : null}
 					</div>
-				)}
-
-				{!isEditClicked ? (
-					<p className="mt-1">{data.key}</p>
-				) : (
-					<p className="mt-1">
-						<FormInput
-							className="focus:outline-none p-1 pl-2 text-base text-gray-600 leading-normal"
-							type="text"
-							name="key"
-							placeholder="Key"
-							value={data.key}
-							handleChange={handleChange}
-							handleOnBlur={(event) => handleOnBlur(event, validateKey, { key: data.key })}
-						/>
-						{errors.key ? <ErrorMessageContainer>{errors.key}</ErrorMessageContainer> : null}
-					</p>
 				)}
 			</div>
 		</CardFormContainer>
 	);
 };
 
-export default ProjectCard;
+export default TeamCard;

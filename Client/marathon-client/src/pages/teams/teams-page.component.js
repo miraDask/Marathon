@@ -11,35 +11,41 @@ import PageTopicContainer from '../../components/containers/page-topic-container
 import NavLink from '../../components/navigation/nav-link.component';
 import FormButton from '../../components/buttons/form-button.component';
 import NoTeams from '../../components/teams/no-teams.component';
+import TeamCard from '../../components/cards/team-card.component';
+import Spinner from '../../components/spinner/spinner.component';
 
 const TeamsPage = () => {
 	const [ teams, setTeams ] = useState(null);
+	const [ isLoading, setLoading ] = useState(true);
 	const { currentProject } = useContext(ProjectsContext);
 	const { token } = useContext(Context);
 
-	useEffect(() => {
-		const getTeams = async () => {
-			const response = await getAllTeams(currentProject.id, token);
+	useEffect(
+		() => {
+			const getTeams = async () => {
+				const response = await getAllTeams(currentProject.id, token);
+				if (response.length > 0) {
+					setTeams(response);
+				}
+				setLoading(false);
+			};
 
-			console.log(response);
-			if (response.length > 0) {
-				setTeams(response);
-			}
-		};
-
-		if (!teams) {
 			getTeams();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		},
+		[ teams ]
+	);
 
 	const renderTeams = () => {
 		return (
 			<div className="lg:w-2/3 flex mb-8 flex-col sm:flex-row sm:items-center items-start mx-auto">
-				<div className="w-full">{teams.map((team) => <div key={team.id}>{team.title}</div>)}</div>
+				<div className="w-full">
+					{teams.map((team) => <TeamCard key={team.id} initialData={team} setTeams={setTeams} />)}
+				</div>
 			</div>
 		);
 	};
+
 	return (
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
@@ -50,8 +56,7 @@ const TeamsPage = () => {
 							<FormButton>Create</FormButton>
 						</NavLink>
 					</PageTopicContainer>
-					{teams ? renderTeams() : <NoTeams />}
-
+					{isLoading ? <Spinner /> : teams ? renderTeams() : <NoTeams />}
 					<div className="lg:w-2/3 flex-grow justify-center items-center
 				 text-center container mx-auto  grid row-gap-4 grid-cols-1 w-full" />
 				</div>

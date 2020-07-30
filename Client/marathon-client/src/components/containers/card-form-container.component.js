@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 
 import { ReactComponent as EditIcon } from '../../assets/icon-edit.svg';
 import { ReactComponent as DeleteIcon } from '../../assets/icon-trash.svg';
@@ -34,8 +34,8 @@ const CardFormContainer = ({
 	};
 
 	const handleSave = (e) => {
-		const success = handleSubmit(e);
-		if (success) {
+		const result = handleSubmit(e);
+		if (result.success) {
 			toggleButtons();
 		}
 	};
