@@ -12,6 +12,7 @@
 
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
 
     using static Marathon.Server.Infrastructure.ApiRoutes;
 
@@ -19,13 +20,16 @@
     {
         private readonly ITeamsService teamService;
         private readonly UserManager<User> userManager;
+        private readonly AppSettings appSettings;
 
         public TeamsController(
             ITeamsService teamService,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            IOptions<AppSettings> appSettings)
         {
             this.teamService = teamService;
             this.userManager = userManager;
+            this.appSettings = appSettings.Value;
         }
 
         /// <summary>
@@ -140,30 +144,54 @@
         }
 
         /// <summary>
-        /// Assign current User to current Team.
+        /// Invite current User to current Team.
         /// </summary>
         /// <param name="projectId"></param>
         /// <param name="teamId"></param>
         /// <param name="userId"></param>
-        /// <response code="200"> Successfully assigned user to team.</response>
+        /// <response code="200"> Successfully invited user to team.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
-        [Route(Teams.AddUser)]
+        [Route(Teams.InviteUser)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult<AuthResponseModel>> AssignUserToTeam(int projectId, int teamId, string userId)
+        public async Task<ActionResult> InviteUserToTeam(int projectId, int teamId, [FromBody]string userId)
         {
-            var assignUserRequest = await this.teamService.AddUserToTeamAsync(userId, teamId, projectId);
+            var inviteUserRequest = await this.teamService.InviteUserToTeamAsync(userId, teamId, projectId);
 
-            if (!assignUserRequest.Success)
+            if (!inviteUserRequest.Success)
             {
                 return this.BadRequest(new ErrorsResponseModel
                 {
-                    Errors = assignUserRequest.Errors,
+                    Errors = inviteUserRequest.Errors,
                 });
             }
 
             return this.Ok();
+        }
+
+        /// <summary>
+        /// Accept current Invitation to join Team.
+        /// </summary>
+        /// <response code="200"> Successfully assigned user to team.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpPost]
+        [Route(Invitations.AcceptInvitation)]
+        [HasProjectAdminAuthorization]
+        public async Task<ActionResult<string>> AcceptInvitationToTeam([FromBody] int invitationId)
+        {
+            var acceptInvitationRequest = await this.teamService.AcceptInvitaionToTeamAsync(invitationId, this.appSettings.Secret);
+
+            if (!acceptInvitationRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = acceptInvitationRequest.Errors,
+                });
+            }
+
+            return this.Ok(acceptInvitationRequest.Result);
         }
 
         /// <summary>

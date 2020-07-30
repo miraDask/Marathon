@@ -32,6 +32,8 @@
 
         public DbSet<Team> Teams { get; set; }
 
+        public DbSet<Invitation> Invitations { get; set; }
+
         public DbSet<TeamUser> TeamsUsers { get; set; }
 
         public DbSet<ProjectAdmin> ProjectsAdmins { get; set; }

@@ -32,7 +32,7 @@
             this.identityService = identityService;
         }
 
-        public async Task<ResultModel<bool>> AddUserToTeamAsync(string userId, int teamId, int projectId)
+        public async Task<ResultModel<bool>> InviteUserToTeamAsync(string userId, int teamId, int projectId)
         {
             var user = await this.userManager.FindByIdAsync(userId);
 
@@ -44,30 +44,51 @@
                 };
             }
 
-            var team = await this.GetByIdAsync(teamId);
-
-            if (team == null)
+            var invitation = new Invitation
             {
-                return new ResultModel<bool>
+                ProjectId = projectId,
+                TeamId = teamId,
+                RecipientId = user.Id,
+            };
+
+            await this.dbContext.AddAsync(invitation);
+            await this.dbContext.SaveChangesAsync();
+
+            return new ResultModel<bool>
+            {
+                Success = true,
+            };
+        }
+
+        public async Task<ResultModel<string>> AcceptInvitaionToTeamAsync(int invitationId, string secret)
+        {
+            var invitation = await this.dbContext.Invitations.FirstOrDefaultAsync(x => x.Id == invitationId);
+
+            if (invitation == null)
+            {
+                return new ResultModel<string>
                 {
-                    Errors = new string[] { Errors.InvalidTeamId },
+                    Errors = new string[] { Errors.InvalidInvitationId },
                 };
             }
 
+            var user = await this.userManager.FindByIdAsync(invitation.RecipientId);
+
             var teamUser = new TeamUser()
             {
-                Team = team,
-                User = user,
+                TeamId = invitation.TeamId,
+                UserId = invitation.RecipientId,
             };
 
             await this.dbContext.TeamsUsers.AddAsync(teamUser);
             await this.dbContext.SaveChangesAsync();
 
-            await this.identityService.AddClaimToUserAsync(user.Id, Claims.Team, projectId.ToString());
+            var token = await this.identityService.AddClaimToUserAsync(user.Id, Claims.Team, invitation.ProjectId.ToString(), secret);
 
-            return new ResultModel<bool>
+            return new ResultModel<string>
             {
                 Success = true,
+                Result = token,
             };
         }
 

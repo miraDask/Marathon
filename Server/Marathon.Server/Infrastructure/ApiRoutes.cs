@@ -20,8 +20,15 @@
             public const string GetAllInProject = Base + "/teams";
             public const string Delete = Base + "/teams/{teamId}";
             public const string GetDetails = Base + "/teams/{teamId}";
-            public const string AddUser = Base + "/teams/{teamId}/{userId}";
-            public const string RemoveUser = Base + "/teams/{teamId}/{userId}";
+            public const string InviteUser = Base + "/teams/{teamId}/invite";
+            public const string RemoveUser = Base + "/teams/{teamId}/remove";
+        }
+
+        public static class Invitations
+        {
+            public const string InvitationsRoute = Root + "/invitations";
+            public const string AcceptInvitation = InvitationsRoute + "/{invitationId}";
+
         }
 
         public static class Projects

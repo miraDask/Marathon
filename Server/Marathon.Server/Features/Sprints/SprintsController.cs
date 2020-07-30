@@ -121,7 +121,7 @@
         }
 
         /// <summary>
-        /// Update current sprint.
+        /// Complete current sprint.
         /// </summary>
         /// <param name="input"></param>
         /// <param name="projectId"></param>

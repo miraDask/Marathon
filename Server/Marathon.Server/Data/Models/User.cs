@@ -34,6 +34,8 @@
 
         public virtual ICollection<ProjectAdmin> ProjectsAdmins { get; set; }
 
+        public virtual ICollection<Invitation> Invitations { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
         public DateTime? ModifiedOn { get; set; }
