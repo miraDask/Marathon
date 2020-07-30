@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import useFormProcessor from '../../hooks/useFormProcessor';
 
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
@@ -19,58 +20,35 @@ const initialTeam = {
 
 const CreateTeamForm = () => {
 	const history = useHistory();
-	const [ team, setTeam ] = useState(initialTeam);
-	const [ errors, setErrors ] = useState({ title: '' });
+	const { data, errors, handleChange, handleOnBlur, handleSubmit } = useFormProcessor(initialTeam, initialTeam);
 	const { token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 
-	const handleChange = (event) => {
-		const { value, name } = event.target;
-		setTeam({ ...team, [name]: value });
-		setErrors({ ...errors, [name]: '' });
+	const getErrors = () => {
+		const { title } = data;
+		return getEmptyInputsErrorsObject({ title });
 	};
 
-	const handleOnBlur = (event, validationFunc, data) => {
-		const { name } = event.target;
-		const { error } = validationFunc(data);
-
-		if (error) {
-			return setErrors({ ...errors, [name]: error });
-		}
-	};
-
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		if (Object.keys(errors).some((key) => errors[key] !== '')) {
-			return;
-		}
-
-		const { title } = team;
-		let errorsObject = getEmptyInputsErrorsObject({ title });
-		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
-			return setErrors({ ...errors, ...errorsObject });
-		}
-
-		const result = await createTeam(currentProject.id, token, { title, imageUrl: '' });
+	const handleCreateTeam = async () => {
+		const result = await createTeam(currentProject.id, token, { title: data.title, imageUrl: '' });
 		console.log(result);
 		if (result) {
-			setErrors({ title: '' });
 			history.push(`/user/teams/${result}`);
 		}
 	};
 
 	return (
 		<form
-			onSubmit={handleSubmit}
+			onSubmit={(e) => handleSubmit(e, getErrors(), handleCreateTeam)}
 			className="lg:w-2/6 md:w-1/2 rounded-lg p-8 flex flex-col md:ml-0 w-full mt-10 md:mt-0"
 		>
 			<h2 className="text-gray-900 text-lg font-medium title-font mb-5">CREATE TEAM</h2>
 			<FormInput
 				handleChange={handleChange}
-				handleOnBlur={(event) => handleOnBlur(event, validateTitle, { title: team.title })}
+				handleOnBlur={(event) => handleOnBlur(event, validateTitle, { title: data.title })}
 				type="text"
 				name="title"
-				value={team.title}
+				value={data.title}
 				placeholder="Team Title"
 			/>
 			{errors.title ? <ErrorMessageContainer>{errors.title}</ErrorMessageContainer> : null}
