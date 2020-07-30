@@ -1,13 +1,45 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect, useContext } from 'react';
+
+import { ProjectsContext } from '../../providers/projects-context.provider';
+import { Context } from '../../providers/global-context.provider';
+
+import { getAllTeams } from '../../services/teams.service';
 
 import MainWrapper from '../../components/main/main-wrapper.component';
 import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
 import PageTopicContainer from '../../components/containers/page-topic-container.component';
 import NavLink from '../../components/navigation/nav-link.component';
 import FormButton from '../../components/buttons/form-button.component';
-import InfoMessageContainer from '../../components/messages/form-input-info-message.component';
+import NoTeams from '../../components/teams/no-teams.component';
 
 const TeamsPage = () => {
+	const [ teams, setTeams ] = useState(null);
+	const { currentProject } = useContext(ProjectsContext);
+	const { token } = useContext(Context);
+
+	useEffect(() => {
+		const getTeams = async () => {
+			const response = await getAllTeams(currentProject.id, token);
+
+			console.log(response);
+			if (response.length > 0) {
+				setTeams(response);
+			}
+		};
+
+		if (!teams) {
+			getTeams();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const renderTeams = () => {
+		return (
+			<div className="lg:w-2/3 flex mb-8 flex-col sm:flex-row sm:items-center items-start mx-auto">
+				<div className="w-full">{teams.map((team) => <div key={team.id}>{team.title}</div>)}</div>
+			</div>
+		);
+	};
 	return (
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
@@ -18,14 +50,7 @@ const TeamsPage = () => {
 							<FormButton>Create</FormButton>
 						</NavLink>
 					</PageTopicContainer>
-					<InfoMessageContainer addClass="lg:w-2/3 flex mt-8 flex-col  mx-auto">
-						Click on team name to see details
-					</InfoMessageContainer>
-					<div className="lg:w-2/3 flex mb-8 flex-col sm:flex-row sm:items-center items-start mx-auto">
-						{/* <div className="w-full">
-							{projects.map((project) => <ProjectCard key={project.id} project={project} />)}
-						</div> */}
-					</div>
+					{teams ? renderTeams() : <NoTeams />}
 
 					<div className="lg:w-2/3 flex-grow justify-center items-center
 				 text-center container mx-auto  grid row-gap-4 grid-cols-1 w-full" />

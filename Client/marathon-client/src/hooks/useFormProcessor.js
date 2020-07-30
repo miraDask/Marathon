@@ -22,7 +22,7 @@ const useFormProcessor = (initialError, initialData) => {
 	const handleSubmit = async (event, errorsObject, fetchFunc) => {
 		event.preventDefault();
 		if (Object.keys(errors).some((key) => errors[key] !== '')) {
-			return;
+			return false;
 		}
 
 		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
@@ -30,6 +30,7 @@ const useFormProcessor = (initialError, initialData) => {
 		}
 
 		await fetchFunc();
+		return true;
 	};
 
 	return {

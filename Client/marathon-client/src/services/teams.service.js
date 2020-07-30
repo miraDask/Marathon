@@ -31,3 +31,20 @@ export const inviteToTeam = async (projectId, teamId, token, data) => {
 		return error;
 	}
 };
+
+export const getAllTeams = async (projectId, token) => {
+	const headers = getHeaders(token);
+
+	try {
+		const response = await fetcher(API_URL + `/${projectId}/teams`, 'GET', headers);
+		try {
+			const dataToReturn = await response.json();
+			return dataToReturn;
+		} catch (error) {
+			console.log(error);
+		}
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};

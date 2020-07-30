@@ -32,9 +32,9 @@ const ProjectsAll = ({ projects }) => {
 				<InfoMessageContainer addClass="lg:w-2/3 flex mt-8 flex-col  mx-auto">
 					Click on project name to open it in the backlog
 				</InfoMessageContainer>
-				<div className="lg:w-2/3 flex mb-8 flex-col sm:flex-row sm:items-center items-start mx-auto">
+				<div className="lg:w-2/3 flex mb-8 mt-2 flex-col sm:flex-row sm:items-center items-start mx-auto">
 					<div className="w-full">
-						{projects.map((project) => <ProjectCard key={project.id} project={project} />)}
+						{projects.map((project) => <ProjectCard key={project.id} initialData={project} />)}
 					</div>
 				</div>
 

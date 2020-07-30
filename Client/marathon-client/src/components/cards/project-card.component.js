@@ -1,4 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
+import useFormProcessor from '../../hooks/useFormProcessor';
+
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
@@ -7,79 +9,54 @@ import { deleteProject, updateProject } from '../../services/projects.service';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/project';
 import { validateKey, validateName } from '../../utils/validations/project';
 
-import { ReactComponent as EditIcon } from '../../assets/icon-edit.svg';
-import { ReactComponent as DeleteIcon } from '../../assets/icon-trash.svg';
-import { ReactComponent as SaveIcon } from '../../assets/icon-check-circle.svg';
-import { ReactComponent as CancelIcon } from '../../assets/icon-x-circle.svg';
+// import { ReactComponent as EditIcon } from '../../assets/icon-edit.svg';
+// import { ReactComponent as DeleteIcon } from '../../assets/icon-trash.svg';
+// import { ReactComponent as SaveIcon } from '../../assets/icon-check-circle.svg';
+// import { ReactComponent as CancelIcon } from '../../assets/icon-x-circle.svg';
 
 import ErrorMessageContainer from '../messages/form-input-error-message.component';
-import FormInput from '../../components/inputs/form-input.component';
-import NavLink from '../../components/navigation/nav-link.component';
+import FormInput from '../inputs/form-input.component';
+import NavLink from '../navigation/nav-link.component';
+import CardFormContainer from '../containers/card-form-container.component';
 
 const initialIsEditClicked = false;
+const initialError = { name: '', key: '' };
 
-const ProjectCard = ({ project }) => {
-	const history = useHistory();
+const ProjectCard = ({ initialData }) => {
+	const {
+		data,
+		errors,
+		setErrors,
+		setData,
+		handleChange,
+		handleOnBlur,
+		handleSubmit
+	} = useFormProcessor(initialError, {
+		...initialData
+	});
 	const { updateProjects, deleteFromProjects, currentProject, saveCurrentProject } = useContext(ProjectsContext);
 	const { token } = useContext(Context);
 	const [ isEditClicked, setIsEditClicked ] = useState(initialIsEditClicked);
-	const [ editHidden, setEditHidden ] = useState(false);
-	const [ projectToEdit, setProjectToEdit ] = useState({ name: project.name, key: project.key });
-	const [ errors, setErrors ] = useState({ name: '', key: '' });
+	const history = useHistory();
+	const dataIdRef = useRef(null);
 
-	const handleOnBlur = (event, validationFunc, data) => {
-		const { name } = event.target;
-		const { error } = validationFunc(data);
-
-		if (error) {
-			return setErrors({ ...errors, [name]: error });
-		}
+	const saveIdRef = (id) => {
+		dataIdRef.current = id;
 	};
 
-	const toggleButtons = () => {
-		setIsEditClicked(!isEditClicked);
-		setEditHidden(!editHidden);
-	};
-
-	const handleEditClick = () => {
-		toggleButtons();
-	};
-
-	const handleUpdate = async (e) => {
-		const id = e.target.id ? e.target.id : e.target.parentNode.id;
-		if (Object.keys(errors).some((key) => errors[key] !== '')) {
-			return;
-		}
-
-		const { name, key } = projectToEdit;
-
-		if (project.name === name && project.key === key) {
-			toggleButtons();
-			return;
-		}
-
-		let errorsObject = getEmptyInputsErrorsObject({ name, key });
-		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
-			return setErrors({ ...errors, ...errorsObject });
-		}
-
+	const handleUpdate = async () => {
+		const { name, key } = data;
+		const id = dataIdRef.current;
 		try {
 			await updateProject(id, { name, key }, token);
-			updateProjects(projectToEdit, id);
-			toggleButtons();
+			updateProjects(data, id);
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
-	const handleChange = (e) => {
-		const { name, value } = e.target;
-		setProjectToEdit({ ...projectToEdit, [name]: value });
-		setErrors({ ...errors, [name]: '' });
-	};
-
-	const handleDeleteClick = async (e) => {
-		const id = e.target.id ? e.target.id : e.target.parentNode.id;
+	const handleDeleteClick = async () => {
+		const id = dataIdRef.current;
 		try {
 			await deleteProject(token, id);
 			deleteFromProjects(id);
@@ -93,26 +70,38 @@ const ProjectCard = ({ project }) => {
 	};
 
 	return (
-		<div className="mx-auto flex p-6 bg-white rounded-lg shadow-xl mb-3 justify-between">
+		<CardFormContainer
+			id={initialData.id}
+			saveIdRef={saveIdRef}
+			isEditClicked={isEditClicked}
+			setIsEditClicked={setIsEditClicked}
+			initialData={initialData}
+			initialError={initialError}
+			setData={setData}
+			setErrors={setErrors}
+			handleDeleteClick={handleDeleteClick}
+			handleSubmit={(e) =>
+				handleSubmit(e, getEmptyInputsErrorsObject({ name: data.name, key: data.key }), handleUpdate)}
+		>
 			<div className="pt-1">
 				{!isEditClicked ? (
 					<NavLink
-						to={`/user/dashboard/${project.id}/backlog`}
+						to={`/user/dashboard/${data.id}/backlog`}
 						hoverColor="green-400"
 						otherClasses="cursor-pointer text-xl text-gray-900 leading-tight"
 					>
-						{project.name}
+						{data.name}
 					</NavLink>
 				) : (
 					<div>
 						<FormInput
 							autoFocus
-							className="focus:outline-none text-xl text-black leading-tight"
+							className="focus:outline-none p-1 pl-2 text-xl text-black leading-tight"
 							type="text"
 							name="name"
-							value={projectToEdit.name}
+							value={data.name}
 							onChange={handleChange}
-							handleOnBlur={(event) => handleOnBlur(event, validateName, { name: projectToEdit.name })}
+							handleOnBlur={(event) => handleOnBlur(event, validateName, { name: data.name })}
 							placeholder="Project Name"
 						/>
 						{errors.name ? <ErrorMessageContainer>{errors.name}</ErrorMessageContainer> : null}
@@ -120,41 +109,23 @@ const ProjectCard = ({ project }) => {
 				)}
 
 				{!isEditClicked ? (
-					<p className="mt-1">{projectToEdit.key}</p>
+					<p className="mt-1">{data.key}</p>
 				) : (
 					<p className="mt-1">
 						<FormInput
-							className="focus:outline-none text-base text-gray-600 leading-normal"
+							className="focus:outline-none p-1 pl-2 text-base text-gray-600 leading-normal"
 							type="text"
 							name="key"
 							placeholder="Key"
-							value={projectToEdit.key}
+							value={data.key}
 							handleChange={handleChange}
-							handleOnBlur={(event) => handleOnBlur(event, validateKey, { key: projectToEdit.key })}
+							handleOnBlur={(event) => handleOnBlur(event, validateKey, { key: data.key })}
 						/>
 						{errors.key ? <ErrorMessageContainer>{errors.key}</ErrorMessageContainer> : null}
 					</p>
 				)}
 			</div>
-			{editHidden ? (
-				<div>
-					<span className="inline-block mr-2">
-						<CancelIcon className="mx-1
-						cursor-pointer" onClick={handleEditClick} />
-					</span>
-					<span className="inline-block mr-2">
-						<SaveIcon id={project.id} className="mx-1 cursor-pointer" onClick={handleUpdate} />
-					</span>
-					<span className="inline-block mr-10">
-						<DeleteIcon id={project.id} className="mx-1 cursor-pointer" onClick={handleDeleteClick} />
-					</span>
-				</div>
-			) : (
-				<span className="inline-block cursor-pointer">
-					<EditIcon onClick={handleEditClick} />
-				</span>
-			)}
-		</div>
+		</CardFormContainer>
 	);
 };
 
