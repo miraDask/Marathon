@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import useFormProcessor from '../../hooks/useFormProcessor';
 
 import { Context } from '../../providers/global-context.provider';
 import { registerUser } from '../../services/users.service';
@@ -26,37 +27,12 @@ const initialUser = {
 };
 
 const SignUpForm = ({ classes, ...otherProps }) => {
-	const history = useHistory();
+	const { data, errors, setErrors, handleChange, handleOnBlur, handleSubmit } = useFormProcessor({}, initialUser);
 	const { toggleLoggedIn, saveToken } = useContext(Context);
-	const [ user, setUser ] = useState(initialUser);
-	const [ errors, setErrors ] = useState({});
+	const history = useHistory();
 
-	const handleChange = (event) => {
-		const { value, name } = event.target;
-		setUser({ ...user, [name]: value });
-		setErrors({ ...errors, [name]: '' });
-	};
-
-	const handleOnBlur = (event, validationFunc, data) => {
-		const { name } = event.target;
-		const { error } = validationFunc(data);
-
-		if (error) {
-			return setErrors({ ...errors, [name]: error });
-		}
-	};
-
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		if (Object.keys(errors).some((key) => errors[key] !== '')) {
-			return;
-		}
-
-		const errorsObject = getEmptyInputsErrorsObject({ ...user });
-		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
-			return setErrors({ ...errors, ...errorsObject });
-		}
-		const { firstName, lastName, username, email, password } = user;
+	const handleSignUp = async () => {
+		const { firstName, lastName, username, email, password } = data;
 		const fullName = `${firstName} ${lastName}`;
 		const result = await registerUser({ fullName, username, email, password });
 
@@ -72,7 +48,7 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 
 	return (
 		<form
-			onSubmit={handleSubmit}
+			onSubmit={(e) => handleSubmit(e, getEmptyInputsErrorsObject({ ...data }), handleSignUp)}
 			className={`lg:w-2/6 md:w-1/2 rounded-lg p-8 flex flex-col md:ml-0 w-full mt-10 md:mt-0 ${classes}`}
 			{...otherProps}
 		>
@@ -80,9 +56,9 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 			<FormInput
 				type="text"
 				name="firstName"
-				value={user.firstName}
+				value={data.firstName}
 				placeholder="First Name"
-				handleOnBlur={(event) => handleOnBlur(event, validateFirstName, { firstName: user.firstName })}
+				handleOnBlur={(event) => handleOnBlur(event, validateFirstName, { firstName: data.firstName })}
 				handleChange={handleChange}
 			/>
 			{errors.firstName ? <ErrorMessageContainer>{errors.firstName}</ErrorMessageContainer> : null}
@@ -90,9 +66,9 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 			<FormInput
 				type="text"
 				name="lastName"
-				value={user.lastName}
+				value={data.lastName}
 				placeholder="Full Name"
-				handleOnBlur={(event) => handleOnBlur(event, validateLastName, { lastName: user.lastName })}
+				handleOnBlur={(event) => handleOnBlur(event, validateLastName, { lastName: data.lastName })}
 				handleChange={handleChange}
 			/>
 			{errors.lastName ? <ErrorMessageContainer>{errors.lastName}</ErrorMessageContainer> : null}
@@ -100,9 +76,9 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 			<FormInput
 				type="text"
 				name="username"
-				value={user.username}
+				value={data.username}
 				placeholder="Username"
-				handleOnBlur={(event) => handleOnBlur(event, validateUsername, { username: user.username })}
+				handleOnBlur={(event) => handleOnBlur(event, validateUsername, { username: data.username })}
 				handleChange={handleChange}
 			/>
 			{errors.username ? <ErrorMessageContainer>{errors.username}</ErrorMessageContainer> : null}
@@ -110,9 +86,9 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 			<FormInput
 				type="email"
 				name="email"
-				value={user.email}
+				value={data.email}
 				placeholder="Email"
-				handleOnBlur={(event) => handleOnBlur(event, validateEmail, { email: user.email })}
+				handleOnBlur={(event) => handleOnBlur(event, validateEmail, { email: data.email })}
 				handleChange={handleChange}
 			/>
 			{errors.email ? <ErrorMessageContainer>{errors.email}</ErrorMessageContainer> : null}
@@ -120,9 +96,9 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 			<FormInput
 				type="password"
 				name="password"
-				value={user.password}
+				value={data.password}
 				placeholder="Password"
-				handleOnBlur={(event) => handleOnBlur(event, validatePassword, { password: user.password })}
+				handleOnBlur={(event) => handleOnBlur(event, validatePassword, { password: data.password })}
 				handleChange={handleChange}
 			/>
 			{errors.password ? <ErrorMessageContainer>{errors.password}</ErrorMessageContainer> : null}
@@ -130,12 +106,12 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 			<FormInput
 				type="password"
 				name="confirmPassword"
-				value={user.confirmPassword}
+				value={data.confirmPassword}
 				placeholder="Confirm Password"
 				handleOnBlur={(event) =>
 					handleOnBlur(event, validateConfirmPassword, {
-						password: user.password,
-						confirmPassword: user.confirmPassword
+						password: data.password,
+						confirmPassword: data.confirmPassword
 					})}
 				handleChange={handleChange}
 			/>

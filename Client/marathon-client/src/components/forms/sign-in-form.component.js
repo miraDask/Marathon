@@ -1,4 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
+import useFormProcessor from '../../hooks/useFormProcessor';
+
 import { useHistory } from 'react-router-dom';
 
 import { Context } from '../../providers/global-context.provider';
@@ -17,12 +19,10 @@ const initialUser = {
 
 const SignInForm = () => {
 	const history = useHistory();
+	const [ hasProjects, setHasProjects ] = useState(false);
+	const { data, errors, setErrors, handleChange, handleSubmit } = useFormProcessor(initialUser, initialUser);
 	const { toggleLoggedIn, saveToken } = useContext(Context);
 	const { saveHasProjects } = useContext(ProjectsContext);
-
-	const [ user, setUser ] = useState(initialUser);
-	const [ errors, setErrors ] = useState({ username: '', password: '' });
-	const [ hasProjects, setHasProjects ] = useState(false);
 
 	useEffect(
 		() => {
@@ -32,24 +32,16 @@ const SignInForm = () => {
 		},
 		[ hasProjects, saveHasProjects ]
 	);
-	const handleChange = (event) => {
-		const { value, name } = event.target;
-		setUser({ ...user, [name]: value });
-		setErrors({ ...errors, [name]: '' });
+
+	const getErrors = () => {
+		const { email, password } = data;
+		return getEmptyInputsErrorsObject({ email, password });
 	};
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-
-		const { email, password } = user;
-		let errorsObject = getEmptyInputsErrorsObject({ email, password });
-		if (Object.keys(errorsObject).some((key) => errorsObject[key] !== '')) {
-			return setErrors({ ...errors, ...errorsObject });
-		}
-
-		const result = await loginUser({ ...user });
+	const handleSignIn = async () => {
+		const result = await loginUser({ ...data });
 		if (result.token) {
-			toggleLoggedIn(email, result.fullName);
+			toggleLoggedIn(data.email, result.fullName);
 			saveToken(result.token);
 			setErrors(null);
 
@@ -65,17 +57,17 @@ const SignInForm = () => {
 
 	return (
 		<form
-			onSubmit={handleSubmit}
+			onSubmit={(e) => handleSubmit(e, getErrors(), handleSignIn)}
 			className="lg:w-2/6 md:w-1/2 rounded-lg p-8 flex flex-col md:ml-0 w-full mt-10 md:mt-0"
 		>
 			<h2 className="text-gray-900 text-lg font-medium title-font mb-5">SIGN IN</h2>
-			<FormInput handleChange={handleChange} type="text" name="email" value={user.email} placeholder="Email" />
+			<FormInput handleChange={handleChange} type="text" name="email" value={data.email} placeholder="Email" />
 			{errors.email ? <ErrorMessageContainer>{errors.email}</ErrorMessageContainer> : null}
 			<FormInput
 				type="password"
 				name="password"
 				placeholder="Password"
-				value={user.password}
+				value={data.password}
 				handleChange={handleChange}
 			/>
 			{errors.password ? <ErrorMessageContainer>{errors.password}</ErrorMessageContainer> : null}
