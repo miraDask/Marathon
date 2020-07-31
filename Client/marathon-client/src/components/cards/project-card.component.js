@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, Fragment } from 'react';
 import useFormProcessor from '../../hooks/useFormProcessor';
 
 import { Context } from '../../providers/global-context.provider';
@@ -13,6 +13,7 @@ import ErrorMessageContainer from '../messages/form-input-error-message.componen
 import FormInput from '../inputs/form-input.component';
 import NavLink from '../navigation/nav-link.component';
 import CardFormContainer from '../containers/card-form-container.component';
+import ProjectRoleTag from '../../components/tags/project-role-tag.component';
 
 const initialIsEditClicked = false;
 const initialError = { name: '', key: '' };
@@ -66,6 +67,7 @@ const ProjectCard = ({ initialData }) => {
 	return (
 		<CardFormContainer
 			id={initialData.id}
+			showEdit={data.isCurrentUserCreator}
 			saveIdRef={saveIdRef}
 			isEditClicked={isEditClicked}
 			setIsEditClicked={setIsEditClicked}
@@ -103,7 +105,16 @@ const ProjectCard = ({ initialData }) => {
 				)}
 
 				{!isEditClicked ? (
-					<p className="mt-1">{data.key}</p>
+					<Fragment>
+						<p className="mt-1">{data.key}</p>
+						<p>
+							{data.isCurrentUserCreator ? (
+								<ProjectRoleTag text="creator" color="orange-500" size="w-16 h-4" />
+							) : (
+								<ProjectRoleTag text="team" color="green-500" size="w-16 h-4" />
+							)}
+						</p>
+					</Fragment>
 				) : (
 					<p className="mt-1">
 						<FormInput

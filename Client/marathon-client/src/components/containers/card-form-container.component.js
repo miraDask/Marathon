@@ -8,6 +8,7 @@ import { ReactComponent as CancelIcon } from '../../assets/icon-x-circle.svg';
 const CardFormContainer = ({
 	children,
 	id,
+	showEdit,
 	saveIdRef,
 	isEditClicked,
 	setIsEditClicked,
@@ -47,7 +48,7 @@ const CardFormContainer = ({
 				: 'orange-200'} rounded-lg shadow-xl mb-3 justify-between`}
 		>
 			<div className="pt-1">{children}</div>
-			{editHidden ? (
+			{showEdit ? editHidden ? (
 				<div>
 					<span className="inline-block mr-2">
 						<CancelIcon className="mx-1
@@ -64,7 +65,7 @@ const CardFormContainer = ({
 				<span className="inline-block cursor-pointer">
 					<EditIcon id={id} onClick={handleEditClick} />
 				</span>
-			)}
+			) : null}
 		</div>
 	);
 };

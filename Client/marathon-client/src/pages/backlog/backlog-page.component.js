@@ -52,6 +52,9 @@ const BacklogPage = ({ match, location }) => {
 		const getCurrentProjectDetails = async () => {
 			const projectId = match.params.projectId;
 			const response = await getProjectDetails(projectId, token);
+			if (response.errors) {
+				console.log(response.errors);
+			}
 			if (response) {
 				const issuesCollections = processBacklogIssuesCollections(response);
 				updateBacklogIssues(issuesCollections);
@@ -68,8 +71,6 @@ const BacklogPage = ({ match, location }) => {
 				if (activeSprint) {
 					saveActiveSprintId(activeSprint.id);
 				}
-
-				console.log('Reload');
 			}
 		};
 		getCurrentProjectDetails();

@@ -12,7 +12,7 @@ import BoardPage from '../../pages/board/board-page.component';
 import BacklogPage from '../../pages/backlog/backlog-page.component';
 import TeamsPage from '../../pages/teams/teams-page.component';
 import ArchivePage from '../../pages/archive/archive-page.component';
-import PeoplePage from '../../pages/people/people-page.component';
+import InvitationsPage from '../../pages/invitations/invitations-page.component';
 import TeamDetailsPage from '../../pages/teams/team-details-page.component';
 
 const Main = () => {
@@ -23,7 +23,7 @@ const Main = () => {
 			<Route exact path="/" component={HomePage} />
 			<Route exact path="/help" component={HelpPage} />
 			<Route exact path="/user/projects" component={UserProjectsPage} />
-			<Route exact path="/user/people" component={PeoplePage} />
+			<Route exact path="/user/invitations" component={InvitationsPage} />
 			<Route exact path="/user/projects/create" component={CreateProjectPage} />
 			<Route exact path="/user/team/create" component={CreateTeamPage} />
 			<Route exact path="/user/dashboard/:projectId/board" component={BoardPage} />

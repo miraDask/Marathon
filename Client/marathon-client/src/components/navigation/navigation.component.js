@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Context } from '../../providers/global-context.provider';
@@ -42,8 +42,8 @@ const Navigation = () => {
 							</NavLink>
 						</span>
 						<span className="ml-5">
-							<NavLink to="/user/people" textColor="teal-600" hoverColor="green-400">
-								People
+							<NavLink to="/user/invitations" textColor="teal-600" hoverColor="green-400">
+								Invitations
 							</NavLink>
 						</span>
 					</div>
@@ -57,14 +57,18 @@ const Navigation = () => {
 					{isLoggedIn ? (
 						<AccountDropdown otherClasses={isModalOpen ? 'invisible' : ''} />
 					) : (
-						<div>
-							<NavLink to="/signin" hoverColor="green-400">
-								SIGN IN
-							</NavLink>
-							<NavLink to="/signup" hoverColor="green-400">
-								SIGN UP
-							</NavLink>
-						</div>
+						<Fragment>
+							<span className="mr-5">
+								<NavLink to="/signin" hoverColor="green-400">
+									SIGN IN
+								</NavLink>
+							</span>
+							<span className="mr-5">
+								<NavLink to="/signup" hoverColor="green-400">
+									SIGN UP
+								</NavLink>
+							</span>
+						</Fragment>
 					)}
 				</nav>
 			</div>

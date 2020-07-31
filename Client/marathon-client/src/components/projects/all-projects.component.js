@@ -10,7 +10,7 @@ import PageTopicContainer from '../../components/containers/page-topic-container
 
 const ProjectsAll = ({ projects }) => {
 	const { removeHasProjects } = useContext(ProjectsContext);
-
+	console.log(projects);
 	useEffect(
 		() => {
 			if (projects.length < 1) {
