@@ -32,9 +32,9 @@
             this.identityService = identityService;
         }
 
-        public async Task<ResultModel<bool>> InviteUserToTeamAsync(string userId, int teamId, int projectId)
+        public async Task<ResultModel<bool>> InviteUserToTeamAsync(string email, int teamId, int projectId)
         {
-            var user = await this.userManager.FindByIdAsync(userId);
+            var user = await this.userManager.FindByEmailAsync(email);
 
             if (user == null)
             {
@@ -81,6 +81,10 @@
             };
 
             await this.dbContext.TeamsUsers.AddAsync(teamUser);
+
+            invitation.Accepted = true;
+            this.dbContext.Update(invitation);
+
             await this.dbContext.SaveChangesAsync();
 
             var token = await this.identityService.AddClaimToUserAsync(user.Id, Claims.Team, invitation.ProjectId.ToString(), secret);
@@ -152,11 +156,12 @@
             var getAllTeamsResult = await this.dbContext
                 .Teams
                 .Where(x => x.ProjectId == id)
+                .OrderByDescending(x => x.ModifiedOn)
                 .Select(x => new TeamListingServiceModel()
                 {
                     Id = x.Id,
                     Title = x.Title,
-                    ImageUrl = x.Title,
+                    ImageUrl = x.ImageUrl,
                 })
                 .ToListAsync();
 
@@ -177,6 +182,11 @@
 
         public async Task<ResultModel<TeamDetailsServiceModel>> GetDetailsAsync(int id)
         {
+            var invitedUsersEmails = await this.dbContext.Invitations
+                .Where(x => x.TeamId == id && !x.Accepted)
+                .Select(x => x.Recipient.Email)
+                .ToListAsync();
+
             var detailsResult = await this.dbContext
                 .Teams
                 .Where(x => x.Id == id)
@@ -184,12 +194,14 @@
                 {
                     Title = x.Title,
                     ImageUrl = x.ImageUrl,
-                    TeamUsers = x.TeamsUsers.Select(x => new UserListingServerModel()
+                    TeamUsers = x.TeamsUsers.Select(x => new UserDetailsServiceModel()
                     {
                         Id = x.User.Id,
                         FullName = x.User.FullName,
+                        Email = x.User.Email,
                         ImageUrl = x.User.ImageUrl,
                     }),
+                    InvitedUsersEmails = invitedUsersEmails,
                 })
                 .FirstOrDefaultAsync();
 

@@ -10,6 +10,8 @@
 
         public string ImageUrl { get; set; }
 
-        public IEnumerable<UserListingServerModel> TeamUsers { get; set; }
+        public IEnumerable<UserDetailsServiceModel> TeamUsers { get; set; }
+
+        public IEnumerable<string> InvitedUsersEmails { get; set; }
     }
 }

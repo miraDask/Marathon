@@ -22,6 +22,6 @@
 
         Task<ResultModel<string>> AcceptInvitaionToTeamAsync(int invitationId, string secret);
 
-        Task<ResultModel<bool>> RemoveUserFromTeamAsync(string userId, int teamId, int projectId);
+        Task<ResultModel<bool>> RemoveUserFromTeamAsync(string email, int teamId, int projectId);
     }
 }

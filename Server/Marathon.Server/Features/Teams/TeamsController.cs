@@ -148,16 +148,16 @@
         /// </summary>
         /// <param name="projectId"></param>
         /// <param name="teamId"></param>
-        /// <param name="userId"></param>
+        /// <param name="input"></param>
         /// <response code="200"> Successfully invited user to team.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPost]
         [Route(Teams.InviteUser)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult> InviteUserToTeam(int projectId, int teamId, [FromBody]string userId)
+        public async Task<ActionResult> InviteUserToTeam(int projectId, int teamId, [FromBody]InviteUserToTeamRequestModel input)
         {
-            var inviteUserRequest = await this.teamService.InviteUserToTeamAsync(userId, teamId, projectId);
+            var inviteUserRequest = await this.teamService.InviteUserToTeamAsync(input.Email, teamId, projectId);
 
             if (!inviteUserRequest.Success)
             {

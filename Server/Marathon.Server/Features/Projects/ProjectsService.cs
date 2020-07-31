@@ -112,6 +112,7 @@
                 .Where(x => x.CreatorId == id
                          || x.ProjectsAdmins.Any(x => x.UserId == id)
                          || x.Teams.Any(x => x.TeamsUsers.Any(x => x.UserId == id)))
+                .OrderByDescending(x => x.ModifiedOn)
                 .Select(x => new ProjectListingServiceModel()
                 {
                     Id = x.Id,
