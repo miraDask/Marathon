@@ -29,7 +29,7 @@ const ProjectCard = ({ initialData }) => {
 	} = useFormProcessor(initialError, {
 		...initialData
 	});
-	const { updateProjects, deleteFromProjects, currentProject, saveCurrentProject } = useContext(ProjectsContext);
+	const { deleteFromProjects, currentProject, saveCurrentProject } = useContext(ProjectsContext);
 	const { token } = useContext(Context);
 	const [ isEditClicked, setIsEditClicked ] = useState(initialIsEditClicked);
 	const history = useHistory();
@@ -44,7 +44,6 @@ const ProjectCard = ({ initialData }) => {
 		const id = dataIdRef.current;
 		try {
 			await updateProject(id, { name, key }, token);
-			updateProjects(data, id);
 		} catch (error) {
 			console.log(error);
 		}

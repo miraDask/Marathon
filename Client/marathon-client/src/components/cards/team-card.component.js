@@ -3,8 +3,8 @@ import useFormProcessor from '../../hooks/useFormProcessor';
 
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
+import { TeamsContext } from '../../providers/teams-context.provider';
 
-import { useHistory } from 'react-router-dom';
 import { updateTeam, deleteTeam } from '../../services/teams.service';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/teams';
 import { validateTitle } from '../../utils/validations/teams';
@@ -13,12 +13,11 @@ import ErrorMessageContainer from '../messages/form-input-error-message.componen
 import FormInput from '../inputs/form-input.component';
 import NavLink from '../navigation/nav-link.component';
 import CardFormContainer from '../containers/card-form-container.component';
-import TeamsPage from '../../pages/teams/teams-page.component';
 
 const initialIsEditClicked = false;
 const initialError = { name: '', key: '' };
 
-const TeamCard = ({ initialData, setTeams }) => {
+const TeamCard = ({ initialData }) => {
 	const {
 		data,
 		errors,
@@ -30,12 +29,11 @@ const TeamCard = ({ initialData, setTeams }) => {
 	} = useFormProcessor(initialError, {
 		...initialData
 	});
-
+	const { teams, saveTeams } = useContext(TeamsContext);
 	const { token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 
 	const [ isEditClicked, setIsEditClicked ] = useState(initialIsEditClicked);
-	const history = useHistory();
 	const dataIdRef = useRef(null);
 
 	const saveIdRef = (id) => {
@@ -56,12 +54,7 @@ const TeamCard = ({ initialData, setTeams }) => {
 		const id = dataIdRef.current;
 		try {
 			await deleteTeam(currentProject.id, token, id);
-			setTeams((oldTeamList) => {
-				let newTeamList = oldTeamList.filter((x) => x.id !== +dataIdRef.current);
-				return newTeamList.length > 0 ? [] : null;
-			});
-			//history.push(`/user/dashboard/${currentProject.id}/teams`);
-			//history.push(`/user/dashboard/${currentProject.id}/teams`);
+			saveTeams(teams.filter((x) => x.id !== +dataIdRef.current));
 		} catch (error) {
 			console.log(error);
 		}

@@ -1,7 +1,8 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react';
+import React, { Fragment, useEffect, useContext } from 'react';
 
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { Context } from '../../providers/global-context.provider';
+import { TeamsContext } from '../../providers/teams-context.provider';
 
 import { getAllTeams } from '../../services/teams.service';
 
@@ -15,34 +16,27 @@ import TeamCard from '../../components/cards/team-card.component';
 import Spinner from '../../components/spinner/spinner.component';
 
 const TeamsPage = () => {
-	const [ teams, setTeams ] = useState(null);
-	const [ isLoading, setLoading ] = useState(true);
+	const { teams, saveTeams } = useContext(TeamsContext);
 	const { currentProject } = useContext(ProjectsContext);
 	const { token } = useContext(Context);
 
-	useEffect(
-		() => {
-			const getTeams = async () => {
-				const response = await getAllTeams(currentProject.id, token);
-				if (response.length > 0) {
-					setTeams(response);
-				}
-				setLoading(false);
-			};
+	const getTeams = async () => {
+		const response = await getAllTeams(currentProject.id, token);
+		saveTeams(response);
+	};
 
-			getTeams();
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-		},
-		[ teams ]
-	);
+	useEffect(() => {
+		getTeams();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const renderTeams = () => {
-		return (
+		return teams.length > 0 ? (
 			<div className="lg:w-2/3 flex mb-8 flex-col sm:flex-row sm:items-center items-start mx-auto">
-				<div className="w-full">
-					{teams.map((team) => <TeamCard key={team.id} initialData={team} setTeams={setTeams} />)}
-				</div>
+				<div className="w-full">{teams.map((team) => <TeamCard key={team.id} initialData={team} />)}</div>
 			</div>
+		) : (
+			<NoTeams />
 		);
 	};
 
@@ -56,7 +50,7 @@ const TeamsPage = () => {
 							<FormButton>Create</FormButton>
 						</NavLink>
 					</PageTopicContainer>
-					{isLoading ? <Spinner /> : teams ? renderTeams() : <NoTeams />}
+					{!teams ? <Spinner /> : renderTeams()}
 					<div className="lg:w-2/3 flex-grow justify-center items-center
 				 text-center container mx-auto  grid row-gap-4 grid-cols-1 w-full" />
 				</div>

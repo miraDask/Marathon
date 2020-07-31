@@ -22,14 +22,13 @@ export const createTeam = async (projectId, token, data) => {
 
 export const inviteToTeam = async (projectId, teamId, token, data) => {
 	const headers = getHeaders(token);
+	const response = await fetcher(API_URL + `/${projectId}/teams/${teamId}/invite`, 'POST', headers, data);
 
-	try {
-		const response = await fetcher(API_URL + `/${projectId}/teams/${teamId}/invite`, 'POST', headers, data);
-		await response.json();
-	} catch (error) {
-		console.log(error);
-		return error;
+	if (response.status >= 400) {
+		return { error: 'There is no user with this email' };
 	}
+
+	return true;
 };
 
 export const getAllTeams = async (projectId, token) => {
@@ -37,6 +36,23 @@ export const getAllTeams = async (projectId, token) => {
 
 	try {
 		const response = await fetcher(API_URL + `/${projectId}/teams`, 'GET', headers);
+		try {
+			const dataToReturn = await response.json();
+			return dataToReturn;
+		} catch (error) {
+			console.log(error);
+		}
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
+
+export const getTeamDetails = async (projectId, teamId, token) => {
+	const headers = getHeaders(token);
+
+	try {
+		const response = await fetcher(API_URL + `/${projectId}/teams/${teamId}`, 'GET', headers);
 		try {
 			const dataToReturn = await response.json();
 			return dataToReturn;

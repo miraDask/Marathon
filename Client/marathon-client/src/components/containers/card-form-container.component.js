@@ -33,8 +33,8 @@ const CardFormContainer = ({
 		toggleButtons();
 	};
 
-	const handleSave = (e) => {
-		const result = handleSubmit(e);
+	const handleSave = async (e) => {
+		const result = await handleSubmit(e);
 		if (result.success) {
 			toggleButtons();
 		}

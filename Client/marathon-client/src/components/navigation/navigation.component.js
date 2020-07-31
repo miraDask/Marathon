@@ -26,26 +26,34 @@ const Navigation = () => {
 				{isLoggedIn ? (
 					<div>
 						{currentProject ? (
-							<NavLink
-								to={`/user/dashboard/${currentProject.id}/board`}
-								textColor="teal-600"
-								hoverColor="green-400"
-							>
-								Dashboard
-							</NavLink>
+							<span className="ml-5">
+								<NavLink
+									to={`/user/dashboard/${currentProject.id}/board`}
+									textColor="teal-600"
+									hoverColor="green-400"
+								>
+									Dashboard
+								</NavLink>
+							</span>
 						) : null}
-						<NavLink to="/user/projects" textColor="teal-600" hoverColor="green-400">
-							Projects
-						</NavLink>
-						<NavLink to="/user/people" textColor="teal-600" hoverColor="green-400">
-							People
-						</NavLink>
+						<span className="ml-5">
+							<NavLink to="/user/projects" textColor="teal-600" hoverColor="green-400">
+								Projects
+							</NavLink>
+						</span>
+						<span className="ml-5">
+							<NavLink to="/user/people" textColor="teal-600" hoverColor="green-400">
+								People
+							</NavLink>
+						</span>
 					</div>
 				) : null}
 				<nav className="flex lg:w-2/5 flex-wrap items-center text-base lg:justify-end md:ml-auto md:mr-5">
-					<NavLink to="/help" hoverColor="green-400">
-						HELP
-					</NavLink>
+					<span className="mr-5">
+						<NavLink to="/help" hoverColor="green-400">
+							HELP
+						</NavLink>
+					</span>
 					{isLoggedIn ? (
 						<AccountDropdown otherClasses={isModalOpen ? 'invisible' : ''} />
 					) : (

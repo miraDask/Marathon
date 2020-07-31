@@ -13,6 +13,7 @@ import BacklogPage from '../../pages/backlog/backlog-page.component';
 import TeamsPage from '../../pages/teams/teams-page.component';
 import ArchivePage from '../../pages/archive/archive-page.component';
 import PeoplePage from '../../pages/people/people-page.component';
+import TeamDetailsPage from '../../pages/teams/team-details-page.component';
 
 const Main = () => {
 	const { isLoggedIn } = useContext(Context);
@@ -28,6 +29,7 @@ const Main = () => {
 			<Route exact path="/user/dashboard/:projectId/board" component={BoardPage} />
 			<Route exact path="/user/dashboard/:projectId/backlog" component={BacklogPage} />
 			<Route exact path="/user/dashboard/:projectId/teams" component={TeamsPage} />
+			<Route exact path="/user/dashboard/:projectId/teams/:teamId" component={TeamDetailsPage} />
 			<Route exact path="/user/dashboard/:projectId/archive" component={ArchivePage} />
 			<Route exact path="/signup" render={() => (isLoggedIn ? <Redirect to="/" /> : <SignUpPage />)} />
 			<Route exact path="/signin" render={() => (isLoggedIn ? <Redirect to="/" /> : <SignInPage />)} />

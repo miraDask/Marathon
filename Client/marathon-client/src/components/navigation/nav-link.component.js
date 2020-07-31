@@ -6,7 +6,7 @@ const NavLink = ({ children, handleClick, textColor, hoverColor, otherClasses, .
 	const hover = !hoverColor ? '' : `hover:text-${hoverColor}`;
 	const text = !textColor ? '' : `text-${textColor}`;
 	return (
-		<Link {...otherProps} onClick={handleClick} className={`mr-5 ${hover} ${text} ${otherClasses}`}>
+		<Link {...otherProps} onClick={handleClick} className={`${hover} ${text} ${otherClasses}`}>
 			{children}
 		</Link>
 	);
