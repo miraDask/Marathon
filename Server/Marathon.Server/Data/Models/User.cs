@@ -34,7 +34,11 @@
 
         public virtual ICollection<ProjectAdmin> ProjectsAdmins { get; set; }
 
-        public virtual ICollection<Invitation> Invitations { get; set; }
+        [InverseProperty("Sender")]
+        public virtual ICollection<Invitation> SendInvitations { get; set; }
+
+        [InverseProperty("Recipient")]
+        public virtual ICollection<Invitation> RecievedInvitations { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

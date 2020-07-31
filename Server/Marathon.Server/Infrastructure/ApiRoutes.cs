@@ -26,9 +26,10 @@
 
         public static class Invitations
         {
-            public const string InvitationsRoute = Root + "/invitations";
-            public const string AcceptInvitation = InvitationsRoute + "/{invitationId}";
-
+            public const string AcceptInvitation = Root + "/projects/invitations";
+            public const string GetInvitations = Root + "/projects/invitations";
+            public const string DeleteInvitation = Root + "/projects/invitations";
+            public const string DeclineInvitation = Root + "/projects/invitations";
         }
 
         public static class Projects

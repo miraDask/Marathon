@@ -11,6 +11,7 @@
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Cache;
     using Marathon.Server.Features.Identity;
+    using Marathon.Server.Features.Invitations;
     using Marathon.Server.Features.Issues;
     using Marathon.Server.Features.Projects;
     using Marathon.Server.Features.Sprints;
@@ -128,6 +129,7 @@
                 .AddTransient<ISprintsService, SprinstService>()
                 .AddTransient<ICacheService, CacheService>()
                 .AddTransient<ITokensService, TokensService>()
+                .AddTransient<IInvitationsService, InvitationsService>()
                 .AddTransient<OptionRequestsMiddleware>()
                 .AddTransient<TokenManagerMiddleware>();
 

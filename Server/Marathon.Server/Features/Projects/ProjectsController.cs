@@ -136,7 +136,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Projects.GetDetails)]
-        [HasProjectAdminAuthorization]
+        [HasProjectTeamAuthorizationAttribute]
         public async Task<ActionResult<ProjectDetailsServiceModel>> Details(int projectId)
         {
             var detailsRequest = await this.projectsService.GetDetailsAsync(projectId);

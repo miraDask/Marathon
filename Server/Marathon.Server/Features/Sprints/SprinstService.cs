@@ -255,7 +255,6 @@
             };
         }
 
-
         public async Task<ResultModel<bool>> CompleteAsync(int oldSprintId, int? newSprintId, int projectId)
         {
             var sprint = await this.GetByIdAndProjectIdAsync(oldSprintId, projectId);

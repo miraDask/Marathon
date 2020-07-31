@@ -6,8 +6,8 @@
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common;
     using Marathon.Server.Features.Common.Models;
-    using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Teams.Models;
+    using Marathon.Server.Infrastructure.Extensions;
     using Marathon.Server.Infrastructure.Filters;
 
     using Microsoft.AspNetCore.Identity;
@@ -157,7 +157,8 @@
         [HasProjectAdminAuthorization]
         public async Task<ActionResult> InviteUserToTeam(int projectId, int teamId, [FromBody]InviteUserToTeamRequestModel input)
         {
-            var inviteUserRequest = await this.teamService.InviteUserToTeamAsync(input.Email, teamId, projectId);
+            var senderId = this.User.GetId();
+            var inviteUserRequest = await this.teamService.InviteUserToTeamAsync(input.Email, teamId, projectId, senderId);
 
             if (!inviteUserRequest.Success)
             {
@@ -168,30 +169,6 @@
             }
 
             return this.Ok();
-        }
-
-        /// <summary>
-        /// Accept current Invitation to join Team.
-        /// </summary>
-        /// <response code="200"> Successfully assigned user to team.</response>
-        /// <response code="400"> Bad Reaquest.</response>
-        /// <response code="401"> Unauthorized request.</response>
-        [HttpPost]
-        [Route(Invitations.AcceptInvitation)]
-        [HasProjectAdminAuthorization]
-        public async Task<ActionResult<string>> AcceptInvitationToTeam([FromBody] int invitationId)
-        {
-            var acceptInvitationRequest = await this.teamService.AcceptInvitaionToTeamAsync(invitationId, this.appSettings.Secret);
-
-            if (!acceptInvitationRequest.Success)
-            {
-                return this.BadRequest(new ErrorsResponseModel
-                {
-                    Errors = acceptInvitationRequest.Errors,
-                });
-            }
-
-            return this.Ok(acceptInvitationRequest.Result);
         }
 
         /// <summary>

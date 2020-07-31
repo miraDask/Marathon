@@ -1,6 +1,7 @@
 ﻿namespace Marathon.Server.Data.Migrations
 {
     using System;
+
     using Microsoft.EntityFrameworkCore.Migrations;
 
     public partial class AddNewEntityInvitationAndRlationToItInUserEntity : Migration

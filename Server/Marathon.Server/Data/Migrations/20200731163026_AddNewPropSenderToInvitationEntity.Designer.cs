@@ -4,14 +4,16 @@ using Marathon.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Marathon.Server.Data.Migrations
 {
     [DbContext(typeof(MarathonDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200731163026_AddNewPropSenderToInvitationEntity")]
+    partial class AddNewPropSenderToInvitationEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,9 +33,6 @@ namespace Marathon.Server.Data.Migrations
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("Declined")
-                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");

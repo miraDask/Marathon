@@ -23,7 +23,7 @@
         private readonly MarathonDbContext dbContext;
         private readonly IIdentityService identityService;
 
-        public IssuesService(MarathonDbContext dbContext,IIdentityService identityService)
+        public IssuesService(MarathonDbContext dbContext, IIdentityService identityService)
         {
             this.dbContext = dbContext;
             this.identityService = identityService;

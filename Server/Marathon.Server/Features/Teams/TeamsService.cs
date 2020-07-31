@@ -32,7 +32,7 @@
             this.identityService = identityService;
         }
 
-        public async Task<ResultModel<bool>> InviteUserToTeamAsync(string email, int teamId, int projectId)
+        public async Task<ResultModel<bool>> InviteUserToTeamAsync(string email, int teamId, int projectId, string senderId)
         {
             var user = await this.userManager.FindByEmailAsync(email);
 
@@ -49,6 +49,7 @@
                 ProjectId = projectId,
                 TeamId = teamId,
                 RecipientId = user.Id,
+                SenderId = senderId,
             };
 
             await this.dbContext.AddAsync(invitation);
@@ -57,42 +58,6 @@
             return new ResultModel<bool>
             {
                 Success = true,
-            };
-        }
-
-        public async Task<ResultModel<string>> AcceptInvitaionToTeamAsync(int invitationId, string secret)
-        {
-            var invitation = await this.dbContext.Invitations.FirstOrDefaultAsync(x => x.Id == invitationId);
-
-            if (invitation == null)
-            {
-                return new ResultModel<string>
-                {
-                    Errors = new string[] { Errors.InvalidInvitationId },
-                };
-            }
-
-            var user = await this.userManager.FindByIdAsync(invitation.RecipientId);
-
-            var teamUser = new TeamUser()
-            {
-                TeamId = invitation.TeamId,
-                UserId = invitation.RecipientId,
-            };
-
-            await this.dbContext.TeamsUsers.AddAsync(teamUser);
-
-            invitation.Accepted = true;
-            this.dbContext.Update(invitation);
-
-            await this.dbContext.SaveChangesAsync();
-
-            var token = await this.identityService.AddClaimToUserAsync(user.Id, Claims.Team, invitation.ProjectId.ToString(), secret);
-
-            return new ResultModel<string>
-            {
-                Success = true,
-                Result = token,
             };
         }
 
