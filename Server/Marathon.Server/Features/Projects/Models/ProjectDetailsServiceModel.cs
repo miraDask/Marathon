@@ -16,7 +16,7 @@
 
         public string Key { get; set; }
 
-        public UserListingServerModel Creator { get; set; }
+        public bool IsCreator { get; set; }
 
         public IEnumerable<IssueListingServiceModel> Issues { get; set; }
 

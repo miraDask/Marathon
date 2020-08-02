@@ -122,7 +122,7 @@
                 })
                 .ToListAsync();
 
-        public async Task<ResultModel<ProjectDetailsServiceModel>> GetDetailsAsync(int id)
+        public async Task<ResultModel<ProjectDetailsServiceModel>> GetDetailsAsync(int id, string userId)
         {
             var project = await this.dbContext
                 .Projects
@@ -133,12 +133,7 @@
                     Name = x.Name,
                     ImageUrl = x.ImageUrl,
                     Key = x.Key,
-                    Creator = new UserListingServerModel
-                    {
-                        Id = x.Creator.Id,
-                        FullName = x.Creator.FullName,
-                        ImageUrl = x.Creator.ImageUrl,
-                    },
+                    IsCreator = x.CreatorId == userId,
                     Issues = x.Issues.Where(x => x.SprintId == null).Select(x => new IssueListingServiceModel
                     {
                         Title = x.Title,

@@ -3,6 +3,7 @@
     using System.Collections.Generic;
 
     using Marathon.Server.Features.Identity.Models;
+    using Marathon.Server.Features.Invitations.Models;
 
     public class TeamDetailsServiceModel
     {
@@ -12,6 +13,6 @@
 
         public IEnumerable<UserDetailsServiceModel> TeamUsers { get; set; }
 
-        public IEnumerable<string> InvitedUsersEmails { get; set; }
+        public IEnumerable<InvitationUserServiceModel> Invitations { get; set; }
     }
 }

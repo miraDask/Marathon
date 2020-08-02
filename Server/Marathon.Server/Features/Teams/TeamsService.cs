@@ -10,6 +10,7 @@
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Identity.Models;
+    using Marathon.Server.Features.Invitations.Models;
     using Marathon.Server.Features.Teams.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -115,9 +116,13 @@
 
         public async Task<ResultModel<TeamDetailsServiceModel>> GetDetailsAsync(int id)
         {
-            var invitedUsersEmails = await this.dbContext.Invitations
+            var invitations = await this.dbContext.Invitations
                 .Where(x => x.TeamId == id && !x.Accepted)
-                .Select(x => x.Recipient.Email)
+                .Select(x => new InvitationUserServiceModel
+                {
+                    RecipientEmail = x.Recipient.Email,
+                    Declined = x.Declined,
+                })
                 .ToListAsync();
 
             var detailsResult = await this.dbContext
@@ -134,7 +139,7 @@
                         Email = x.User.Email,
                         ImageUrl = x.User.ImageUrl,
                     }),
-                    InvitedUsersEmails = invitedUsersEmails,
+                    Invitations = invitations,
                 })
                 .FirstOrDefaultAsync();
 

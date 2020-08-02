@@ -139,7 +139,8 @@
         [HasProjectTeamAuthorizationAttribute]
         public async Task<ActionResult<ProjectDetailsServiceModel>> Details(int projectId)
         {
-            var detailsRequest = await this.projectsService.GetDetailsAsync(projectId);
+            var userId = this.User.GetId();
+            var detailsRequest = await this.projectsService.GetDetailsAsync(projectId, userId);
 
             if (!detailsRequest.Success)
             {
