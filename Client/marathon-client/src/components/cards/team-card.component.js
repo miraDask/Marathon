@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext } from 'react';
 import useFormProcessor from '../../hooks/useFormProcessor';
 
 import { Context } from '../../providers/global-context.provider';
@@ -34,27 +34,20 @@ const TeamCard = ({ initialData }) => {
 	const { currentProject } = useContext(ProjectsContext);
 
 	const [ isEditClicked, setIsEditClicked ] = useState(initialIsEditClicked);
-	const dataIdRef = useRef(null);
-
-	const saveIdRef = (id) => {
-		dataIdRef.current = id;
-	};
 
 	const handleUpdate = async () => {
 		const { title } = data;
-		const id = dataIdRef.current;
 		try {
-			await updateTeam(currentProject.id, token, id, { title, imageUrl: '' });
+			await updateTeam(currentProject.id, token, initialData.id, { title, imageUrl: '' });
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
 	const handleDeleteClick = async () => {
-		const id = dataIdRef.current;
 		try {
-			await deleteTeam(currentProject.id, token, id);
-			saveTeams(teams.filter((x) => x.id !== +dataIdRef.current));
+			await deleteTeam(currentProject.id, token, initialData.id);
+			saveTeams(teams.filter((x) => x.id !== initialData.id));
 		} catch (error) {
 			console.log(error);
 		}
@@ -62,8 +55,6 @@ const TeamCard = ({ initialData }) => {
 
 	return (
 		<CardFormContainer
-			id={initialData.id}
-			saveIdRef={saveIdRef}
 			isEditClicked={isEditClicked}
 			setIsEditClicked={setIsEditClicked}
 			initialData={initialData}

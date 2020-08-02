@@ -14,7 +14,7 @@ const initialUser = {
 	email: ''
 };
 const InviteToTeamForm = ({ teamId, teamTitle }) => {
-	const { data, errors, setErrors, handleChange, handleSubmit } = useFormProcessor(initialUser, initialUser);
+	const { data, errors, setData, setErrors, handleChange, handleSubmit } = useFormProcessor(initialUser, initialUser);
 	const { token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 
@@ -26,8 +26,12 @@ const InviteToTeamForm = ({ teamId, teamTitle }) => {
 	const handleInvite = async () => {
 		const { email } = data;
 		const { error } = await inviteToTeam(currentProject.id, teamId, token, { email });
-		const errorObj = error ? { email: error } : { email: '' };
-		setErrors(errorObj);
+		if (error) {
+			setErrors({ email: error });
+		} else {
+			setErrors({ email: '' });
+			setData({ email: '' });
+		}
 	};
 
 	return (

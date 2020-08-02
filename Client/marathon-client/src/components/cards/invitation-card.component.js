@@ -1,15 +1,16 @@
 import React, { useContext } from 'react';
 
 import { Context } from '../../providers/global-context.provider';
+import { TeamsContext } from '../../providers/teams-context.provider';
 
-import { acceptInvitation } from '../../services/invitations.service';
+import { acceptInvitation, deleteInvitation } from '../../services/invitations.service';
 
 import { ReactComponent as DeleteIcon } from '../../assets/icon-trash.svg';
 import { ReactComponent as SaveIcon } from '../../assets/icon-check-circle.svg';
 
 const InvitationCard = ({ invitation }) => {
 	const { token, saveToken } = useContext(Context);
-
+	const { saveChangeInvitations } = useContext(TeamsContext);
 	const { senderFullName, projectName, teamName } = invitation;
 
 	const handleSave = async () => {
@@ -18,16 +19,18 @@ const InvitationCard = ({ invitation }) => {
 
 		if (response) {
 			saveToken(response);
+			saveChangeInvitations(true);
 		}
 	};
 
 	const handleDeleteClick = async () => {
-		// const id = dataIdRef.current;
-		// try {
-		// 	await deleteTeam(currentProject.id, token, id);
-		// } catch (error) {
-		// 	console.log(error);
-		// }
+		const { id } = invitation;
+		try {
+			await deleteInvitation(token, { invitationId: id });
+			saveChangeInvitations(true);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	const getMessage = () => (

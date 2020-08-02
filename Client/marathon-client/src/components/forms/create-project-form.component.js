@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import useFormProcessor from '../../hooks/useFormProcessor';
 
 import { Context } from '../../providers/global-context.provider';
-import { ProjectsContext } from '../../providers/projects-context.provider';
 
 import { createProject } from '../../services/projects.service';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/project';
@@ -21,10 +20,9 @@ const initialProject = {
 };
 
 const CreateProjectForm = () => {
-	const history = useHistory();
 	const { data, errors, handleChange, handleOnBlur, handleSubmit } = useFormProcessor(initialProject, initialProject);
 	const { saveToken, token } = useContext(Context);
-	const { updateProjects, saveHasProjects } = useContext(ProjectsContext);
+	const history = useHistory();
 
 	const getErrors = () => {
 		const { name, key } = data;
@@ -37,8 +35,6 @@ const CreateProjectForm = () => {
 
 		if (result.token) {
 			saveToken(result.token);
-			saveHasProjects();
-			updateProjects({ name, key }, result.id);
 			history.push('/user/projects');
 		}
 	};

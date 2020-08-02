@@ -23,9 +23,9 @@ export const createTeam = async (projectId, token, data) => {
 export const inviteToTeam = async (projectId, teamId, token, data) => {
 	const headers = getHeaders(token);
 	const response = await fetcher(API_URL + `/${projectId}/teams/${teamId}/invite`, 'POST', headers, data);
-
-	if (response.status >= 400) {
-		return { error: 'There is no user with this email' };
+	if (response.status === 400) {
+		const result = await response.json();
+		return { error: result.errors[0] };
 	}
 
 	return true;

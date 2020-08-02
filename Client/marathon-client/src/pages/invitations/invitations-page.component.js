@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import { getAllInvitations } from '../../services/invitations.service';
-import { ProjectsContext } from '../../providers/projects-context.provider';
+import { TeamsContext } from '../../providers/teams-context.provider';
+
 import { Context } from '../../providers/global-context.provider';
 
 import MainWrapper from '../../components/main/main-wrapper.component';
@@ -11,6 +12,7 @@ import PageTopicContainer from '../../components/containers/page-topic-container
 const InvitationsPage = () => {
 	const [ invitations, setInvitations ] = useState(null);
 	const { token } = useContext(Context);
+	const { invitationsAreChanged } = useContext(TeamsContext);
 
 	const getInvitations = async () => {
 		const response = await getAllInvitations(token);
@@ -18,9 +20,12 @@ const InvitationsPage = () => {
 		console.log('inv', response);
 	};
 
-	useEffect(() => {
-		getInvitations();
-	}, []);
+	useEffect(
+		() => {
+			getInvitations();
+		},
+		[ invitationsAreChanged ]
+	);
 
 	return (
 		<MainWrapper otherClasses="pb-24">

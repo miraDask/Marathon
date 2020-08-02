@@ -1,69 +1,34 @@
 /* eslint-disable eqeqeq */
 import React, { createContext, useState } from 'react';
-const hasUserProjects = localStorage.getItem('hasProjects') !== null ? true : false;
 const currProject = localStorage.getItem('currentProject') ? JSON.parse(localStorage.getItem('currentProject')) : null;
 
 const initialState = {
-	hasProjects: hasUserProjects,
 	projects: null,
 	currentProject: currProject,
+	updatedProjects: [],
 	saveCurrentProject: () => {},
 	saveProjects: () => {},
-	deleteProjects: () => {},
-	deleteFromProjects: () => {},
-	updateProjects: () => {},
-	saveHasProjects: () => {},
-	removeHasProjects: () => {}
+	updateProjects: () => {}
 };
 
 export const ProjectsContext = createContext(initialState);
 
 const ProjectsContextProvider = ({ children }) => {
 	const [ currentProject, setCurrentProject ] = useState(currProject);
-	const [ projects, setProjects ] = useState(null);
-	const [ hasProjects, setHasProjects ] = useState(hasUserProjects);
-
+	const [ updatedProjects, setUpdatedProjects ] = useState([]);
 	const saveCurrentProject = (newProject) => {
 		setCurrentProject(newProject);
 		localStorage.setItem('currentProject', JSON.stringify(newProject));
 	};
 
-	const saveProjects = (projects) => {
-		setProjects(projects);
-	};
-
-	const deleteProjects = () => {
-		localStorage.removeItem('projects');
-	};
-
-	const deleteFromProjects = (id) => {
-		const updatedProjects = projects.filter((x) => x.id !== +id);
-		setProjects(updatedProjects);
-		localStorage.setItem('projects', JSON.stringify(updatedProjects));
-	};
-
-	const saveHasProjects = () => {
-		localStorage.setItem('hasProjects', 'true');
-		setHasProjects(true);
-	};
-
-	const removeHasProjects = () => {
-		localStorage.removeItem('hasProjects');
-		setHasProjects(false);
-	};
-
+	const saveUpdatedProjects = () => setUpdatedProjects([ ...updatedProjects, 1 ]);
 	return (
 		<ProjectsContext.Provider
 			value={{
-				projects,
-				hasProjects,
 				currentProject,
+				updatedProjects,
 				saveCurrentProject,
-				saveProjects,
-				removeHasProjects,
-				saveHasProjects,
-				deleteFromProjects,
-				deleteProjects
+				saveUpdatedProjects
 			}}
 		>
 			{children}

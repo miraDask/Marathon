@@ -1,10 +1,9 @@
-import React, { useState, useContext, useRef, Fragment } from 'react';
+import React, { useState, useContext, Fragment } from 'react';
 import useFormProcessor from '../../hooks/useFormProcessor';
 
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
-import { useHistory } from 'react-router-dom';
 import { deleteProject, updateProject } from '../../services/projects.service';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/project';
 import { validateKey, validateName } from '../../utils/validations/project';
@@ -30,35 +29,27 @@ const ProjectCard = ({ initialData }) => {
 	} = useFormProcessor(initialError, {
 		...initialData
 	});
-	const { deleteFromProjects, currentProject, saveCurrentProject } = useContext(ProjectsContext);
+	const { currentProject, saveCurrentProject, saveUpdatedProjects } = useContext(ProjectsContext);
 	const { token } = useContext(Context);
 	const [ isEditClicked, setIsEditClicked ] = useState(initialIsEditClicked);
-	const history = useHistory();
-	const dataIdRef = useRef(null);
-
-	const saveIdRef = (id) => {
-		dataIdRef.current = id;
-	};
 
 	const handleUpdate = async () => {
 		const { name, key } = data;
-		const id = dataIdRef.current;
 		try {
-			await updateProject(id, { name, key }, token);
+			await updateProject(initialData.id, { name, key }, token);
+			saveUpdatedProjects();
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
 	const handleDeleteClick = async () => {
-		const id = dataIdRef.current;
 		try {
-			await deleteProject(token, id);
-			deleteFromProjects(id);
-			if (currentProject.id === +id) {
+			await deleteProject(token, initialData.id);
+			if (currentProject.id === initialData.id) {
 				saveCurrentProject(null);
 			}
-			history.push('/user/projects');
+			saveUpdatedProjects();
 		} catch (error) {
 			console.log(error);
 		}
@@ -66,9 +57,7 @@ const ProjectCard = ({ initialData }) => {
 
 	return (
 		<CardFormContainer
-			id={initialData.id}
 			showEdit={data.isCurrentUserCreator}
-			saveIdRef={saveIdRef}
 			isEditClicked={isEditClicked}
 			setIsEditClicked={setIsEditClicked}
 			initialData={initialData}
@@ -107,13 +96,13 @@ const ProjectCard = ({ initialData }) => {
 				{!isEditClicked ? (
 					<Fragment>
 						<p className="mt-1">{data.key}</p>
-						<p>
+						<div>
 							{data.isCurrentUserCreator ? (
 								<ProjectRoleTag text="creator" color="orange-500" size="w-16 h-4" />
 							) : (
 								<ProjectRoleTag text="team" color="green-500" size="w-16 h-4" />
 							)}
-						</p>
+						</div>
 					</Fragment>
 				) : (
 					<p className="mt-1">
