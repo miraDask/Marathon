@@ -1,10 +1,9 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import useFormProcessor from '../../hooks/useFormProcessor';
 
 import { useHistory } from 'react-router-dom';
 
 import { Context } from '../../providers/global-context.provider';
-import { ProjectsContext } from '../../providers/projects-context.provider';
 import { loginUser } from '../../services/users.service';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/auth';
 
@@ -18,20 +17,9 @@ const initialUser = {
 };
 
 const SignInForm = () => {
-	const history = useHistory();
-	const [ hasProjects, setHasProjects ] = useState(false);
 	const { data, errors, setErrors, handleChange, handleSubmit } = useFormProcessor(initialUser, initialUser);
 	const { toggleLoggedIn, saveToken } = useContext(Context);
-	const { saveHasProjects } = useContext(ProjectsContext);
-
-	useEffect(
-		() => {
-			return () => {
-				saveHasProjects();
-			};
-		},
-		[ hasProjects, saveHasProjects ]
-	);
+	const history = useHistory();
 
 	const getErrors = () => {
 		const { email, password } = data;
@@ -44,11 +32,6 @@ const SignInForm = () => {
 			toggleLoggedIn(data.email, result.fullName);
 			saveToken(result.token);
 			setErrors(null);
-
-			if (result.hasProjects) {
-				setHasProjects(true);
-			}
-
 			history.push('/user/projects');
 		} else {
 			setErrors({ ...errors, password: 'Invalid username or password' });

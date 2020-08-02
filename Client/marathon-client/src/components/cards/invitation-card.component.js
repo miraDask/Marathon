@@ -19,7 +19,7 @@ const InvitationCard = ({ invitation }) => {
 
 		if (response) {
 			saveToken(response);
-			saveChangeInvitations(true);
+			saveChangeInvitations();
 		}
 	};
 
@@ -27,7 +27,7 @@ const InvitationCard = ({ invitation }) => {
 		const { id } = invitation;
 		try {
 			await deleteInvitation(token, { invitationId: id });
-			saveChangeInvitations(true);
+			saveChangeInvitations();
 		} catch (error) {
 			console.log(error);
 		}

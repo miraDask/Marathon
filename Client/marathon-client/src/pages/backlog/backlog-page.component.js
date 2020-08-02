@@ -64,7 +64,7 @@ const BacklogPage = ({ match, location }) => {
 					id: response.id,
 					name: response.name,
 					key: response.key,
-					creator: response.creator,
+					isCreator: response.isCreator,
 					activeSprintId: activeSprint ? activeSprint.id : null
 				});
 
@@ -188,7 +188,7 @@ const BacklogPage = ({ match, location }) => {
 			);
 		});
 
-	return (
+	return !isLoading ? (
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
 			<MainWrapper>
@@ -196,19 +196,17 @@ const BacklogPage = ({ match, location }) => {
 					<Alert color="teal" show={showAlert} />
 				</div>
 				<PageTopicContainer size="lg:w-5/6" title={`Backlog / ${!currentProject ? '' : currentProject.name}`} />
-				{!isLoading ? (
-					<div className="overflow-y-auto h-screen">
-						{renderSprints()}
-						{startingSprint ? <StartSprintModal /> : null}
-						{!openedIssue ? null : <IssueEditModal item={openedIssue} />}
-						{creating ? <CreateIssueModal sprintId={!currentSprint ? null : currentSprint.id} /> : null}
-						{updatingSprint ? <EditSprintModal /> : null}
-					</div>
-				) : (
-					<Spinner />
-				)}
+				<div className="overflow-y-auto h-screen">
+					{renderSprints()}
+					{startingSprint ? <StartSprintModal /> : null}
+					{!openedIssue ? null : <IssueEditModal item={openedIssue} />}
+					{creating ? <CreateIssueModal sprintId={!currentSprint ? null : currentSprint.id} /> : null}
+					{updatingSprint ? <EditSprintModal /> : null}
+				</div>
 			</MainWrapper>
 		</Fragment>
+	) : (
+		<Spinner />
 	);
 };
 

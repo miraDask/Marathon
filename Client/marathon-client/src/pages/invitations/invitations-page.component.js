@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 
 import { getAllInvitations } from '../../services/invitations.service';
 import { TeamsContext } from '../../providers/teams-context.provider';
@@ -14,17 +14,20 @@ const InvitationsPage = () => {
 	const { token } = useContext(Context);
 	const { invitationsAreChanged } = useContext(TeamsContext);
 
-	const getInvitations = async () => {
-		const response = await getAllInvitations(token);
-		setInvitations(response);
-		console.log('inv', response);
-	};
+	const getInvitations = useCallback(
+		async () => {
+			const response = await getAllInvitations(token);
+			setInvitations(response);
+			console.log('inv', response);
+		},
+		[ token ]
+	);
 
 	useEffect(
 		() => {
 			getInvitations();
 		},
-		[ invitationsAreChanged ]
+		[ invitationsAreChanged, getInvitations ]
 	);
 
 	return (

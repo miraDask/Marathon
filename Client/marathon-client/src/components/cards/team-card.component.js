@@ -29,7 +29,7 @@ const TeamCard = ({ initialData }) => {
 	} = useFormProcessor(initialError, {
 		...initialData
 	});
-	const { teams, saveTeams } = useContext(TeamsContext);
+	const { saveUpdatedTeams } = useContext(TeamsContext);
 	const { token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 
@@ -39,6 +39,7 @@ const TeamCard = ({ initialData }) => {
 		const { title } = data;
 		try {
 			await updateTeam(currentProject.id, token, initialData.id, { title, imageUrl: '' });
+			saveUpdatedTeams();
 		} catch (error) {
 			console.log(error);
 		}
@@ -47,7 +48,7 @@ const TeamCard = ({ initialData }) => {
 	const handleDeleteClick = async () => {
 		try {
 			await deleteTeam(currentProject.id, token, initialData.id);
-			saveTeams(teams.filter((x) => x.id !== initialData.id));
+			saveUpdatedTeams();
 		} catch (error) {
 			console.log(error);
 		}
@@ -55,6 +56,7 @@ const TeamCard = ({ initialData }) => {
 
 	return (
 		<CardFormContainer
+			showEdit={true}
 			isEditClicked={isEditClicked}
 			setIsEditClicked={setIsEditClicked}
 			initialData={initialData}

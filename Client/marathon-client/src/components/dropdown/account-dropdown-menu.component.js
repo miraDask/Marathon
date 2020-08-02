@@ -10,14 +10,11 @@ import { ProjectsContext } from '../../providers/projects-context.provider';
 const AccountDropdownMenu = () => {
 	const history = useHistory();
 	const { toggleLoggedIn, token, email } = useContext(Context);
-	const { removeHasProjects, deleteProjects } = useContext(ProjectsContext);
 
 	const handleSignOut = async (e) => {
 		e.preventDefault();
 		await logoutUser(token);
 		toggleLoggedIn();
-		removeHasProjects();
-		deleteProjects();
 		history.push('/');
 	};
 
@@ -34,9 +31,9 @@ const AccountDropdownMenu = () => {
 						Signed in as <span className="text-gray-900 text-lg">{email}</span>
 					</p>
 				</div>
-				<div className="py-1">
+				{/* <div className="py-1">
 					<DropdownLink>Account settings</DropdownLink>
-				</div>
+				</div> */}
 				<div className="border-t border-gray-100" />
 				<div className="py-1">
 					<DropdownLink handleOnClick={handleSignOut}>SIGN OUT</DropdownLink>

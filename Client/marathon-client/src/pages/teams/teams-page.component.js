@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useContext } from 'react';
+import React, { Fragment, useState, useEffect, useContext, useCallback } from 'react';
 
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { Context } from '../../providers/global-context.provider';
@@ -16,19 +16,25 @@ import TeamCard from '../../components/cards/team-card.component';
 import Spinner from '../../components/spinner/spinner.component';
 
 const TeamsPage = () => {
-	const { teams, saveTeams } = useContext(TeamsContext);
+	const [ teams, setTeams ] = useState(null);
 	const { currentProject } = useContext(ProjectsContext);
+	const { updatedTeams } = useContext(TeamsContext);
 	const { token } = useContext(Context);
 
-	const getTeams = async () => {
-		const response = await getAllTeams(currentProject.id, token);
-		saveTeams(response);
-	};
+	const getTeams = useCallback(
+		async () => {
+			const response = await getAllTeams(currentProject.id, token);
+			setTeams(response);
+		},
+		[ currentProject.id, token, setTeams ]
+	);
 
-	useEffect(() => {
-		getTeams();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	useEffect(
+		() => {
+			getTeams();
+		},
+		[ getTeams, updatedTeams ]
+	);
 
 	const renderTeams = () => {
 		return teams.length > 0 ? (

@@ -2,9 +2,11 @@ import React, { useContext } from 'react';
 import useFormProcessor from '../../hooks/useFormProcessor';
 
 import { inviteToTeam } from '../../services/teams.service';
+import { getEmptyInputsErrorsObject } from '../../utils/errors/auth';
+
+import { TeamsContext } from '../../providers/teams-context.provider';
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
-import { getEmptyInputsErrorsObject } from '../../utils/errors/auth';
 
 import ErrorMessageContainer from '../../components/messages/form-input-error-message.component';
 import InfoMessageContainer from '../../components/messages/form-input-info-message.component';
@@ -17,6 +19,7 @@ const InviteToTeamForm = ({ teamId, teamTitle }) => {
 	const { data, errors, setData, setErrors, handleChange, handleSubmit } = useFormProcessor(initialUser, initialUser);
 	const { token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
+	const { saveChangeInvitations } = useContext(TeamsContext);
 
 	const getErrors = () => {
 		const { email } = data;
@@ -26,11 +29,13 @@ const InviteToTeamForm = ({ teamId, teamTitle }) => {
 	const handleInvite = async () => {
 		const { email } = data;
 		const { error } = await inviteToTeam(currentProject.id, teamId, token, { email });
+
 		if (error) {
 			setErrors({ email: error });
 		} else {
 			setErrors({ email: '' });
 			setData({ email: '' });
+			saveChangeInvitations();
 		}
 	};
 

@@ -4,6 +4,7 @@ import { getTeamDetails } from '../../services/teams.service';
 
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { Context } from '../../providers/global-context.provider';
+import { TeamsContext } from '../../providers/teams-context.provider';
 
 import { ReactComponent as Icon } from '../../assets/awaiting-acceptance.svg';
 
@@ -18,6 +19,7 @@ const TeamDetailsPage = ({ match }) => {
 	const [ team, setTeam ] = useState(null);
 	const { currentProject } = useContext(ProjectsContext);
 	const { token } = useContext(Context);
+	const { invitationsAreChanged } = useContext(TeamsContext);
 	const teamId = match.params.teamId;
 
 	const getTeam = useCallback(
@@ -32,7 +34,7 @@ const TeamDetailsPage = ({ match }) => {
 		() => {
 			getTeam();
 		},
-		[ getTeam ]
+		[ getTeam, invitationsAreChanged ]
 	);
 
 	return (
@@ -42,9 +44,12 @@ const TeamDetailsPage = ({ match }) => {
 					<InviteToTeamForm teamId={teamId} teamTitle={team ? team.title : ''} />
 					<div className="flex flex-wrap sm:mx-auto sm:mb-2 mt-12">
 						<InfoMessageContainer>Awaiting acceptance: </InfoMessageContainer>
-						{!team ? null : team.invitedUsersEmails.length > 0 ? (
-							team.invitedUsersEmails.map((x) => (
-								<UserCard key={x} value={x}>
+						{!team ? null : team.invitations.length > 0 ? (
+							team.invitations.map((x) => (
+								<UserCard
+									key={x.recipientEmail}
+									value={`${x.recipientEmail}     ${x.declined ? 'Declined' : ''}`}
+								>
 									<Icon />
 								</UserCard>
 							))
@@ -55,7 +60,7 @@ const TeamDetailsPage = ({ match }) => {
 				<div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
 					{!team ? null : team.teamUsers.length > 0 ? (
 						team.teamUsers.map((x) => (
-							<UserCard key={x.id} value={x.email}>
+							<UserCard key={x.id} value={x.email} valueOffset="ml-4">
 								<Avatar
 									bgColor="orange-400"
 									size="w-8 h-8"
