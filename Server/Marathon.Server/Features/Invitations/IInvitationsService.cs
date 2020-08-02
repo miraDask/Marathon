@@ -11,5 +11,9 @@
         Task<ResultModel<string>> AcceptInvitaionToTeamAsync(int invitationId, string secret);
 
         Task<IEnumerable<InvitationServiceModel>> GetAllAsync(string userId);
+
+        Task<ResultModel<bool>> DeclineAsync(int invitationId);
+
+        Task<ResultModel<bool>> InviteUserToTeamAsync(string email, int teamId, int projectId, string senderId);
     }
 }

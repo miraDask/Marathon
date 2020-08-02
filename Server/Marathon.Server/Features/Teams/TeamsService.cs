@@ -19,46 +19,14 @@
     public class TeamsService : ITeamsService
     {
         private readonly MarathonDbContext dbContext;
-        private readonly UserManager<User> userManager;
         private readonly IIdentityService identityService;
 
         public TeamsService(
             MarathonDbContext dbContext,
-            UserManager<User> userManager,
             IIdentityService identityService)
         {
             this.dbContext = dbContext;
-            this.userManager = userManager;
             this.identityService = identityService;
-        }
-
-        public async Task<ResultModel<bool>> InviteUserToTeamAsync(string email, int teamId, int projectId, string senderId)
-        {
-            var user = await this.userManager.FindByEmailAsync(email);
-
-            if (user == null)
-            {
-                return new ResultModel<bool>
-                {
-                    Errors = new string[] { Errors.InvalidUserId },
-                };
-            }
-
-            var invitation = new Invitation
-            {
-                ProjectId = projectId,
-                TeamId = teamId,
-                RecipientId = user.Id,
-                SenderId = senderId,
-            };
-
-            await this.dbContext.AddAsync(invitation);
-            await this.dbContext.SaveChangesAsync();
-
-            return new ResultModel<bool>
-            {
-                Success = true,
-            };
         }
 
         public async Task<ResultModel<int>> CreateAsync(string title, string imageUrl, int projectId)

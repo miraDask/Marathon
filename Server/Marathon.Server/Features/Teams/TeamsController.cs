@@ -7,7 +7,6 @@
     using Marathon.Server.Features.Common;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Teams.Models;
-    using Marathon.Server.Infrastructure.Extensions;
     using Marathon.Server.Infrastructure.Filters;
 
     using Microsoft.AspNetCore.Identity;
@@ -141,34 +140,6 @@
             }
 
             return this.Ok(getAllRequest.Result);
-        }
-
-        /// <summary>
-        /// Invite current User to current Team.
-        /// </summary>
-        /// <param name="projectId"></param>
-        /// <param name="teamId"></param>
-        /// <param name="input"></param>
-        /// <response code="200"> Successfully invited user to team.</response>
-        /// <response code="400"> Bad Reaquest.</response>
-        /// <response code="401"> Unauthorized request.</response>
-        [HttpPost]
-        [Route(Teams.InviteUser)]
-        [HasProjectAdminAuthorization]
-        public async Task<ActionResult> InviteUserToTeam(int projectId, int teamId, [FromBody]InviteUserToTeamRequestModel input)
-        {
-            var senderId = this.User.GetId();
-            var inviteUserRequest = await this.teamService.InviteUserToTeamAsync(input.Email, teamId, projectId, senderId);
-
-            if (!inviteUserRequest.Success)
-            {
-                return this.BadRequest(new ErrorsResponseModel
-                {
-                    Errors = inviteUserRequest.Errors,
-                });
-            }
-
-            return this.Ok();
         }
 
         /// <summary>

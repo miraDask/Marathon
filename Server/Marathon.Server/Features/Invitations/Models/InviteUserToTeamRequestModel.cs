@@ -1,4 +1,4 @@
-﻿namespace Marathon.Server.Features.Teams.Models
+﻿namespace Marathon.Server.Features.Invitations.Models
 {
     public class InviteUserToTeamRequestModel
     {

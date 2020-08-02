@@ -68,14 +68,7 @@
             var claims = await this.userManager.GetClaimsAsync(user);
             var token = await this.tokenService.GenerateJwtToken(user.Id, email, secret, claims);
             var userProjects = await this.dbContext.Users.
-                Where(x => x.Id == user.Id)
-                .Select(x => new
-                {
-                    HasAny = x.CreatedProjects.Any()
-                    || x.ProjectsAdmins.Any(y => y.UserId == x.Id)
-                    || x.TeamsUsers.Any(y => y.UserId == x.Id),
-                })
-                .FirstOrDefaultAsync();
+                FirstOrDefaultAsync(x => x.Id == user.Id);
 
             return new ResultModel<AuthResponseModel>
             {
@@ -83,7 +76,6 @@
                 {
                     Token = token,
                     FullName = user.FullName,
-                    HasProjects = userProjects.HasAny,
                 },
                 Success = true,
             };
