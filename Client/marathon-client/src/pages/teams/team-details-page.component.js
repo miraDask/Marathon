@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect, useContext, useCallback } from 'react';
 
 import { getTeamDetails } from '../../services/teams.service';
+import { ReactComponent as Icon } from '../../assets/watermelon-pack-illustration-14.svg';
 
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { Context } from '../../providers/global-context.provider';
@@ -57,10 +58,12 @@ const TeamDetailsPage = ({ match }) => {
 					</div>
 					<div className="lg:ml-12 lg:flex-grow md:w-1/2 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
 						{!team ? null : team.invitations.length > 0 ? (
-							<InfoMessageContainer>Awaiting acceptance: </InfoMessageContainer>
-						) : null}
-						{!team ? null : team.invitations.length > 0 ? (
-							<UnacceptedInvitationsList invitations={team.invitations} />
+							<Fragment>
+								<InfoMessageContainer>Awaiting acceptance: </InfoMessageContainer>
+								<UnacceptedInvitationsList invitations={team.invitations} />
+							</Fragment>
+						) : team.teamUsers.length > 0 ? (
+							<Icon className="w-64 h-64 sm:ml-32 md:32" />
 						) : null}
 					</div>
 				</div>

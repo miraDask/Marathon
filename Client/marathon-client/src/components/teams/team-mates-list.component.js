@@ -25,6 +25,7 @@ const TeamMatesList = ({ people, teamId }) => {
 
 	return people.map((person) => (
 		<UserCard
+			showDelete={currentProject.isCreator}
 			fetchDelete={handleRemoveFromTeam}
 			key={person.id}
 			id={person.id}

@@ -23,13 +23,14 @@ const UnacceptedInvitationsList = ({ invitations }) => {
 
 	return invitations.map((invitation) => (
 		<UserCard
+			showDelete={true}
 			key={invitation.id}
 			id={invitation.id}
 			fetchDelete={handleDeleteInvitation}
 			value={
 				<div>
 					{invitation.recipientEmail}{' '}
-					{invitation.declined ? <span className="ml-8 text-red-400">Declined</span> : null}
+					{invitation.declined ? <span className="ml-2 text-red-400">Declined</span> : null}
 				</div>
 			}
 		>
