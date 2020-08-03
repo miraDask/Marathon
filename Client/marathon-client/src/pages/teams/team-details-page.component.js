@@ -50,7 +50,7 @@ const TeamDetailsPage = ({ match }) => {
 							<p className="title-font text-2xl font-medium text-gray-900">Team members:</p>
 						) : null}
 						{!team ? null : team.teamUsers.length > 0 ? (
-							<TeamMatesList people={team.teamUsers} />
+							<TeamMatesList people={team.teamUsers} teamId={team.id} />
 						) : (
 							<NoTeamMates />
 						)}

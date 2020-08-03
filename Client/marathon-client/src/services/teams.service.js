@@ -76,6 +76,17 @@ export const updateTeam = async (projectId, token, teamId, data) => {
 	}
 };
 
+export const removeFromTeam = async (projectId, token, teamId, data) => {
+	const headers = getHeaders(token);
+
+	try {
+		await fetcher(API_URL + `/${projectId}/teams/${teamId}/remove`, 'DELETE', headers, data);
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
+
 export const deleteTeam = async (projectId, token, teamId) => {
 	const headers = getHeaders(token);
 
