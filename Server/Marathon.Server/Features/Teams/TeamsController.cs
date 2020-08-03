@@ -6,6 +6,7 @@
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Teams.Models;
     using Marathon.Server.Infrastructure.Filters;
 
@@ -147,16 +148,15 @@
         /// </summary>
         /// <param name="teamId"></param>
         /// <param name="projectId"></param>
-        /// <param name="userId"></param>
         /// <response code="200"> Successfully removed user from team.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpDelete]
         [Route(Teams.RemoveUser)]
         [HasProjectAdminAuthorization]
-        public async Task<ActionResult<int>> RemoveUserFromTeam(int projectId, int teamId, string userId)
+        public async Task<ActionResult<int>> RemoveUserFromTeam(int projectId, int teamId, [FromBody] UserIdRequestModel input)
         {
-            var removeRequest = await this.teamService.RemoveUserFromTeamAsync(userId, teamId, projectId);
+            var removeRequest = await this.teamService.RemoveUserFromTeamAsync(input.Id, teamId, projectId);
 
             if (!removeRequest.Success)
             {

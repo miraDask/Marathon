@@ -131,6 +131,7 @@
                 .Where(x => x.Id == id)
                 .Select(x => new TeamDetailsServiceModel()
                 {
+                    Id = x.Id,
                     Title = x.Title,
                     ImageUrl = x.ImageUrl,
                     TeamUsers = x.TeamsUsers.Select(x => new UserDetailsServiceModel()

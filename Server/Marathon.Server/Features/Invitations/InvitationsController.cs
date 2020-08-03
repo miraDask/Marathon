@@ -92,7 +92,7 @@
         /// <summary>
         /// Decline current invitation.
         /// </summary>
-        /// <response code="200">Successfully deleted.</response>
+        /// <response code="200">Successfully declined.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
         [HttpPatch]
