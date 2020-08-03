@@ -63,7 +63,7 @@ const TeamDetailsPage = ({ match }) => {
 								<UnacceptedInvitationsList invitations={team.invitations} />
 							</Fragment>
 						) : team.teamUsers.length > 0 ? (
-							<Icon className="w-64 h-64 sm:ml-32 md:32" />
+							<Icon className="w-64 h-64 sm:ml-32 md:ml-32" />
 						) : null}
 					</div>
 				</div>

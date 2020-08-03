@@ -14,6 +14,7 @@ import TeamsPage from '../../pages/teams/teams-page.component';
 import ArchivePage from '../../pages/archive/archive-page.component';
 import InvitationsPage from '../../pages/invitations/invitations-page.component';
 import TeamDetailsPage from '../../pages/teams/team-details-page.component';
+import ErrorPage from '../../pages/error/error-404-page.component';
 
 const Main = () => {
 	const { isLoggedIn } = useContext(Context);
@@ -33,6 +34,7 @@ const Main = () => {
 			<Route exact path="/user/dashboard/:projectId/archive" component={ArchivePage} />
 			<Route exact path="/signup" render={() => (isLoggedIn ? <Redirect to="/" /> : <SignUpPage />)} />
 			<Route exact path="/signin" render={() => (isLoggedIn ? <Redirect to="/" /> : <SignInPage />)} />
+			<Route path="/error" component={ErrorPage} />
 		</Switch>
 	);
 };
