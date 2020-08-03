@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext, useCallback } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { Context } from '../../providers/global-context.provider';
@@ -20,13 +21,21 @@ const TeamsPage = () => {
 	const { currentProject } = useContext(ProjectsContext);
 	const { updatedTeams } = useContext(TeamsContext);
 	const { token } = useContext(Context);
+	const { projectId } = useParams();
+	const history = useHistory();
 
 	const getTeams = useCallback(
 		async () => {
-			const response = await getAllTeams(currentProject.id, token);
+			const response = await getAllTeams(projectId, token);
+			const { error } = response;
+			if (error) {
+				history.push('/404');
+				return;
+			}
+
 			setTeams(response);
 		},
-		[ currentProject.id, token, setTeams ]
+		[ projectId, token, setTeams, history ]
 	);
 
 	useEffect(

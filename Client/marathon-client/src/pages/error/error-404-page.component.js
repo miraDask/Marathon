@@ -10,15 +10,7 @@ const ErrorPage = ({ goBack }) => {
 				<ErrorImage className="lg:w-2/6 md:w-3/6 w-5/6 mb-10 object-cover object-center rounded opacity-50" />
 				<div className="absolute top-auto text-center mb-48">
 					<h1 className="title-font sm:text-4xl text-3xl font-medium text-gray-900">404</h1>
-					<p className="leading-relaxed">Page Not Found</p>
-					<div className="flex justify-center">
-						<button
-							onClick={goBack}
-							className="inline-flex text-white bg-green-400 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded text-lg"
-						>
-							Run Back
-						</button>
-					</div>
+					<h6 className="leading-relaxed">Page Not Found</h6>
 				</div>
 			</div>
 		</MainWrapper>

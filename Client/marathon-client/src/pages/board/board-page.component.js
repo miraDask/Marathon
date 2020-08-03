@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useContext, useState } from 'react';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 
 import { getSprintDetails } from '../../services/sprints.service';
 import { processBoardIssuesCollections } from '../../utils/issues';
@@ -18,26 +19,33 @@ import PageTopicContainer from '../../components/containers/page-topic-container
 import FormButton from '../../components/buttons/form-button.component';
 import InfoMessageContainer from '../../components/messages/form-input-info-message.component';
 
-const BoardPage = ({ match, location }) => {
+const BoardPage = () => {
 	const [ title, setTitle ] = useState('');
 	const [ remainingDays, setRemainingDays ] = useState('');
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { updateBoardIssues, newAssignee } = useContext(IssuesContext);
 	const { currentProject } = useContext(ProjectsContext);
 	const { toggleCompletingSprint } = useContext(SprintsContext);
-	const showAlert = location.state ? location.state.showAlert : false;
+	const history = useHistory();
+	const { projectId } = useParams();
+	const { state } = useLocation();
+	const showAlert = state ? state.showAlert : false;
 
 	useEffect(
 		() => {
 			const getActiveSprintDetails = async () => {
-				const projectId = match.params.projectId;
 				const response = await getSprintDetails(projectId, token, currentProject.activeSprintId);
+				const { error } = response;
+				if (error) {
+					history.push('/404');
+					return;
+				}
+
 				if (response) {
 					const statusesCollection = processBoardIssuesCollections(response);
 					updateBoardIssues(statusesCollection);
 					setTitle(response.title);
 					setRemainingDays(response.remainingDays);
-					console.log('response', response);
 				}
 			};
 
@@ -62,7 +70,13 @@ const BoardPage = ({ match, location }) => {
 			<DashboardNavBar otherClasses="w-full" />
 			<MainWrapper>
 				<div className="px-16 pt-6 justify-evenly">
-					<Alert color="teal" show={showAlert} />
+					<Alert
+						color="teal"
+						show={showAlert}
+						onClose={() => {
+							history.push(`/user/dashboard/${currentProject.id}/board`, { showAlert: false });
+						}}
+					/>
 				</div>
 				<PageTopicContainer
 					size="lg:w-5/6"

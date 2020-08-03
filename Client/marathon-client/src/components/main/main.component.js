@@ -34,7 +34,8 @@ const Main = () => {
 			<Route exact path="/user/dashboard/:projectId/archive" component={ArchivePage} />
 			<Route exact path="/signup" render={() => (isLoggedIn ? <Redirect to="/" /> : <SignUpPage />)} />
 			<Route exact path="/signin" render={() => (isLoggedIn ? <Redirect to="/" /> : <SignInPage />)} />
-			<Route path="/error" component={ErrorPage} />
+			<Route path="/404" component={ErrorPage} />
+			<Redirect to="/404" />
 		</Switch>
 	);
 };

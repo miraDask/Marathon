@@ -55,12 +55,12 @@ export const getProjectDetails = async (id, token) => {
 
 	try {
 		const response = await fetcher(API_URL + `/${id}`, 'GET', headers);
-		try {
-			const dataToReturn = await response.json();
-			return dataToReturn;
-		} catch (error) {
-			console.log(error);
+
+		const dataToReturn = await response.json();
+		if (response.status === 400) {
+			return { error: dataToReturn };
 		}
+		return dataToReturn;
 	} catch (error) {
 		console.log(error);
 		return error;

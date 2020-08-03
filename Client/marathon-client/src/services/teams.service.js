@@ -36,12 +36,11 @@ export const getAllTeams = async (projectId, token) => {
 
 	try {
 		const response = await fetcher(API_URL + `/${projectId}/teams`, 'GET', headers);
-		try {
-			const dataToReturn = await response.json();
-			return dataToReturn;
-		} catch (error) {
-			console.log(error);
+		const dataToReturn = await response.json();
+		if (response.status === 400) {
+			return { error: dataToReturn };
 		}
+		return dataToReturn;
 	} catch (error) {
 		console.log(error);
 		return error;
@@ -53,12 +52,12 @@ export const getTeamDetails = async (projectId, teamId, token) => {
 
 	try {
 		const response = await fetcher(API_URL + `/${projectId}/teams/${teamId}`, 'GET', headers);
-		try {
-			const dataToReturn = await response.json();
-			return dataToReturn;
-		} catch (error) {
-			console.log(error);
+		if (response.status === 400) {
+			return { error: true };
 		}
+
+		const dataToReturn = await response.json();
+		return dataToReturn;
 	} catch (error) {
 		console.log(error);
 		return error;

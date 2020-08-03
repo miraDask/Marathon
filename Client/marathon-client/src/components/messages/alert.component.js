@@ -1,18 +1,19 @@
 import React, { Fragment, useState, useContext } from 'react';
 import { Context } from '../../providers/global-context.provider';
 
-const Alert = ({ color, show }) => {
+const Alert = ({ color, show, onClose }) => {
 	const { alertMessage, saveAlert } = useContext(Context);
 	const [ showAlert, setShowAlert ] = useState(show);
 
 	const handleClick = () => {
 		saveAlert(null);
 		setShowAlert(false);
+		onClose();
 	};
 
 	return (
 		<Fragment>
-			{showAlert ? (
+			{showAlert && alertMessage ? (
 				<div
 					className={`px-6 py-4 rounded relative mb-4 border border-${color}-500 text-${color}-500 bg-${color}-100`}
 				>

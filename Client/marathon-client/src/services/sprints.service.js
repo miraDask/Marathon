@@ -38,12 +38,12 @@ export const getSprintDetails = async (projectId, token, sprintId) => {
 	try {
 		const response = await fetcher(API_URL + `/${projectId}/sprints/${sprintId}`, 'GET', headers);
 
-		try {
-			const dataToReturn = await response.json();
-			return dataToReturn;
-		} catch (error) {
-			console.log(error);
+		const dataToReturn = await response.json();
+
+		if (response.status === 400) {
+			return { error: dataToReturn };
 		}
+		return dataToReturn;
 	} catch (error) {
 		console.log(error);
 		return error;

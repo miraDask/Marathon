@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext, useRef, Fragment } from 'react';
 
+import { useHistory, useParams, useLocation } from 'react-router-dom';
+
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { Context } from '../../providers/global-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
@@ -24,7 +26,7 @@ import BacklogDndContainer from '../../components/backlog/backlog-dnd-container.
 import NoPlanedSprint from '../../components/sprints/no-planed-sprint.component';
 import BacklogIssueCard from '../../components/cards/backlog-issue-card.component';
 
-const BacklogPage = ({ match, location }) => {
+const BacklogPage = () => {
 	const { token, toggleModalIsOpen } = useContext(Context);
 	const { saveCurrentProject, currentProject } = useContext(ProjectsContext);
 	const {
@@ -42,19 +44,24 @@ const BacklogPage = ({ match, location }) => {
 
 	const [ isLoading, setLoading ] = useState(true);
 	const [ dragging, setDragging ] = useState(false);
+	const history = useHistory();
+	const { projectId } = useParams();
+	const { state } = useLocation();
 
 	const dragItem = useRef();
 	const dragItemNode = useRef();
 	const movingItem = useRef();
-	const showAlert = location.state ? location.state.showAlert : false;
+	const showAlert = state ? state.showAlert : false;
 
 	useEffect(() => {
 		const getCurrentProjectDetails = async () => {
-			const projectId = match.params.projectId;
 			const response = await getProjectDetails(projectId, token);
-			if (response.errors) {
-				console.log(response.errors);
+			const { error } = response;
+			if (error) {
+				history.push('/404');
+				return;
 			}
+
 			if (response) {
 				const issuesCollections = processBacklogIssuesCollections(response);
 				updateBacklogIssues(issuesCollections);
@@ -193,7 +200,13 @@ const BacklogPage = ({ match, location }) => {
 			<DashboardNavBar otherClasses="w-full" />
 			<MainWrapper>
 				<div className="px-16 pt-6 justify-evenly">
-					<Alert color="teal" show={showAlert} />
+					<Alert
+						color="teal"
+						show={showAlert}
+						onClose={() => {
+							history.push(`/user/dashboard/${currentProject.id}/backlog`, { showAlert: false });
+						}}
+					/>
 				</div>
 				<PageTopicContainer size="lg:w-5/6" title={`Backlog / ${!currentProject ? '' : currentProject.name}`} />
 				<div className="overflow-y-auto h-screen">

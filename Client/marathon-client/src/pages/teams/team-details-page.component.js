@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext, useCallback } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { getTeamDetails } from '../../services/teams.service';
 import { ReactComponent as Icon } from '../../assets/watermelon-pack-illustration-14.svg';
@@ -16,19 +17,25 @@ import NoTeamMates from '../../components/teams/no-team-mates.component';
 import InfoMessageContainer from '../../components/messages/form-input-info-message.component';
 import PageTopicContainer from '../../components/containers/page-topic-container.component';
 
-const TeamDetailsPage = ({ match }) => {
+const TeamDetailsPage = () => {
 	const [ team, setTeam ] = useState(null);
 	const { currentProject } = useContext(ProjectsContext);
 	const { token } = useContext(Context);
 	const { invitationsAreChanged } = useContext(TeamsContext);
-	const teamId = match.params.teamId;
+	const { teamId, projectId } = useParams();
+	const history = useHistory();
 
 	const getTeam = useCallback(
 		async () => {
-			const response = await getTeamDetails(currentProject.id, teamId, token);
+			const response = await getTeamDetails(projectId, teamId, token);
+			const { error } = response;
+			if (error) {
+				history.push('/404');
+				return;
+			}
 			setTeam(response);
 		},
-		[ currentProject.id, teamId, token ]
+		[ projectId, teamId, token, history ]
 	);
 
 	useEffect(
