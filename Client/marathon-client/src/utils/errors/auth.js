@@ -11,7 +11,7 @@ export const getServerErrorsObject = (serverErrors) => {
 	let errorsObject = {};
 	Object.keys(serverErrors).forEach((key) => {
 		const message = serverErrors[key][0];
-		if (message.toLowerCase().includes('username')) {
+		if (message.toLowerCase().includes('user name')) {
 			errorsObject = { ...errorsObject, username: message };
 		} else if (message.toLowerCase().includes('password')) {
 			errorsObject = { ...errorsObject, password: message };

@@ -67,18 +67,18 @@ const TeamDetailsPage = ({ match }) => {
 						)}
 					</div>
 					<div className="lg:ml-12 lg:flex-grow md:w-1/2 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
-						<div className="flex flex-wrap sm:mb-2 mt-2 ml-0">
+						<div className="flex flex-wrap sm:mb-2 ml-0">
 							{!team ? null : team.invitations.length > 0 ? (
 								<InfoMessageContainer>Awaiting acceptance: </InfoMessageContainer>
 							) : null}
 							{!team ? null : team.invitations.length > 0 ? (
-								team.invitations.map((x) => (
+								team.invitations.map((invitation) => (
 									<UserCard
-										key={x.recipientEmail}
+										key={invitation.recipientEmail}
 										value={
 											<div>
-												{x.recipientEmail}{' '}
-												{x.declined ? (
+												{invitation.recipientEmail}{' '}
+												{invitation.declined ? (
 													<span className="ml-8 text-red-400">Declined</span>
 												) : null}
 											</div>
