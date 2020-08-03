@@ -15,7 +15,7 @@ import FormInput from '../inputs/form-input.component';
 const initialUser = {
 	email: ''
 };
-const InviteToTeamForm = ({ teamId, teamTitle }) => {
+const InviteToTeamForm = ({ teamId }) => {
 	const { data, errors, setData, setErrors, handleChange, handleSubmit } = useFormProcessor(initialUser, initialUser);
 	const { token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
@@ -41,7 +41,6 @@ const InviteToTeamForm = ({ teamId, teamTitle }) => {
 
 	return (
 		<form onSubmit={(e) => handleSubmit(e, getErrors(), handleInvite)}>
-			<h4 className="title-font sm:text-4xl text-4xl mb-4 font-medium text-gray-900">Team : {teamTitle}</h4>
 			<InfoMessageContainer className="mb-2 leading-relaxed">Invite team member</InfoMessageContainer>
 			<div className="flex w-full md:justify-start justify-between">
 				<FormInput

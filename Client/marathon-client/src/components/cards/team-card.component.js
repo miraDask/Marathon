@@ -56,7 +56,7 @@ const TeamCard = ({ initialData }) => {
 
 	return (
 		<CardFormContainer
-			showEdit={true}
+			showEdit={currentProject.isCreator}
 			isEditClicked={isEditClicked}
 			setIsEditClicked={setIsEditClicked}
 			initialData={initialData}

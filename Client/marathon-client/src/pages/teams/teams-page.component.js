@@ -52,9 +52,11 @@ const TeamsPage = () => {
 			<MainWrapper otherClasses="pb-24">
 				<div className="container px-5 py-8 mx-auto">
 					<PageTopicContainer size="lg:w-2/3" title="Teams" bottom="mb-5">
-						<NavLink to="/user/team/create">
-							<FormButton>Create</FormButton>
-						</NavLink>
+						{currentProject.isCreator ? (
+							<NavLink to="/user/team/create">
+								<FormButton>Create</FormButton>
+							</NavLink>
+						) : null}
 					</PageTopicContainer>
 					{!teams ? <Spinner /> : renderTeams()}
 					<div className="lg:w-2/3 flex-grow justify-center items-center

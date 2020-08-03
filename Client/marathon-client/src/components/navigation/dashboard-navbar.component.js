@@ -84,15 +84,15 @@ const DashboardNavBar = ({ otherClasses }) => {
 					>
 						Backlog
 					</DashboardNavItem>
-					{currentProject.isCreator ? (
-						<DashboardNavItem
-							handleClick={handleTeamLinkClick}
-							type={teamLinkIsClicked ? 'active' : 'inactive'}
-							to={`/user/dashboard/${id}/teams`}
-						>
-							Teams
-						</DashboardNavItem>
-					) : null}
+
+					<DashboardNavItem
+						handleClick={handleTeamLinkClick}
+						type={teamLinkIsClicked ? 'active' : 'inactive'}
+						to={`/user/dashboard/${id}/teams`}
+					>
+						Teams
+					</DashboardNavItem>
+
 					<DashboardNavItem
 						handleClick={handleArchiveLinkClick}
 						type={archiveLinkIsClicked ? 'active' : 'inactive'}
