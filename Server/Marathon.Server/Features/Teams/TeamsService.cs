@@ -120,6 +120,7 @@
                 .Where(x => x.TeamId == id && !x.Accepted)
                 .Select(x => new InvitationUserServiceModel
                 {
+                    Id = x.Id,
                     RecipientEmail = x.Recipient.Email,
                     Declined = x.Declined,
                 })

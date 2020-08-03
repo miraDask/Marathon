@@ -125,7 +125,28 @@
             {
                 Success = true,
             };
+        }
 
+        public async Task<ResultModel<bool>> DeleteAsync(int invitationId)
+        {
+            var invitation = await this.dbContext.Invitations.FirstOrDefaultAsync(x => x.Id == invitationId);
+            if (invitation == null)
+            {
+                return new ResultModel<bool>
+                {
+                    Errors = new string[] { Errors.InvalidInvitationId },
+                };
+            }
+
+            invitation.IsDeleted = true;
+            invitation.DeletedOn = DateTime.UtcNow;
+            this.dbContext.Update(invitation);
+            await this.dbContext.SaveChangesAsync();
+
+            return new ResultModel<bool>
+            {
+                Success = true,
+            };
         }
 
         public async Task<IEnumerable<InvitationServiceModel>> GetAllAsync(string userId)

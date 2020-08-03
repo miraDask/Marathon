@@ -95,11 +95,34 @@
         /// <response code="200">Successfully deleted.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
-        [HttpDelete]
+        [HttpPatch]
         [Route(Invitations.DeclineInvitation)]
         public async Task<ActionResult> Decline([FromBody]InvitationReaquestModel input)
         {
-            var deleteRequest = await this.invitationsService.DeclineAsync(input.InvitationId);
+            var declineRequest = await this.invitationsService.DeclineAsync(input.InvitationId);
+
+            if (!declineRequest.Success)
+            {
+                return this.BadRequest(new ErrorsResponseModel
+                {
+                    Errors = declineRequest.Errors,
+                });
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// Delete current invitation.
+        /// </summary>
+        /// <response code="200">Successfully deleted.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpDelete]
+        [Route(Invitations.DeleteInvitation)]
+        public async Task<ActionResult> Delete([FromBody] InvitationReaquestModel input)
+        {
+            var deleteRequest = await this.invitationsService.DeleteAsync(input.InvitationId);
 
             if (!deleteRequest.Success)
             {

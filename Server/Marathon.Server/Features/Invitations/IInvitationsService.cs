@@ -14,6 +14,8 @@
 
         Task<ResultModel<bool>> DeclineAsync(int invitationId);
 
+        Task<ResultModel<bool>> DeleteAsync(int invitationId);
+
         Task<ResultModel<bool>> InviteUserToTeamAsync(string email, int teamId, int projectId, string senderId);
     }
 }
