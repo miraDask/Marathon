@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { Context } from '../../providers/global-context.provider';
 import { TeamsContext } from '../../providers/teams-context.provider';
 
-import { acceptInvitation, deleteInvitation } from '../../services/invitations.service';
+import { acceptInvitation, declineInvitation } from '../../services/invitations.service';
 
 import { ReactComponent as DeleteIcon } from '../../assets/icon-trash.svg';
 import { ReactComponent as SaveIcon } from '../../assets/icon-check-circle.svg';
@@ -26,7 +26,7 @@ const InvitationCard = ({ invitation }) => {
 	const handleDeleteClick = async () => {
 		const { id } = invitation;
 		try {
-			await deleteInvitation(token, { invitationId: id });
+			await declineInvitation(token, { invitationId: id });
 			saveChangeInvitations();
 		} catch (error) {
 			console.log(error);

@@ -36,6 +36,17 @@ export const getAllInvitations = async (token) => {
 	}
 };
 
+export const declineInvitation = async (token, data) => {
+	const headers = getHeaders(token);
+
+	try {
+		await fetcher(API_URL, 'PATCH', headers, data);
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};
+
 export const deleteInvitation = async (token, data) => {
 	const headers = getHeaders(token);
 
@@ -46,14 +57,3 @@ export const deleteInvitation = async (token, data) => {
 		return error;
 	}
 };
-
-// export const declineInvitation = async (token) => {
-// 	const headers = getHeaders(token);
-
-// 	try {
-// 		await fetcher(API_URL, 'PATCH', headers);
-// 	} catch (error) {
-// 		console.log(error);
-// 		return error;
-// 	}
-// };

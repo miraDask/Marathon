@@ -45,7 +45,7 @@ const InviteToTeamForm = ({ teamId }) => {
 			<div className="flex w-full md:justify-start justify-between">
 				<FormInput
 					handleChange={handleChange}
-					className="bg-gray-100 rounded mr-4 px-2 border border-gray-400 focus:outline-none focus:border-teal-500 text-base lg:w-full xl:w-1/2 w-full md:w-full"
+					className="bg-gray-100 rounded mr-4 px-2 border border-gray-400 focus:outline-none focus:border-teal-500 text-base w-full"
 					placeholder="Email"
 					value={data.email}
 					name="email"
