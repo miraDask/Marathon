@@ -13,6 +13,8 @@
 
         Task LoguotAsync(string token);
 
+        Task UpdateUserAsync(string userId, string fullName, string userName, string imageUrl);
+
         Task<UserListingServerModel> GetAssignee(string id);
 
         Task<string> AddClaimToUserAsync(string userId, string claimKey, string claimValue, string secret);

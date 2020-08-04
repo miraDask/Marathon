@@ -76,6 +76,7 @@
                 {
                     Token = token,
                     FullName = user.FullName,
+                    ImageUrl = user.ImageUrl,
                 },
                 Success = true,
             };
@@ -128,6 +129,7 @@
                 {
                     Token = token,
                     FullName = fullName,
+                    ImageUrl = string.Empty,
                 },
                 Success = true,
             };
@@ -152,6 +154,29 @@
             await this.userManager.RemoveClaimAsync(user, claim);
 
             await this.tokenService.DeactivateJwtToken(user.Id);
+        }
+
+        public async Task UpdateUserAsync(string userId, string fullName, string userName, string imageUrl)
+        {
+            var user = await this.userManager.FindByIdAsync(userId);
+
+            if (fullName != string.Empty && fullName != user.FullName)
+            {
+                user.FullName = fullName;
+            }
+
+            if (userName != string.Empty && userName != user.UserName)
+            {
+                user.UserName = userName;
+            }
+
+            if (imageUrl != string.Empty && imageUrl != user.ImageUrl)
+            {
+                user.ImageUrl = imageUrl;
+            }
+
+            this.dbContext.Update(user);
+            await this.dbContext.SaveChangesAsync();
         }
 
         private async Task<User> AddNewClaimToUserAsync(string userId, string claimKey, string claimValue)

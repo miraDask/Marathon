@@ -4,6 +4,7 @@
 
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
+    using Marathon.Server.Infrastructure.Extensions;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
 
@@ -74,6 +75,22 @@
             }
 
             return loginResult.Result;
+        }
+
+        /// <summary>
+        /// Update User.
+        /// </summary>
+        /// <response code="200"> Successfully updated user.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpPost]
+        [Route(Identity.UpdateUser)]
+        public async Task<ActionResult> UpdateUser([FromBody] UpdateUserRequestModel input)
+        {
+            var userId = this.User.GetId();
+            await this.identityService.UpdateUserAsync(userId, input.FullName, input.UserName, input.ImageUrl);
+
+            return this.Ok();
         }
 
         /// <summary>

@@ -11,6 +11,7 @@
             public const string Login = IdentityRoute + "/login";
             public const string Register = IdentityRoute + "/register";
             public const string Logout = IdentityRoute + "/logout";
+            public const string UpdateUser = IdentityRoute + "/user";
         }
 
         public static class Teams
