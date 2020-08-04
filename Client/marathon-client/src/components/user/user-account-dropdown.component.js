@@ -7,14 +7,14 @@ const initialClicked = false;
 
 const AccountDropdown = ({ otherClasses }) => {
 	const [ avatarIsClicked, setAvatarIsClicked ] = useState(initialClicked);
-	const { fullName, image } = useContext(Context);
+	const { user } = useContext(Context);
 	const handleClick = () => {
 		setAvatarIsClicked(!avatarIsClicked);
 	};
 
 	return (
 		<div className={otherClasses}>
-			<Avatar bgColor="orange-400" handleClick={handleClick} size="w-8 h-8" user={{ fullName, image }} />
+			<Avatar bgColor="orange-400" handleClick={handleClick} size="w-8 h-8" user={user} />
 			{!avatarIsClicked ? null : <AccountDropdownMenu />}
 		</div>
 	);

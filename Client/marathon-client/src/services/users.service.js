@@ -1,3 +1,4 @@
+import { getHeaders, fetcher } from './common';
 const API_URL = 'https://localhost:44391/api/identity/';
 
 export const registerUser = async (data) => {
@@ -12,13 +13,19 @@ export const logoutUser = async (data) => {
 	return fetchUser(data, API_URL + 'logout');
 };
 
-const fetchUser = async (data, url) => {
+export const updateUser = async (data, token) => {
+	try {
+		await fetcher(API_URL + 'user', 'POST', getHeaders(token), data);
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+const fetchUser = async (data, url, token = null) => {
 	try {
 		const result = await fetch(url, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
+			headers: getHeaders(token),
 			body: JSON.stringify(data)
 		});
 

@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
+import { updateUser } from '../../services/users.service';
+import { Context } from '../../providers/global-context.provider';
 import MainWrapper from '../../components/main/main-wrapper.component';
 const ProfilePage = () => {
 	const [ imageUrl, setImageUrl ] = useState('');
+	const { token } = useContext(Context);
 
 	const openWidget = () => {
 		const widget = window.cloudinary.createUploadWidget(
@@ -10,9 +13,17 @@ const ProfilePage = () => {
 				cloudName: 'miradask',
 				uploadPreset: 'marathon'
 			},
-			(error, result) => {
+			async (error, result) => {
 				if (result.event === 'success') {
 					setImageUrl(result.info.url);
+					await updateUser(
+						{
+							fullName: '',
+							userName: '',
+							imageUrl: result.info.url
+						},
+						token
+					);
 				}
 			}
 		);

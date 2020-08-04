@@ -29,7 +29,7 @@ const SignInForm = () => {
 	const handleSignIn = async () => {
 		const result = await loginUser({ ...data });
 		if (result.token) {
-			toggleLoggedIn(data.email, result.fullName);
+			toggleLoggedIn({ email: data.email, fullName: result.fullName, imageUrl: result.imageUrl });
 			saveToken(result.token);
 			setErrors(null);
 			history.push('/user/projects');

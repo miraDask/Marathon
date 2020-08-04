@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Avatar = ({ bgColor, handleClick, size, user }) => {
-	const { fullName, image } = user;
+	const { fullName, imageUrl } = user;
 	const initials = fullName.split(' ').map((x) => x.charAt(0)).join('');
 	return (
 		<div
@@ -10,7 +10,7 @@ const Avatar = ({ bgColor, handleClick, size, user }) => {
 			alt={fullName}
 			onClick={handleClick}
 		>
-			{!image ? initials : <img className="w-full h-full rounded-full" src={image} alt={initials} />}
+			{!imageUrl ? initials : <img className="w-full h-full rounded-full" src={imageUrl} alt={initials} />}
 		</div>
 	);
 };
