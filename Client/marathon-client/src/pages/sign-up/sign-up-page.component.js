@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 
 import { ReactComponent as Image } from '../../assets/watermelon-pack-illustration-10.svg';
-import MainWrapper from '../../components/main/main-wrapper.component';
-import SignUpForm from '../../components/forms/sign-up-form.component';
+import MainWrapper from '../../components/main-wrapper';
+import SignUpForm from '../../components/sign-up-form';
 
 const SignUpPage = () => {
 	useEffect(() => {

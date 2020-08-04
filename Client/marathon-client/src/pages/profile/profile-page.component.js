@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 
 import { updateUser } from '../../services/users.service';
 import { Context } from '../../providers/global-context.provider';
-import MainWrapper from '../../components/main/main-wrapper.component';
+import MainWrapper from '../../components/main-wrapper';
 const ProfilePage = () => {
 	const [ imageUrl, setImageUrl ] = useState('');
 	const { token } = useContext(Context);

@@ -1,0 +1,40 @@
+import React, { useContext } from 'react';
+
+import { removeFromTeam } from '../../services/teams.service';
+
+import { ProjectsContext } from '../../providers/projects-context.provider';
+import { Context } from '../../providers/global-context.provider';
+import { TeamsContext } from '../../providers/teams-context.provider';
+
+import Avatar from '../avatar';
+import UserCard from '../user-card';
+
+const TeamMatesList = ({ people, teamId }) => {
+	const { currentProject } = useContext(ProjectsContext);
+	const { token } = useContext(Context);
+	const { saveChangeInvitations } = useContext(TeamsContext);
+
+	const handleRemoveFromTeam = async (id) => {
+		try {
+			await removeFromTeam(currentProject.id, token, teamId, { id });
+			saveChangeInvitations();
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	return people.map((person) => (
+		<UserCard
+			showDelete={currentProject.isCreator}
+			fetchDelete={handleRemoveFromTeam}
+			key={person.id}
+			id={person.id}
+			value={person.email}
+			valueOffset="ml-4"
+		>
+			<Avatar bgColor="orange-400" size="w-8 h-8" user={person} />
+		</UserCard>
+	));
+};
+
+export default TeamMatesList;

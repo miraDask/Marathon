@@ -9,15 +9,15 @@ import { IssuesContext } from '../../providers/issues-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { SprintsContext } from '../../providers/sprints-context.provider';
 
-import Alert from '../../components/messages/alert.component';
-import NoActiveSprint from '../../components/board/no-active-sprint.component';
-import CompleteSprintModal from '../../components/modals/complete-sprint-modal.component';
-import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
-import MainWrapper from '../../components/main/main-wrapper.component';
-import Board from '../../components/board/board.component';
-import PageTopicContainer from '../../components/containers/page-topic-container.component';
-import FormButton from '../../components/buttons/form-button.component';
-import InfoMessageContainer from '../../components/messages/form-input-info-message.component';
+import Alert from '../../components/alert';
+import NoActiveSprint from '../../components/no-active-sprint';
+import CompleteSprintModal from '../../components/complete-sprint-modal';
+import DashboardNavBar from '../../components/dashboard-navbar';
+import MainWrapper from '../../components/main-wrapper';
+import Board from '../../components/board';
+import PageTopicContainer from '../../components/page-topic-container';
+import FormButton from '../../components/button-form';
+import InfoMessageContainer from '../../components/form-input-info-message';
 
 const BoardPage = () => {
 	const [ title, setTitle ] = useState('');

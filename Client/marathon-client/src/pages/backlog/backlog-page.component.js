@@ -12,19 +12,19 @@ import { processBacklogIssuesCollections, getNewIssuesCollections } from '../../
 import { getProjectDetails } from '../../services/projects.service';
 import { updateIssue } from '../../services/issues.service';
 
-import CreateIssueModal from '../../components/modals/create-issue-modal.component';
-import IssueEditModal from '../../components/modals/issue-edit-modal.component';
-import EditSprintModal from '../../components/modals/edit-sprint-modal.component';
-import StartSprintModal from '../../components/modals/start-sprint-modal.component';
+import CreateIssueModal from '../../components/create-issue-modal';
+import IssueEditModal from '../../components/issue-edit-modal';
+import EditSprintModal from '../../components/edit-sprint-modal';
+import StartSprintModal from '../../components/start-sprint-modal';
 
-import Alert from '../../components/messages/alert.component';
-import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
-import Spinner from '../../components/spinner/spinner.component';
-import MainWrapper from '../../components/main/main-wrapper.component';
-import PageTopicContainer from '../../components/containers/page-topic-container.component';
-import BacklogDndContainer from '../../components/backlog/backlog-dnd-container.component';
-import NoPlanedSprint from '../../components/sprints/no-planed-sprint.component';
-import BacklogIssueCard from '../../components/cards/backlog-issue-card.component';
+import Alert from '../../components/alert';
+import DashboardNavBar from '../../components/dashboard-navbar';
+import Spinner from '../../components/spinner';
+import MainWrapper from '../../components/main-wrapper';
+import PageTopicContainer from '../../components/page-topic-container';
+import BacklogDndContainer from '../../components/backlog-dnd-container';
+import NoPlanedSprint from '../../components/no-planed-sprint';
+import BacklogIssueCard from '../../components/backlog-issue-card';
 
 const BacklogPage = () => {
 	const { token, toggleModalIsOpen } = useContext(Context);

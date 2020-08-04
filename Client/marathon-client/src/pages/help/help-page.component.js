@@ -1,7 +1,7 @@
 import React from 'react';
-import MainWrapper from '../../components/main/main-wrapper.component';
+import MainWrapper from '../../components/main-wrapper';
 import { ReactComponent as Image } from '../../assets/watermelon-pack-illustration-05.svg';
-import StepsContainer from '../../components/steps/steps-container.component';
+import StepsContainer from '../../components/steps-container';
 
 const HelpPage = () => {
 	return (

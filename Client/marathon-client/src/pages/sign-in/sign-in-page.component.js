@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { ReactComponent as Image } from '../../assets/watermelon-pack-illustration-10.svg';
-import MainWrapper from '../../components/main/main-wrapper.component';
-import SignInForm from '../../components/forms/sign-in-form.component';
+import MainWrapper from '../../components/main-wrapper';
+import SignInForm from '../../components/sign-in-form';
 
 const SignInPage = () => {
 	return (

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 
-import MainWrapper from '../../components/main/main-wrapper.component';
-import CreateTeamForm from '../../components/forms/create-team-form.component';
-import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
+import MainWrapper from '../../components/main-wrapper';
+import CreateTeamForm from '../../components/create-team-form';
+import DashboardNavBar from '../../components/dashboard-navbar';
 
 const CreateProjectPage = () => {
 	useEffect(() => {

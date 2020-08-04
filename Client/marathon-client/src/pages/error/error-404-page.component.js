@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactComponent as ErrorImage } from '../../assets/watermelon-pack-illustration-15.svg';
 
-import MainWrapper from '../../components/main/main-wrapper.component';
+import MainWrapper from '../../components/main-wrapper';
 
 const ErrorPage = ({ goBack }) => {
 	return (

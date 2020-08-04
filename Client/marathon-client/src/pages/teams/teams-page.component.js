@@ -7,14 +7,14 @@ import { TeamsContext } from '../../providers/teams-context.provider';
 
 import { getAllTeams } from '../../services/teams.service';
 
-import MainWrapper from '../../components/main/main-wrapper.component';
-import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
-import PageTopicContainer from '../../components/containers/page-topic-container.component';
-import NavLink from '../../components/navigation/nav-link.component';
-import FormButton from '../../components/buttons/form-button.component';
-import NoTeams from '../../components/teams/no-teams.component';
-import TeamCard from '../../components/cards/team-card.component';
-import Spinner from '../../components/spinner/spinner.component';
+import MainWrapper from '../../components/main-wrapper';
+import DashboardNavBar from '../../components/dashboard-navbar';
+import PageTopicContainer from '../../components/page-topic-container';
+import NavLink from '../../components/nav-link';
+import FormButton from '../../components/button-form';
+import NoTeams from '../../components/no-teams';
+import TeamCard from '../../components/team-card';
+import Spinner from '../../components/spinner';
 
 const TeamsPage = () => {
 	const [ teams, setTeams ] = useState(null);

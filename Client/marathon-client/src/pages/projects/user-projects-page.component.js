@@ -4,9 +4,9 @@ import { ProjectsContext } from '../../providers/projects-context.provider';
 
 import { getProjects } from '../../services/projects.service';
 
-import NoProjects from '../../components/projects/no-projects.component';
-import ProjectsAll from '../../components/projects/all-projects.component';
-import Spinner from '../../components/spinner/spinner.component';
+import NoProjects from '../../components/no-projects';
+import ProjectsAll from '../../components/all-projects';
+import Spinner from '../../components/spinner';
 
 const UserProjectsPage = () => {
 	const [ projects, setProjects ] = useState(null);

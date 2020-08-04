@@ -5,11 +5,11 @@ import { TeamsContext } from '../../providers/teams-context.provider';
 
 import { Context } from '../../providers/global-context.provider';
 
-import Spinner from '../../components/spinner/spinner.component';
-import MainWrapper from '../../components/main/main-wrapper.component';
-import InvitationCard from '../../components/cards/invitation-card.component';
-import PageTopicContainer from '../../components/containers/page-topic-container.component';
-import NoInvitations from '../../components/invitations/no-invitations.component';
+import Spinner from '../../components/spinner';
+import MainWrapper from '../../components/main-wrapper';
+import InvitationCard from '../../components/invitation-card';
+import PageTopicContainer from '../../components/page-topic-container';
+import NoInvitations from '../../components/no-invitations';
 
 const InvitationsPage = () => {
 	const [ invitations, setInvitations ] = useState(null);

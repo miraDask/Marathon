@@ -8,20 +8,19 @@ import { ProjectsContext } from '../../providers/projects-context.provider';
 import { Context } from '../../providers/global-context.provider';
 import { TeamsContext } from '../../providers/teams-context.provider';
 
-import UnacceptedInvitationsList from '../../components/invitations/unaccepted-invitations-list.component';
-import TeamMatesList from '../../components/teams/team-mates-list.component';
-import DashboardNavBar from '../../components/navigation/dashboard-navbar.component';
-import MainWrapper from '../../components/main/main-wrapper.component';
-import InviteToTeamForm from '../../components/forms/invite-team-member-form.component';
-import NoTeamMates from '../../components/teams/no-team-mates.component';
-import InfoMessageContainer from '../../components/messages/form-input-info-message.component';
-import PageTopicContainer from '../../components/containers/page-topic-container.component';
-import DeleteModal from '../../components/modals/delete-modal.component';
+import UnacceptedInvitationsList from '../../components/unaccepted-invitations-list';
+import TeamMatesList from '../../components/team-mates-list';
+import DashboardNavBar from '../../components/dashboard-navbar';
+import MainWrapper from '../../components/main-wrapper';
+import InviteToTeamForm from '../../components/invite-team-member-form';
+import NoTeamMates from '../../components/no-team-mates';
+import InfoMessageContainer from '../../components/form-input-info-message';
+import PageTopicContainer from '../../components/page-topic-container';
 
 const TeamDetailsPage = () => {
 	const [ team, setTeam ] = useState(null);
 	const { currentProject } = useContext(ProjectsContext);
-	const { token, deleteModal } = useContext(Context);
+	const { token } = useContext(Context);
 	const { invitationsAreChanged } = useContext(TeamsContext);
 	const { teamId, projectId } = useParams();
 	const history = useHistory();
