@@ -12,14 +12,14 @@ import ErrorMessageContainer from '../messages/form-input-error-message.componen
 import IssueFormsInput from '../inputs/issue-forms-input.component';
 import CustomLabel from '../labels/custom-label.component';
 
-const initialError = { title: '', description: '', storyPoints: '' };
+const initialError = { title: '', goal: '', storyPoints: '' };
 
 const SprintForm = ({ handleUpdateSprint, children, showDateInputs, successFunc = null }) => {
 	const { toggleModalIsOpen } = useContext(Context);
 	const { currentSprint } = useContext(SprintsContext);
 	const { data, errors, setErrors, setData, handleChange, handleOnBlur, handleSubmit } = useFormProcessor(
 		initialError,
-		currentSprint
+		currentSprint.goal ? currentSprint : { ...currentSprint, goal: '' }
 	);
 
 	const getErrors = () => {

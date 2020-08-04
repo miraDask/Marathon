@@ -5,6 +5,7 @@ import { TeamsContext } from '../../providers/teams-context.provider';
 
 import { Context } from '../../providers/global-context.provider';
 
+import Spinner from '../../components/spinner/spinner.component';
 import MainWrapper from '../../components/main/main-wrapper.component';
 import InvitationCard from '../../components/cards/invitation-card.component';
 import PageTopicContainer from '../../components/containers/page-topic-container.component';
@@ -19,7 +20,6 @@ const InvitationsPage = () => {
 		async () => {
 			const response = await getAllInvitations(token);
 			setInvitations(response);
-			console.log('inv', response);
 		},
 		[ token ]
 	);
@@ -31,9 +31,13 @@ const InvitationsPage = () => {
 		[ invitationsAreChanged, getInvitations ]
 	);
 
+	if (!invitations) {
+		return <Spinner color="green-400" />;
+	}
+
 	return (
 		<MainWrapper otherClasses="pb-24">
-			{invitations && invitations.length > 0 ? (
+			{invitations.length > 0 ? (
 				<div className="container px-5 py-8 mx-auto">
 					<PageTopicContainer size="lg:w-2/3" title="Invitations" bottom="mb-5" />
 					<div className="lg:w-2/3 flex mb-8 flex-col sm:flex-row sm:items-center items-start mx-auto">

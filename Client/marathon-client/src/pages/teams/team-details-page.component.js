@@ -16,11 +16,12 @@ import InviteToTeamForm from '../../components/forms/invite-team-member-form.com
 import NoTeamMates from '../../components/teams/no-team-mates.component';
 import InfoMessageContainer from '../../components/messages/form-input-info-message.component';
 import PageTopicContainer from '../../components/containers/page-topic-container.component';
+import DeleteModal from '../../components/modals/delete-modal.component';
 
 const TeamDetailsPage = () => {
 	const [ team, setTeam ] = useState(null);
 	const { currentProject } = useContext(ProjectsContext);
-	const { token } = useContext(Context);
+	const { token, deleteModal } = useContext(Context);
 	const { invitationsAreChanged } = useContext(TeamsContext);
 	const { teamId, projectId } = useParams();
 	const history = useHistory();
@@ -66,7 +67,7 @@ const TeamDetailsPage = () => {
 					<div className="lg:ml-12 lg:flex-grow md:w-1/2 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
 						{!team ? null : team.invitations.length > 0 ? (
 							<Fragment>
-								<InfoMessageContainer>Awaiting acceptance: </InfoMessageContainer>
+								<InfoMessageContainer>Pending Invitations: </InfoMessageContainer>
 								<UnacceptedInvitationsList invitations={team.invitations} />
 							</Fragment>
 						) : team.teamUsers.length > 0 ? (
@@ -74,6 +75,7 @@ const TeamDetailsPage = () => {
 						) : null}
 					</div>
 				</div>
+				{/* <DeleteModal show={deleteModal} /> */}
 			</MainWrapper>
 		</Fragment>
 	);

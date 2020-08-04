@@ -33,7 +33,11 @@ const UserProjectsPage = () => {
 		[ getAllProjects, updatedProjects ]
 	);
 
-	return isLoading ? <Spinner color="green-400" /> : !projects ? <NoProjects /> : <ProjectsAll projects={projects} />;
+	if (isLoading) {
+		return <Spinner color="green-400" />;
+	}
+
+	return !projects ? <NoProjects /> : <ProjectsAll projects={projects} />;
 };
 
 export default UserProjectsPage;

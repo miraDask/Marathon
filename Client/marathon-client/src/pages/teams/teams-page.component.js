@@ -55,6 +55,10 @@ const TeamsPage = () => {
 		);
 	};
 
+	if (!teams) {
+		return <Spinner color="green-400" />;
+	}
+
 	return (
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
@@ -67,7 +71,7 @@ const TeamsPage = () => {
 							</NavLink>
 						) : null}
 					</PageTopicContainer>
-					{!teams ? <Spinner /> : renderTeams()}
+					{renderTeams()}
 					<div className="lg:w-2/3 flex-grow justify-center items-center
 				 text-center container mx-auto  grid row-gap-4 grid-cols-1 w-full" />
 				</div>

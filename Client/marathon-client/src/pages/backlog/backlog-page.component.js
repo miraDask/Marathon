@@ -195,7 +195,11 @@ const BacklogPage = () => {
 			);
 		});
 
-	return !isLoading ? (
+	if (isLoading) {
+		return <Spinner color="green-400" />;
+	}
+
+	return (
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
 			<MainWrapper>
@@ -218,8 +222,6 @@ const BacklogPage = () => {
 				</div>
 			</MainWrapper>
 		</Fragment>
-	) : (
-		<Spinner />
 	);
 };
 

@@ -11,6 +11,8 @@ const initialState = {
 	fullName: name,
 	alertMessage: null,
 	isLoggedIn: isLogged,
+	deleteModal: false,
+	saveDeleteModal: () => {},
 	saveAlert: () => {},
 	toggleModalIsOpen: () => {},
 	toggleLoggedIn: () => {},
@@ -26,7 +28,7 @@ const GlobalContextProvider = ({ children }) => {
 	const [ isLoggedIn, setLoggedIn ] = useState(isLogged);
 	const [ isModalOpen, setModalOpen ] = useState(false);
 	const [ alertMessage, setAlert ] = useState(null);
-
+	const [ deleteModal, setDeleteModal ] = useState(false);
 	const saveAlert = (message) => {
 		setAlert(message);
 	};
@@ -58,6 +60,8 @@ const GlobalContextProvider = ({ children }) => {
 		setModalOpen(!isModalOpen);
 	};
 
+	const saveDeleteModal = (value) => setDeleteModal(value);
+
 	useEffect(
 		() => {
 			setToken(token);
@@ -74,6 +78,8 @@ const GlobalContextProvider = ({ children }) => {
 				isLoggedIn,
 				isModalOpen,
 				alertMessage,
+				deleteModal,
+				saveDeleteModal,
 				saveAlert,
 				toggleLoggedIn,
 				saveToken,
