@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles/main.css';
 
-import Main from './components/main';
+import RoutesHandler from './components/routesHandler';
 import Navigation from './components/navigation';
 import Footer from './components/footer';
 import ProjectsContextProvider from '../src/providers/projects-context.provider';
@@ -17,7 +17,7 @@ const App = () => {
 				<IssuesContextProvider>
 					<SprintsContextProvider>
 						<TeamsContextProvider>
-							<Main />
+							<RoutesHandler />
 						</TeamsContextProvider>
 					</SprintsContextProvider>
 				</IssuesContextProvider>

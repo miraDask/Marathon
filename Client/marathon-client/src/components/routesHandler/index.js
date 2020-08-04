@@ -1,23 +1,25 @@
 import React, { useContext } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { Context } from '../../providers/global-context.provider';
-import HomePage from '../../pages/home/homepage.component';
-import HelpPage from '../../pages/help/help-page.component';
-import SignUpPage from '../../pages/sign-up/sign-up-page.component';
-import SignInPage from '../../pages/sign-in/sign-in-page.component';
-import UserProjectsPage from '../../pages/projects/user-projects-page.component';
-import CreateProjectPage from '../../pages/projects/user-create-project-page.component';
-import CreateTeamPage from '../../pages/teams/create-team-page.component';
-import BoardPage from '../../pages/board/board-page.component';
-import BacklogPage from '../../pages/backlog/backlog-page.component';
-import TeamsPage from '../../pages/teams/teams-page.component';
-import ArchivePage from '../../pages/archive/archive-page.component';
-import InvitationsPage from '../../pages/invitations/invitations-page.component';
-import TeamDetailsPage from '../../pages/teams/team-details-page.component';
-import ProfilePage from '../../pages/profile/profile-page.component';
-import ErrorPage from '../../pages/error/error-404-page.component';
 
-const Main = () => {
+import { Context } from '../../providers/global-context.provider';
+
+import HomePage from '../../pages/home';
+import HelpPage from '../../pages/help';
+import SignUpPage from '../../pages/sign-up';
+import SignInPage from '../../pages/sign-in';
+import UserProjectsPage from '../../pages/projects';
+import CreateProjectPage from '../../pages/create-project';
+import CreateTeamPage from '../../pages/create-team';
+import BoardPage from '../../pages/board';
+import BacklogPage from '../../pages/backlog';
+import TeamsPage from '../../pages/teams';
+import ArchivePage from '../../pages/archive';
+import InvitationsPage from '../../pages/invitations';
+import TeamDetailsPage from '../../pages/team-details';
+import ProfilePage from '../../pages/profile';
+import ErrorPage from '../../pages/error';
+
+const RoutesHandler = () => {
 	const { isLoggedIn } = useContext(Context);
 
 	return (
@@ -78,4 +80,4 @@ const Main = () => {
 	);
 };
 
-export default Main;
+export default RoutesHandler;
