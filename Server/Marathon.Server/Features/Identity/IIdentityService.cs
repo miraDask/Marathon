@@ -17,6 +17,8 @@
 
         Task<UserListingServerModel> GetAssignee(string id);
 
+        Task<UserDetailsServiceModel> GetUser(string id);
+
         Task<string> AddClaimToUserAsync(string userId, string claimKey, string claimValue, string secret);
 
         Task AddClaimToUserAsync(string userId, string claimKey, string claimValue);

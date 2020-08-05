@@ -75,8 +75,14 @@
                 Result = new AuthResponseModel
                 {
                     Token = token,
-                    FullName = user.FullName,
-                    ImageUrl = user.ImageUrl,
+                    User = new UserDetailsServiceModel
+                    {
+                        Id = user.Id,
+                        FullName = user.FullName,
+                        UserName = user.UserName,
+                        ImageUrl = user.ImageUrl,
+                        Email = user.Email,
+                    },
                 },
                 Success = true,
             };
@@ -128,8 +134,14 @@
                 Result = new AuthResponseModel
                 {
                     Token = token,
-                    FullName = fullName,
-                    ImageUrl = string.Empty,
+                    User = new UserDetailsServiceModel
+                    {
+                        Id = user.Id,
+                        FullName = user.FullName,
+                        UserName = user.UserName,
+                        ImageUrl = user.ImageUrl,
+                        Email = user.Email,
+                    },
                 },
                 Success = true,
             };
@@ -142,6 +154,19 @@
                 Id = x.Id,
                 FullName = x.FullName,
                 ImageUrl = x.ImageUrl,
+            })
+            .FirstOrDefaultAsync();
+        }
+
+        public async Task<UserDetailsServiceModel> GetUser(string id)
+        {
+            return await this.dbContext.Users.Where(x => x.Id == id).Select(x => new UserDetailsServiceModel
+            {
+                Id = x.Id,
+                FullName = x.FullName,
+                UserName = x.UserName,
+                ImageUrl = x.ImageUrl,
+                Email = x.Email,
             })
             .FirstOrDefaultAsync();
         }

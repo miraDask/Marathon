@@ -94,6 +94,22 @@
         }
 
         /// <summary>
+        /// Get User.
+        /// </summary>
+        /// <response code="200"> Successfully returned user.</response>
+        /// <response code="400"> Bad Reaquest.</response>
+        /// <response code="401"> Unauthorized request.</response>
+        [HttpGet]
+        [Route(Identity.GetUser)]
+        public async Task<ActionResult<UserDetailsServiceModel>> GetUser()
+        {
+            var userId = this.User.GetId();
+            var user = await this.identityService.GetUser(userId);
+
+            return this.Ok(user);
+        }
+
+        /// <summary>
         /// Logout User.
         /// </summary>
         /// <response code="200"> Successfully logged out user.</response>
