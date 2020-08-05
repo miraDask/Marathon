@@ -6,10 +6,11 @@ import { updateUser } from '../../services/users.service';
 import { Context } from '../../providers/global-context.provider';
 import MainWrapper from '../../components/main-wrapper';
 const ProfilePage = () => {
-	const [ imageUrl, setImageUrl ] = useState('');
-	const { user } = useContext(Context);
+	const [ loading, setLoading ] = useState(false);
+	const { user, saveUser } = useContext(Context);
 
 	const openWidget = () => {
+		setLoading(true);
 		const widget = window.cloudinary.createUploadWidget(
 			{
 				cloudName: 'miradask',
@@ -18,7 +19,7 @@ const ProfilePage = () => {
 			async (error, result) => {
 				const token = getCookie('x-auth-token');
 				if (result.event === 'success') {
-					setImageUrl(result.info.url);
+					saveUser({ ...user, imageUrl: result.info.url });
 					await updateUser(
 						{
 							fullName: '',
@@ -32,6 +33,7 @@ const ProfilePage = () => {
 		);
 
 		widget.open();
+		setLoading(false);
 	};
 	return (
 		<MainWrapper>
@@ -58,7 +60,7 @@ const ProfilePage = () => {
 								onClick={openWidget}
 								className="flex ml-auto text-white bg-green-400 border-0 py-2 px-6 focus:outline-none hover:bg-teal-600 rounded"
 							>
-								Upload image
+								{!loading ? 'Upload image' : 'Loading ...'}
 							</button>
 						</div>
 					</div>
