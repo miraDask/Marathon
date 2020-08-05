@@ -210,7 +210,6 @@ const BacklogPage = () => {
 			<MainWrapper>
 				<div className="px-16 pt-6 justify-evenly">
 					<Alert
-						color="teal"
 						show={showAlert}
 						onClose={() => {
 							history.push(`/user/dashboard/${currentProject.id}/backlog`, { showAlert: false });
