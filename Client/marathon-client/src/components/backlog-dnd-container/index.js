@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 
+import { FlexWrapper, ChildrenContainer, UpperActionsContainer, UnderActionsContainer } from './index.styles';
 import { getCookie } from '../../utils/cookie';
 
 import { initialIssue } from '../../data/constants';
@@ -12,16 +13,7 @@ import { SprintsContext } from '../../providers/sprints-context.provider';
 import ClearButton from '../button-clear';
 import { ReactComponent as EditIcon } from '../../assets/icon-edit.svg';
 
-const BacklogDndContainer = ({
-	onDragEnter,
-	top,
-	estimate,
-	sprint,
-	sprintIndex,
-	issuesCount,
-	children,
-	otherProps
-}) => {
+const BacklogDndContainer = ({ onDragEnter, estimate, sprint, sprintIndex, issuesCount, children, otherProps }) => {
 	const { toggleCreating, updateBacklogIssues, backlogIssuesCollections, saveOpenedIssue } = useContext(
 		IssuesContext
 	);
@@ -81,10 +73,10 @@ const BacklogDndContainer = ({
 	};
 
 	return (
-		<div className={`lg:mx-24 lg:w-5/6 text-right md:w-full w-full ${top}`} {...otherProps}>
-			<div className="flex justify-between text-lg">
-				<div className="">{!sprint ? 'Backlog' : sprint.title}</div>
-				<div className="inline-flex">
+		<div className="lg:mx-24 lg:w-5/6 text-right md:w-full w-full mt-12" {...otherProps}>
+			<UpperActionsContainer>
+				<div>{!sprint ? 'Backlog' : sprint.title}</div>
+				<FlexWrapper>
 					<ClearButton
 						onClick={!sprint ? handleAddSprint : sprintIndex === 0 ? handleStartSprint : null}
 						textSize="text-sm"
@@ -94,28 +86,21 @@ const BacklogDndContainer = ({
 						{buttonTitle}
 					</ClearButton>
 					{!sprint ? null : (
-						<div className="inline-flex">
+						<FlexWrapper>
 							<ClearButton onClick={handleUpdateSprint} textSize="text-sm" addClass="mb-2 ml-2">
 								<EditIcon />
 							</ClearButton>
-						</div>
+						</FlexWrapper>
 					)}
-				</div>
-			</div>
-			<div
-				onDragEnter={onDragEnter}
-				className="h-full px-2 py-2 border-dashed border-2 border-gray-400 overflow-hidden text-center relative"
-			>
-				{children}
-			</div>
-			<div className="flex justify-between mt-2">
-				<div className="">
-					<ClearButton onClick={handleCreateIssueClick}>+ Create issue</ClearButton>
-				</div>
-				<div className="inline-flex">
+				</FlexWrapper>
+			</UpperActionsContainer>
+			<ChildrenContainer onDragEnter={onDragEnter}>{children}</ChildrenContainer>
+			<UnderActionsContainer>
+				<ClearButton onClick={handleCreateIssueClick}>+ Create issue</ClearButton>
+				<FlexWrapper>
 					{issuesCount} issue / Estimate: {estimate}
-				</div>
-			</div>
+				</FlexWrapper>
+			</UnderActionsContainer>
 		</div>
 	);
 };

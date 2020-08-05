@@ -177,7 +177,6 @@ const BacklogPage = () => {
 				<BacklogDndContainer
 					key={sprint.id ? sprint.id : currentProject.id}
 					sprint={parentIndex === backlogIssuesCollections.length - 1 ? null : sprint}
-					top="mt-12"
 					sprintIndex={parentIndex}
 					issuesCount={issues.length > 0 ? issues.length : 0}
 					estimate={issues.length > 0 ? getEstimate(parentIndex) : 0}
