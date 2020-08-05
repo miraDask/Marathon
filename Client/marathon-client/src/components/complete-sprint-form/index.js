@@ -1,5 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+
+import { getCookie } from '../../utils/cookie';
 import { completeSprint } from '../../services/sprints.service';
 import { getCompleteSprintFormOptions } from '../../utils/sprints';
 import { getCompletedIssuesCount, getUnCompletedIssuesCount } from '../../utils/issues';
@@ -15,7 +17,7 @@ import InfoMessageContainer from '../form-input-info-message';
 
 const CompleteSprintForm = ({ children }) => {
 	const { currentProject } = useContext(ProjectsContext);
-	const { token, toggleModalIsOpen, saveAlert } = useContext(Context);
+	const { toggleModalIsOpen, saveAlert } = useContext(Context);
 	const { backlogIssuesCollections, boardIssuesCollections } = useContext(IssuesContext);
 	const { toggleCompletingSprint } = useContext(SprintsContext);
 	const [ sprintId, setSprintId ] = useState(null);
@@ -41,6 +43,7 @@ const CompleteSprintForm = ({ children }) => {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
+		const token = getCookie('x-auth-token');
 
 		try {
 			await completeSprint(currentProject.id, token, currentProject.activeSprintId, sprintId);

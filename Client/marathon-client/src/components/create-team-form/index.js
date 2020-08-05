@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import useFormProcessor from '../../hooks/useFormProcessor';
 
-import { Context } from '../../providers/global-context.provider';
+import { getCookie } from '../../utils/cookie';
+
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
 import { createTeam } from '../../services/teams.service';
@@ -21,7 +22,6 @@ const initialTeam = {
 const CreateTeamForm = () => {
 	const history = useHistory();
 	const { data, errors, handleChange, handleOnBlur, handleSubmit } = useFormProcessor(initialTeam, initialTeam);
-	const { token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 
 	const getErrors = () => {
@@ -30,6 +30,7 @@ const CreateTeamForm = () => {
 	};
 
 	const handleCreateTeam = async () => {
+		const token = getCookie('x-auth-token');
 		const result = await createTeam(currentProject.id, token, { title: data.title, imageUrl: '' });
 		if (result) {
 			//history.push(`/user/teams/${result}`);

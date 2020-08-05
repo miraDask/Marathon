@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 
+import { getCookie } from '../../utils/cookie';
+
 import { createIssue } from '../../services/issues.service';
 import { IssuesContext } from '../../providers/issues-context.provider';
 import { Context } from '../../providers/global-context.provider';
@@ -12,10 +14,11 @@ import IssueForm from '../issue-form';
 const CreateIssueModal = () => {
 	const { creating, toggleCreating, backlogIssuesCollections, updateBacklogIssues } = useContext(IssuesContext);
 	const { currentSprint } = useContext(SprintsContext);
-	const { toggleModalIsOpen, token } = useContext(Context);
+	const { toggleModalIsOpen } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 
 	const handleCreateIssue = async (issue) => {
+		const token = getCookie('x-auth-token');
 		const result = await createIssue({ ...issue, sprintId: currentSprint.id }, token, currentProject.id);
 
 		if (result) {

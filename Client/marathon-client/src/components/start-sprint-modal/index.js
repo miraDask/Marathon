@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { updateSprint } from '../../services/sprints.service';
 
+import { getCookie } from '../../utils/cookie';
+
 import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { SprintsContext } from '../../providers/sprints-context.provider';
@@ -11,7 +13,7 @@ import ModalContainer from '../modal-container';
 import SprintForm from '../update-sprint-form';
 
 const StartSprintModal = () => {
-	const { token, toggleModalIsOpen, saveAlert } = useContext(Context);
+	const { toggleModalIsOpen, saveAlert } = useContext(Context);
 	const { currentProject, saveCurrentProject } = useContext(ProjectsContext);
 	const { backlogIssuesCollections, updateBacklogIssues } = useContext(IssuesContext);
 	const { currentSprint, toggleStartingSprint, startingSprint, saveActiveSprintId } = useContext(SprintsContext);
@@ -19,6 +21,7 @@ const StartSprintModal = () => {
 
 	const handleStartSprint = async (sprint) => {
 		saveActiveSprintId(sprint.id);
+		const token = getCookie('x-auth-token');
 		//TODO check whether sprint is modified then update
 		try {
 			await updateSprint(currentProject.id, token, currentSprint.id, sprint);

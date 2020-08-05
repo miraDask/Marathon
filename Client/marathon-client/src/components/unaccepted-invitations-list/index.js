@@ -1,18 +1,19 @@
 import React, { useContext } from 'react';
 
 import { deleteInvitation } from '../../services/invitations.service';
+import { getCookie } from '../../utils/cookie';
 
 import { TeamsContext } from '../../providers/teams-context.provider';
-import { Context } from '../../providers/global-context.provider';
 
 import UserCard from '../user-card';
 import { ReactComponent as Icon } from '../../assets/awaiting-acceptance.svg';
 
 const UnacceptedInvitationsList = ({ invitations }) => {
-	const { token } = useContext(Context);
 	const { saveChangeInvitations } = useContext(TeamsContext);
 
 	const handleDeleteInvitation = async (id) => {
+		const token = getCookie('x-auth-token');
+
 		try {
 			await deleteInvitation(token, { invitationId: id });
 			saveChangeInvitations();

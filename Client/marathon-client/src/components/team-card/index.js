@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import useFormProcessor from '../../hooks/useFormProcessor';
 
-import { Context } from '../../providers/global-context.provider';
+import { getCookie } from '../../utils/cookie';
+
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { TeamsContext } from '../../providers/teams-context.provider';
 
@@ -30,13 +31,14 @@ const TeamCard = ({ initialData }) => {
 		...initialData
 	});
 	const { saveUpdatedTeams } = useContext(TeamsContext);
-	const { token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 
 	const [ isEditClicked, setIsEditClicked ] = useState(initialIsEditClicked);
 
 	const handleUpdate = async () => {
 		const { title } = data;
+		const token = getCookie('x-auth-token');
+
 		try {
 			await updateTeam(currentProject.id, token, initialData.id, { title, imageUrl: '' });
 			saveUpdatedTeams();
@@ -46,6 +48,8 @@ const TeamCard = ({ initialData }) => {
 	};
 
 	const handleDeleteClick = async () => {
+		const token = getCookie('x-auth-token');
+
 		try {
 			await deleteTeam(currentProject.id, token, initialData.id);
 			saveUpdatedTeams();

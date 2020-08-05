@@ -13,6 +13,16 @@ export const logoutUser = async (data) => {
 	return fetchUser(data, API_URL + 'logout');
 };
 
+export const getUser = async (token) => {
+	try {
+		const response = await fetcher(API_URL + 'user', 'GET', getHeaders(token));
+		const dataToReturn = await response.json();
+		return dataToReturn;
+	} catch (error) {
+		return { error: true };
+	}
+};
+
 export const updateUser = async (data, token) => {
 	try {
 		await fetcher(API_URL + 'user', 'POST', getHeaders(token), data);

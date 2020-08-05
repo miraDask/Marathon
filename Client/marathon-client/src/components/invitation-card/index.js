@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
+import { setCookie, getCookie } from '../../utils/cookie';
 
-import { Context } from '../../providers/global-context.provider';
 import { TeamsContext } from '../../providers/teams-context.provider';
 
 import { acceptInvitation, declineInvitation } from '../../services/invitations.service';
@@ -9,22 +9,25 @@ import { ReactComponent as DeleteIcon } from '../../assets/icon-trash.svg';
 import { ReactComponent as SaveIcon } from '../../assets/icon-check-circle.svg';
 
 const InvitationCard = ({ invitation }) => {
-	const { token, saveToken } = useContext(Context);
 	const { saveChangeInvitations } = useContext(TeamsContext);
 	const { senderFullName, projectName, teamName } = invitation;
 
 	const handleSave = async () => {
+		const token = getCookie('x-auth-token');
+
 		const { id } = invitation;
 		const response = await acceptInvitation(token, { invitationId: id });
 
 		if (response) {
-			saveToken(response);
+			setCookie('x-auth-token', response);
 			saveChangeInvitations();
 		}
 	};
 
 	const handleDeleteClick = async () => {
 		const { id } = invitation;
+		const token = getCookie('x-auth-token');
+
 		try {
 			await declineInvitation(token, { invitationId: id });
 			saveChangeInvitations();

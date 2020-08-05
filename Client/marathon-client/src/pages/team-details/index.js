@@ -2,10 +2,10 @@ import React, { Fragment, useState, useEffect, useContext, useCallback } from 'r
 import { useHistory, useParams } from 'react-router-dom';
 
 import { getTeamDetails } from '../../services/teams.service';
-import { ReactComponent as Icon } from '../../assets/watermelon-pack-illustration-14.svg';
+import { getCookie } from '../../utils/cookie';
 
+import { ReactComponent as Icon } from '../../assets/watermelon-pack-illustration-14.svg';
 import { ProjectsContext } from '../../providers/projects-context.provider';
-import { Context } from '../../providers/global-context.provider';
 import { TeamsContext } from '../../providers/teams-context.provider';
 
 import UnacceptedInvitationsList from '../../components/unaccepted-invitations-list';
@@ -20,13 +20,13 @@ import PageTopicContainer from '../../components/page-topic-container';
 const TeamDetailsPage = () => {
 	const [ team, setTeam ] = useState(null);
 	const { currentProject } = useContext(ProjectsContext);
-	const { token } = useContext(Context);
 	const { invitationsAreChanged } = useContext(TeamsContext);
 	const { teamId, projectId } = useParams();
 	const history = useHistory();
 
 	const getTeam = useCallback(
 		async () => {
+			const token = getCookie('x-auth-token');
 			const response = await getTeamDetails(projectId, teamId, token);
 			const { error } = response;
 			if (error) {
@@ -35,7 +35,7 @@ const TeamDetailsPage = () => {
 			}
 			setTeam(response);
 		},
-		[ projectId, teamId, token, history ]
+		[ projectId, teamId, history ]
 	);
 
 	useEffect(

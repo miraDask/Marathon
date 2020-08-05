@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 
+import { getCookie } from '../../utils/cookie';
+
 import { initialIssue } from '../../data/constants';
 import { createSprint } from '../../services/sprints.service';
 import { IssuesContext } from '../../providers/issues-context.provider';
@@ -25,12 +27,14 @@ const BacklogDndContainer = ({
 	);
 	const { saveCurrentSprint, toggleUpdatingSprint, toggleStartingSprint } = useContext(SprintsContext);
 
-	const { toggleModalIsOpen, token } = useContext(Context);
+	const { toggleModalIsOpen } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 
 	const buttonTitle = !sprint ? 'Add Sprint' : 'Start Sprint';
 
 	const handleAddSprint = async () => {
+		const token = getCookie('x-auth-token');
+
 		const response = await createSprint(currentProject.id, token);
 		const sprint = {
 			...response,

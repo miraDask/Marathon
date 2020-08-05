@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react';
 
 import { getAllInvitations } from '../../services/invitations.service';
-import { TeamsContext } from '../../providers/teams-context.provider';
+import { getCookie } from '../../utils/cookie';
 
-import { Context } from '../../providers/global-context.provider';
+import { TeamsContext } from '../../providers/teams-context.provider';
 
 import Spinner from '../../components/spinner';
 import MainWrapper from '../../components/main-wrapper';
@@ -13,16 +13,14 @@ import NoInvitations from '../../components/no-invitations';
 
 const InvitationsPage = () => {
 	const [ invitations, setInvitations ] = useState(null);
-	const { token } = useContext(Context);
 	const { invitationsAreChanged } = useContext(TeamsContext);
 
-	const getInvitations = useCallback(
-		async () => {
-			const response = await getAllInvitations(token);
-			setInvitations(response);
-		},
-		[ token ]
-	);
+	const getInvitations = useCallback(async () => {
+		const token = getCookie('x-auth-token');
+
+		const response = await getAllInvitations(token);
+		setInvitations(response);
+	}, []);
 
 	useEffect(
 		() => {

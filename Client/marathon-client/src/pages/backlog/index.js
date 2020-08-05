@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext, useRef, Fragment } from 'react'
 
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 
+import { getCookie } from '../../utils/cookie';
+
 import { ProjectsContext } from '../../providers/projects-context.provider';
 import { Context } from '../../providers/global-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
@@ -27,7 +29,7 @@ import NoPlanedSprint from '../../components/no-planed-sprint';
 import BacklogIssueCard from '../../components/backlog-issue-card';
 
 const BacklogPage = () => {
-	const { token, toggleModalIsOpen } = useContext(Context);
+	const { toggleModalIsOpen } = useContext(Context);
 	const { saveCurrentProject, currentProject } = useContext(ProjectsContext);
 	const {
 		backlogIssuesCollections,
@@ -55,6 +57,7 @@ const BacklogPage = () => {
 
 	useEffect(() => {
 		const getCurrentProjectDetails = async () => {
+			const token = getCookie('x-auth-token');
 			const response = await getProjectDetails(projectId, token);
 			const { error } = response;
 			if (error) {
@@ -112,6 +115,8 @@ const BacklogPage = () => {
 	};
 
 	const handleDragEnd = async () => {
+		const token = getCookie('x-auth-token');
+
 		setDragging(false);
 		const data = {
 			...movingItem.current,

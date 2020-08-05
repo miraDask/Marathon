@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import useFormProcessor from '../../hooks/useFormProcessor';
-
 import { useHistory } from 'react-router-dom';
+
+import { setCookie } from '../../utils/cookie';
 
 import { Context } from '../../providers/global-context.provider';
 import { loginUser } from '../../services/users.service';
@@ -18,7 +19,7 @@ const initialUser = {
 
 const SignInForm = () => {
 	const { data, errors, setErrors, handleChange, handleSubmit } = useFormProcessor(initialUser, initialUser);
-	const { toggleLoggedIn, saveToken } = useContext(Context);
+	const { toggleLoggedIn, saveUser } = useContext(Context);
 	const history = useHistory();
 
 	const getErrors = () => {
@@ -29,9 +30,10 @@ const SignInForm = () => {
 	const handleSignIn = async () => {
 		const result = await loginUser({ ...data });
 		if (result.token) {
-			toggleLoggedIn({ email: data.email, fullName: result.fullName, imageUrl: result.imageUrl });
-			saveToken(result.token);
-			setErrors(null);
+			saveUser(result.user);
+			setCookie('x-auth-token', result.token);
+			setErrors(initialUser);
+			toggleLoggedIn(true);
 			history.push('/user/projects');
 		} else {
 			setErrors({ ...errors, password: 'Invalid username or password' });

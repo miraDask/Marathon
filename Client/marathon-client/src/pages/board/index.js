@@ -3,6 +3,7 @@ import { useHistory, useParams, useLocation } from 'react-router-dom';
 
 import { getSprintDetails } from '../../services/sprints.service';
 import { processBoardIssuesCollections } from '../../utils/issues';
+import { getCookie } from '../../utils/cookie';
 
 import { Context } from '../../providers/global-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
@@ -22,7 +23,7 @@ import InfoMessageContainer from '../../components/form-input-info-message';
 const BoardPage = () => {
 	const [ title, setTitle ] = useState('');
 	const [ remainingDays, setRemainingDays ] = useState('');
-	const { token, toggleModalIsOpen } = useContext(Context);
+	const { toggleModalIsOpen } = useContext(Context);
 	const { updateBoardIssues, newAssignee } = useContext(IssuesContext);
 	const { currentProject } = useContext(ProjectsContext);
 	const { toggleCompletingSprint } = useContext(SprintsContext);
@@ -33,6 +34,8 @@ const BoardPage = () => {
 
 	useEffect(
 		() => {
+			const token = getCookie('x-auth-token');
+
 			const getActiveSprintDetails = async () => {
 				const response = await getSprintDetails(projectId, token, currentProject.activeSprintId);
 				const { error } = response;

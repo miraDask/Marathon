@@ -1,7 +1,8 @@
 import React, { useState, useContext, Fragment } from 'react';
 import useFormProcessor from '../../hooks/useFormProcessor';
 
-import { Context } from '../../providers/global-context.provider';
+import { getCookie } from '../../utils/cookie';
+
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
 import { deleteProject, updateProject } from '../../services/projects.service';
@@ -30,11 +31,12 @@ const ProjectCard = ({ initialData }) => {
 		...initialData
 	});
 	const { currentProject, saveCurrentProject, saveUpdatedProjects } = useContext(ProjectsContext);
-	const { token } = useContext(Context);
 	const [ isEditClicked, setIsEditClicked ] = useState(initialIsEditClicked);
 
 	const handleUpdate = async () => {
 		const { name, key } = data;
+		const token = getCookie('x-auth-token');
+
 		try {
 			await updateProject(initialData.id, { name, key }, token);
 			saveUpdatedProjects();
@@ -44,6 +46,8 @@ const ProjectCard = ({ initialData }) => {
 	};
 
 	const handleDeleteClick = async () => {
+		const token = getCookie('x-auth-token');
+
 		try {
 			await deleteProject(token, initialData.id);
 			if (currentProject.id === initialData.id) {

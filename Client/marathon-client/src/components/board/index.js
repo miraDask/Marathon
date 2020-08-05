@@ -1,5 +1,7 @@
 import React, { useState, useRef, useContext, Fragment } from 'react';
 
+import { getCookie } from '../../utils/cookie';
+
 import { Context } from '../../providers/global-context.provider';
 import { IssuesContext } from '../../providers/issues-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
@@ -14,7 +16,7 @@ import IssueDetailsModal from '../issue-details-modal';
 const Board = () => {
 	const { openedIssue } = useContext(IssuesContext);
 	const [ dragging, setDragging ] = useState(false);
-	const { toggleModalIsOpen, token } = useContext(Context);
+	const { toggleModalIsOpen } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 
 	const { toggleUpdating, boardIssuesCollections, updateBoardIssues, saveOpenedIssue, saveNewAssignee } = useContext(
@@ -49,6 +51,7 @@ const Board = () => {
 			statusIndex: dragItem.current.index
 		};
 
+		const token = getCookie('x-auth-token');
 		const assignee = await changeIssueStatus(data, token, currentProject.id, movingItem.current.id);
 		if (assignee) {
 			saveNewAssignee({ ...assignee, issueId: movingItem.current.id });

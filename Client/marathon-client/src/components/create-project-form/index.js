@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import useFormProcessor from '../../hooks/useFormProcessor';
 
-import { Context } from '../../providers/global-context.provider';
+import { setCookie, getCookie } from '../../utils/cookie';
 
 import { createProject } from '../../services/projects.service';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/project';
@@ -21,7 +21,6 @@ const initialProject = {
 
 const CreateProjectForm = () => {
 	const { data, errors, handleChange, handleOnBlur, handleSubmit } = useFormProcessor(initialProject, initialProject);
-	const { saveToken, token } = useContext(Context);
 	const history = useHistory();
 
 	const getErrors = () => {
@@ -30,11 +29,12 @@ const CreateProjectForm = () => {
 	};
 
 	const handleCreateProject = async () => {
+		const token = getCookie('x-auth-token');
 		const { name, key } = data;
 		const result = await createProject({ name, key }, token);
 
 		if (result.token) {
-			saveToken(result.token);
+			setCookie('x-auth-token', result.token);
 			history.push('/user/projects');
 		}
 	};

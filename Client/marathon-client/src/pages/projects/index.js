@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { Context } from '../../providers/global-context.provider';
+
+import { getCookie } from '../../utils/cookie';
+
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
 import { getProjects } from '../../services/projects.service';
@@ -11,20 +13,18 @@ import Spinner from '../../components/spinner';
 const UserProjectsPage = () => {
 	const [ projects, setProjects ] = useState(null);
 	const [ isLoading, setLoading ] = useState(true);
-	const { token } = useContext(Context);
 	const { updatedProjects } = useContext(ProjectsContext);
 
-	const getAllProjects = useCallback(
-		async () => {
-			const projectsAll = await getProjects(token);
+	const getAllProjects = useCallback(async () => {
+		const token = getCookie('x-auth-token');
 
-			if (projectsAll.length > 0) {
-				setProjects(projectsAll);
-			}
-			setLoading(false);
-		},
-		[ token ]
-	);
+		const projectsAll = await getProjects(token);
+
+		if (projectsAll.length > 0) {
+			setProjects(projectsAll);
+		}
+		setLoading(false);
+	}, []);
 
 	useEffect(
 		() => {

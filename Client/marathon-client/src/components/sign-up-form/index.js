@@ -2,8 +2,10 @@ import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import useFormProcessor from '../../hooks/useFormProcessor';
 
-import { Context } from '../../providers/global-context.provider';
+import { setCookie } from '../../utils/cookie';
 import { registerUser } from '../../services/users.service';
+
+import { Context } from '../../providers/global-context.provider';
 import {
 	validatePassword,
 	validateConfirmPassword,
@@ -28,7 +30,7 @@ const initialUser = {
 
 const SignUpForm = ({ classes, ...otherProps }) => {
 	const { data, errors, setErrors, handleChange, handleOnBlur, handleSubmit } = useFormProcessor({}, initialUser);
-	const { toggleLoggedIn, saveToken } = useContext(Context);
+	const { toggleLoggedIn, saveUser } = useContext(Context);
 	const history = useHistory();
 
 	const handleSignUp = async () => {
@@ -37,8 +39,9 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 		const result = await registerUser({ fullName, username, email, password });
 
 		if (result.token) {
-			toggleLoggedIn(email, fullName);
-			saveToken(result.token);
+			toggleLoggedIn(true);
+			saveUser(result.user);
+			setCookie('x-auth-token', result.token);
 			history.push('/user/projects');
 		} else {
 			const errorsObject = getServerErrorsObject(result);

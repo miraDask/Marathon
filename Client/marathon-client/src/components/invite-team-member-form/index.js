@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import useFormProcessor from '../../hooks/useFormProcessor';
 
+import { getCookie } from '../../utils/cookie';
 import { inviteToTeam } from '../../services/teams.service';
 import { getEmptyInputsErrorsObject } from '../../utils/errors/auth';
 
 import { TeamsContext } from '../../providers/teams-context.provider';
-import { Context } from '../../providers/global-context.provider';
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
 import ErrorMessageContainer from '../form-input-error-message';
@@ -17,7 +17,6 @@ const initialUser = {
 };
 const InviteToTeamForm = ({ teamId }) => {
 	const { data, errors, setData, setErrors, handleChange, handleSubmit } = useFormProcessor(initialUser, initialUser);
-	const { token } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
 	const { saveChangeInvitations } = useContext(TeamsContext);
 
@@ -28,6 +27,7 @@ const InviteToTeamForm = ({ teamId }) => {
 
 	const handleInvite = async () => {
 		const { email } = data;
+		const token = getCookie('x-auth-token');
 		const { error } = await inviteToTeam(currentProject.id, teamId, token, { email });
 
 		if (error) {

@@ -1,8 +1,9 @@
 import React, { Fragment, useState, useEffect, useContext, useCallback } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
+import { getCookie } from '../../utils/cookie';
+
 import { ProjectsContext } from '../../providers/projects-context.provider';
-import { Context } from '../../providers/global-context.provider';
 import { TeamsContext } from '../../providers/teams-context.provider';
 
 import { getAllTeams } from '../../services/teams.service';
@@ -20,12 +21,12 @@ const TeamsPage = () => {
 	const [ teams, setTeams ] = useState(null);
 	const { currentProject } = useContext(ProjectsContext);
 	const { updatedTeams } = useContext(TeamsContext);
-	const { token } = useContext(Context);
 	const { projectId } = useParams();
 	const history = useHistory();
 
 	const getTeams = useCallback(
 		async () => {
+			const token = getCookie('x-auth-token');
 			const response = await getAllTeams(projectId, token);
 			const { error } = response;
 			if (error) {
@@ -35,7 +36,7 @@ const TeamsPage = () => {
 
 			setTeams(response);
 		},
-		[ projectId, token, setTeams, history ]
+		[ projectId, setTeams, history ]
 	);
 
 	useEffect(
