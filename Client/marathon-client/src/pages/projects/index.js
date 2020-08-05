@@ -19,7 +19,6 @@ const UserProjectsPage = () => {
 		const token = getCookie('x-auth-token');
 
 		const projectsAll = await getProjects(token);
-
 		if (projectsAll.length > 0) {
 			setProjects(projectsAll);
 		}
