@@ -27,8 +27,7 @@ const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleC
 		[ newAssignee ]
 	);
 
-	const renderAssignee = () =>
-		assignee.fullName ? <Avatar size="w-8 h-8" user={assignee} bgColor="green-400" /> : 'unassigned';
+	const renderAssignee = () => (assignee.fullName ? <Avatar user={assignee} bgColor="green" /> : 'unassigned');
 
 	return (
 		<div

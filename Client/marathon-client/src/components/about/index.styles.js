@@ -1,4 +1,3 @@
-import '@emotion/styled';
 import tw from 'tailwind.macro';
 
 export const AboutContainer = tw.div`px-5 lg:py-24 py-6 mx-auto bg-white flex flex-col text-center w-full mb-12`;
