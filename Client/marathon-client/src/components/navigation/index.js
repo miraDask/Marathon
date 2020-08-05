@@ -55,7 +55,7 @@ const Navigation = () => {
 						</NavLink>
 					</span>
 					{isLoggedIn ? (
-						<AccountDropdown otherClasses={isModalOpen ? 'invisible' : ''} />
+						<AccountDropdown show={!isModalOpen} />
 					) : (
 						<Fragment>
 							<span className="mr-5">

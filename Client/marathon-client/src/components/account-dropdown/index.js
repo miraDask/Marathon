@@ -1,11 +1,14 @@
 import React, { useContext, useState } from 'react';
+import { AccountDropdownContainer } from './index.styles';
+
 import { Context } from '../../providers/global-context.provider';
+
 import AccountDropdownMenu from '../account-dropdown-menu';
 import Avatar from '../avatar';
 
 const initialClicked = false;
 
-const AccountDropdown = ({ otherClasses }) => {
+const AccountDropdown = ({ show }) => {
 	const [ avatarIsClicked, setAvatarIsClicked ] = useState(initialClicked);
 	const { user } = useContext(Context);
 	const handleClick = () => {
@@ -13,10 +16,10 @@ const AccountDropdown = ({ otherClasses }) => {
 	};
 
 	return (
-		<div className={otherClasses}>
+		<AccountDropdownContainer visible={show}>
 			<Avatar bgColor="orange-400" handleClick={handleClick} size="w-8 h-8" user={user} />
 			{!avatarIsClicked ? null : <AccountDropdownMenu />}
-		</div>
+		</AccountDropdownContainer>
 	);
 };
 
