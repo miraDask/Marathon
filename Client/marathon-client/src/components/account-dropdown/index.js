@@ -17,7 +17,7 @@ const AccountDropdown = ({ show }) => {
 
 	return (
 		<AccountDropdownContainer visible={show}>
-			<Avatar bgColor="orange-400" handleClick={handleClick} size="w-8 h-8" user={user} />
+			<Avatar bgColor="orange" handleClick={handleClick} user={user} />
 			{!avatarIsClicked ? null : <AccountDropdownMenu />}
 		</AccountDropdownContainer>
 	);

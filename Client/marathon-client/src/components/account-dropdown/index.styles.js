@@ -1,4 +1,3 @@
-import '@emotion/styled';
 import tw from 'tailwind.macro';
 
 const getStyles = (props) => {
