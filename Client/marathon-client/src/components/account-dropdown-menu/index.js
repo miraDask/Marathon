@@ -1,4 +1,6 @@
 import React, { useContext } from 'react';
+
+import { DropdownContainer, NavLinkContainer, UserInfoContainer, UseInfo, Border } from './index.styles';
 import { useHistory } from 'react-router-dom';
 
 import { getCookie } from '../../utils/cookie';
@@ -20,28 +22,20 @@ const AccountDropdownMenu = () => {
 	};
 
 	return (
-		<div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg">
-			<div
-				className="rounded-md bg-white shadow-xs"
-				role="menu"
-				aria-orientation="vertical"
-				aria-labelledby="options-menu"
-			>
-				<div className="py-1">
-					<p className="px-4 py-2">
-						Signed in as <span className="text-gray-900 text-lg">{user.userName}</span>
-					</p>
-				</div>
-				<div className="py-1">
-					<DropdownLink to="/user/profile">PROFILE</DropdownLink>
-				</div>
-				<div className="border-t border-gray-100" />
-				<div className="py-1">
-					<DropdownLink handleOnClick={handleSignOut}>SIGN OUT</DropdownLink>
-				</div>
-				<div className="border-t border-gray-100" />
-			</div>
-		</div>
+		<DropdownContainer className="origin-top-right">
+			<UserInfoContainer>
+				Signed in as <UseInfo>{user.userName}</UseInfo>
+			</UserInfoContainer>
+
+			<NavLinkContainer>
+				<DropdownLink to="/user/profile">PROFILE</DropdownLink>
+			</NavLinkContainer>
+			<Border />
+			<NavLinkContainer>
+				<DropdownLink handleOnClick={handleSignOut}>SIGN OUT</DropdownLink>
+			</NavLinkContainer>
+			<Border />
+		</DropdownContainer>
 	);
 };
 
