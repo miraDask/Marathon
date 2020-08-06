@@ -11,15 +11,18 @@ import ModalContainer from '../modal-container';
 import SprintForm from '../update-sprint-form';
 import DeleteButton from '../button-delete';
 import SubmitButton from '../button-submit';
+import { getCookie } from '../../utils/cookie';
 
 const EditSprintModal = () => {
-	const { token, toggleModalIsOpen } = useContext(Context);
+	const { toggleModalIsOpen } = useContext(Context);
 	const { currentProject, saveCurrentProject } = useContext(ProjectsContext);
 	const { backlogIssuesCollections, updateBacklogIssues } = useContext(IssuesContext);
 	const { currentSprint, toggleUpdatingSprint, updatingSprint } = useContext(SprintsContext);
 
 	const handleUpdateSprint = async (sprint) => {
 		const { title, goal, startDate, endDate } = sprint;
+		const token = getCookie('x-auth-token');
+
 		try {
 			await updateSprint(currentProject.id, token, currentSprint.id, { title, goal, startDate, endDate });
 			let newCollection = JSON.parse(JSON.stringify(backlogIssuesCollections));
@@ -51,6 +54,8 @@ const EditSprintModal = () => {
 
 	const handleDeleteSprint = async (e) => {
 		e.preventDefault();
+		const token = getCookie('x-auth-token');
+
 		try {
 			await deleteSprint(currentProject.id, token, currentSprint.id);
 			let newCollection = JSON.parse(JSON.stringify(backlogIssuesCollections));
