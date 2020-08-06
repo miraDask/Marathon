@@ -1,12 +1,10 @@
 import React, { createContext, useState } from 'react';
 
-const sprint = localStorage.getItem('activeSprint') ? JSON.parse(localStorage.getItem('activeSprint')) : null;
-
 const initialState = {
 	completingSprint: false,
 	updatingSprint: false,
 	startingSprint: false,
-	activeSprint: sprint,
+	activeSprint: null,
 	activeSprintId: null,
 	currentSprint: null,
 	saveActiveSprint: () => {},
@@ -23,7 +21,7 @@ const SprintsContextProvider = ({ children }) => {
 	const [ updatingSprint, setUpdatingSprint ] = useState(false);
 	const [ startingSprint, setStartingSprint ] = useState(false);
 	const [ completingSprint, setCompletingSprint ] = useState(false);
-	const [ activeSprint, setActiveSprint ] = useState(sprint);
+	const [ activeSprint, setActiveSprint ] = useState(null);
 	const [ activeSprintId, setActiveSprintId ] = useState(null);
 	const [ currentSprint, setCurrentSprint ] = useState(null);
 
@@ -41,7 +39,6 @@ const SprintsContextProvider = ({ children }) => {
 
 	const saveActiveSprint = (sprint) => {
 		setActiveSprint(sprint);
-		localStorage.setItem('activeSprint', JSON.stringify(sprint));
 	};
 
 	const saveActiveSprintId = (id) => {

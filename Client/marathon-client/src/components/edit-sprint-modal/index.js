@@ -19,8 +19,9 @@ const EditSprintModal = () => {
 	const { currentSprint, toggleUpdatingSprint, updatingSprint } = useContext(SprintsContext);
 
 	const handleUpdateSprint = async (sprint) => {
+		const { title, goal, startDate, endDate } = sprint;
 		try {
-			await updateSprint(currentProject.id, token, currentSprint.id, sprint);
+			await updateSprint(currentProject.id, token, currentSprint.id, { title, goal, startDate, endDate });
 			let newCollection = JSON.parse(JSON.stringify(backlogIssuesCollections));
 			const sprintIndex = newCollection
 				.map(function(x) {

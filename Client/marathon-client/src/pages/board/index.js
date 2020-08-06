@@ -1,4 +1,6 @@
 import React, { Fragment, useEffect, useContext, useState } from 'react';
+
+import useHubConnection from '../../hooks/useHubConnection';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 
 import { getSprintDetails } from '../../services/sprints.service';
@@ -22,11 +24,12 @@ import InfoMessageContainer from '../../components/form-input-info-message';
 
 const BoardPage = () => {
 	const [ title, setTitle ] = useState('');
+	const { update } = useHubConnection('BoardUpdate');
 	const [ remainingDays, setRemainingDays ] = useState('');
 	const { toggleModalIsOpen } = useContext(Context);
-	const { updateBoardIssues, newAssignee } = useContext(IssuesContext);
+	const { updateBoardIssues } = useContext(IssuesContext);
 	const { currentProject } = useContext(ProjectsContext);
-	const { toggleCompletingSprint } = useContext(SprintsContext);
+	const { toggleCompletingSprint, saveActiveSprintId, activeSprintId } = useContext(SprintsContext);
 	const history = useHistory();
 	const { projectId } = useParams();
 	const { state } = useLocation();
@@ -35,6 +38,7 @@ const BoardPage = () => {
 	useEffect(
 		() => {
 			const token = getCookie('x-auth-token');
+			saveActiveSprintId(currentProject.activeSprintId);
 
 			const getActiveSprintDetails = async () => {
 				const response = await getSprintDetails(projectId, token, currentProject.activeSprintId);
@@ -54,10 +58,15 @@ const BoardPage = () => {
 
 			if (currentProject.activeSprintId) {
 				getActiveSprintDetails();
+				console.log('reload');
+			} else {
+				setTitle('');
+				setRemainingDays('');
+				saveActiveSprintId(null);
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[ newAssignee ]
+		[ update ]
 	);
 
 	const handleCompleteSprint = () => {
@@ -82,15 +91,15 @@ const BoardPage = () => {
 				</div>
 				<PageTopicContainer
 					size="lg:w-5/6"
-					title={!currentProject.activeSprintId ? 'Active Sprint' : `${currentProject.key} / ${title}`}
+					title={!activeSprintId ? 'Active Sprint' : `${currentProject.key} / ${title}`}
 				>
 					{remainingDays ? (
 						<InfoMessageContainer addClass="mr-4">{'Remaining days ' + remainingDays}</InfoMessageContainer>
 					) : null}
 					<FormButton
 						onClick={handleCompleteSprint}
-						disabled={!currentProject.activeSprintId}
-						addClass={!currentProject.activeSprintId ? 'cursor-not-allowed' : ''}
+						disabled={!activeSprintId}
+						addClass={!activeSprintId ? 'cursor-not-allowed' : ''}
 						textSize="text-md"
 					>
 						Complete Sprint
@@ -99,7 +108,7 @@ const BoardPage = () => {
 
 				<div className="container px-6 mb-8 mx-auto flex flex-wrap">
 					<Board />
-					{!currentProject.activeSprintId ? <NoActiveSprint /> : null}
+					{!activeSprintId ? <NoActiveSprint /> : null}
 					<CompleteSprintModal />
 				</div>
 			</MainWrapper>

@@ -16,7 +16,7 @@ import CustomSelect from '../custom-select';
 import InfoMessageContainer from '../form-input-info-message';
 
 const CompleteSprintForm = ({ children }) => {
-	const { currentProject } = useContext(ProjectsContext);
+	const { currentProject, saveCurrentProject } = useContext(ProjectsContext);
 	const { toggleModalIsOpen, saveAlert } = useContext(Context);
 	const { backlogIssuesCollections, boardIssuesCollections } = useContext(IssuesContext);
 	const { toggleCompletingSprint } = useContext(SprintsContext);
@@ -50,6 +50,7 @@ const CompleteSprintForm = ({ children }) => {
 			toggleModalIsOpen();
 			toggleCompletingSprint();
 			saveAlert('Sprint successfully completed');
+			saveCurrentProject({ ...currentProject, activeSprintId: null });
 			history.push(`/user/dashboard/${currentProject.id}/backlog`, { showAlert: true });
 		} catch (error) {
 			return;

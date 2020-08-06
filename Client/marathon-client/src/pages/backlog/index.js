@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef, Fragment } from 'react';
-
+import useHubConnection from '../../hooks/useHubConnection';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 
 import { getCookie } from '../../utils/cookie';
@@ -29,6 +29,8 @@ import NoPlanedSprint from '../../components/no-planed-sprint';
 import BacklogIssueCard from '../../components/backlog-issue-card';
 
 const BacklogPage = () => {
+	const [ isLoading, setLoading ] = useState(true);
+	const [ dragging, setDragging ] = useState(false);
 	const { toggleModalIsOpen } = useContext(Context);
 	const { saveCurrentProject, currentProject } = useContext(ProjectsContext);
 	const {
@@ -43,9 +45,7 @@ const BacklogPage = () => {
 	const { currentSprint, updatingSprint, startingSprint, saveCurrentSprint, saveActiveSprintId } = useContext(
 		SprintsContext
 	);
-
-	const [ isLoading, setLoading ] = useState(true);
-	const [ dragging, setDragging ] = useState(false);
+	const { update } = useHubConnection('BacklogUpdate');
 	const history = useHistory();
 	const { projectId } = useParams();
 	const { state } = useLocation();
@@ -55,37 +55,40 @@ const BacklogPage = () => {
 	const movingItem = useRef();
 	const showAlert = state ? state.showAlert : false;
 
-	useEffect(() => {
-		const getCurrentProjectDetails = async () => {
-			const token = getCookie('x-auth-token');
-			const response = await getProjectDetails(projectId, token);
-			const { error } = response;
-			if (error) {
-				history.push('/404');
-				return;
-			}
-
-			if (response) {
-				const issuesCollections = processBacklogIssuesCollections(response);
-				updateBacklogIssues(issuesCollections);
-				updateBoardIssues(initialStatuses);
-				const activeSprint = response.sprints.filter((x) => x.active)[0];
-				saveCurrentProject({
-					id: response.id,
-					name: response.name,
-					key: response.key,
-					isCreator: response.isCreator,
-					activeSprintId: activeSprint ? activeSprint.id : null
-				});
-
-				if (activeSprint) {
-					saveActiveSprintId(activeSprint.id);
+	useEffect(
+		() => {
+			const getCurrentProjectDetails = async () => {
+				const token = getCookie('x-auth-token');
+				const response = await getProjectDetails(projectId, token);
+				const { error } = response;
+				if (error) {
+					history.push('/404');
+					return;
 				}
-			}
-		};
-		getCurrentProjectDetails();
+
+				if (response) {
+					const issuesCollections = processBacklogIssuesCollections(response);
+					updateBacklogIssues(issuesCollections);
+					updateBoardIssues(initialStatuses);
+					const activeSprint = response.sprints.filter((x) => x.active)[0];
+					saveCurrentProject({
+						id: response.id,
+						name: response.name,
+						key: response.key,
+						isCreator: response.isCreator,
+						activeSprintId: activeSprint ? activeSprint.id : null
+					});
+
+					if (activeSprint) {
+						saveActiveSprintId(activeSprint.id);
+					}
+				}
+			};
+			getCurrentProjectDetails();
+		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+		[ update ]
+	);
 
 	useEffect(
 		() => {
