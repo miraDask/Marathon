@@ -1,8 +1,8 @@
 namespace Marathon.Server
 {
+    using Marathon.Server.Features.Hubs;
     using Marathon.Server.Infrastructure.Extensions;
     using Marathon.Server.Infrastructure.Extentions;
-    using Marathon.Server.Infrastructure.Middlewares;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -24,11 +24,12 @@ namespace Marathon.Server
             services
                  .AddDatabase(this.Configuration)
                  .AddIdentity()
+                 .AddCorsWithOptions()
+                 .AddSignalRWithOptions()
                  .AddRedisEasyCaching()
                  .AddJwtAuthentication(services.GetApplicationSettings(this.Configuration))
                  .AddApplicationServices()
                  .AddSwagger()
-                 .AddCors()
                  .AddApiControllers();
         }
 
@@ -45,13 +46,11 @@ namespace Marathon.Server
                 .UseAuthorization()
                 .UseOptionsMiddleware()
                 .UseTokenCheckMiddleware()
-                .UseCors(options => options
-                .AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod())
+                .UseCors("CorsPolicy")
                 .UseAuthentication()
                 .UseEndpoints(endpoints =>
                 {
+                    endpoints.MapHub<UpdatesHub>("/updatesHub");
                     endpoints.MapControllers();
                 })
                 .ApplyMigrations();

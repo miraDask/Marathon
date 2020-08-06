@@ -204,6 +204,14 @@
             await this.dbContext.SaveChangesAsync();
         }
 
+        public async Task<string[]> GetAllUsersNamesByProjectIdAsync(int projectId)
+        => await this.dbContext.Users
+            .Where(x => x.ProjectsAdmins.Any(x => x.ProjectId == projectId)
+                || x.TeamsUsers.Any(x => x.Team.ProjectId == projectId)
+                || x.CreatedProjects.Any(x => x.Id == projectId))
+            .Select(x => x.UserName)
+            .ToArrayAsync();
+
         private async Task<User> AddNewClaimToUserAsync(string userId, string claimKey, string claimValue)
         {
             var user = await this.userManager.FindByIdAsync(userId);

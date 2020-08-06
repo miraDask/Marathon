@@ -19,6 +19,8 @@
 
         Task<UserDetailsServiceModel> GetUser(string id);
 
+        Task<string[]> GetAllUsersNamesByProjectIdAsync(int projectId);
+
         Task<string> AddClaimToUserAsync(string userId, string claimKey, string claimValue, string secret);
 
         Task AddClaimToUserAsync(string userId, string claimKey, string claimValue);

@@ -9,10 +9,12 @@
     using Marathon.Server.Data.Enumerations;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Hubs;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues;
     using Marathon.Server.Features.Issues.Models;
     using Marathon.Server.Features.Sprints.Models;
+    using Microsoft.AspNetCore.SignalR;
     using Microsoft.EntityFrameworkCore;
 
     using static Marathon.Server.Features.Common.Constants;
@@ -21,11 +23,13 @@
     {
         private readonly MarathonDbContext dbContext;
         private readonly IIssuesService issuesService;
+        private readonly IHubContext<UpdatesHub> hub;
 
-        public SprinstService(MarathonDbContext dbContext, IIssuesService issuesService)
+        public SprinstService(MarathonDbContext dbContext, IIssuesService issuesService, IHubContext<UpdatesHub> hub)
         {
             this.dbContext = dbContext;
             this.issuesService = issuesService;
+            this.hub = hub;
         }
 
         public async Task<SprintListingServiceModel> CreateAsync(int projectId)
@@ -46,6 +50,8 @@
 
             await this.dbContext.AddAsync(sprint);
             await this.dbContext.SaveChangesAsync();
+
+            await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BacklogUpdate, true);
 
             return new SprintListingServiceModel
             {
@@ -74,6 +80,8 @@
             this.dbContext.Sprints.Update(sprint);
 
             await this.dbContext.SaveChangesAsync();
+
+            await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BacklogUpdate, true);
 
             return new ResultModel<bool>
             {
@@ -249,6 +257,8 @@
             this.dbContext.Update(sprint);
             await this.dbContext.SaveChangesAsync();
 
+            await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BacklogUpdate, true);
+
             return new ResultModel<bool>
             {
                 Success = true,
@@ -275,6 +285,8 @@
 
             this.dbContext.Update(sprint);
             await this.dbContext.SaveChangesAsync();
+
+            await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BoardUpdate, true);
 
             return new ResultModel<bool>
             {

@@ -9,24 +9,27 @@
     using Marathon.Server.Data.Enumerations;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Hubs;
     using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
-    using Marathon.Server.Features.Projects;
     using Marathon.Server.Features.Sprints.Models;
+    using Microsoft.AspNetCore.SignalR;
     using Microsoft.EntityFrameworkCore;
 
-    using static Marathon.Server.Features.Common.Constants.Errors;
+    using static Marathon.Server.Features.Common.Constants;
 
     public class IssuesService : IIssuesService
     {
         private readonly MarathonDbContext dbContext;
         private readonly IIdentityService identityService;
+        private readonly IHubContext<UpdatesHub> hub;
 
-        public IssuesService(MarathonDbContext dbContext, IIdentityService identityService)
+        public IssuesService(MarathonDbContext dbContext, IIdentityService identityService, IHubContext<UpdatesHub> hub)
         {
             this.dbContext = dbContext;
             this.identityService = identityService;
+            this.hub = hub;
         }
 
         public async Task<int> CreateAsync(int projectId, string userId, CreateIssueRequestModel model)
@@ -52,8 +55,10 @@
             };
 
             this.dbContext.Issues.Add(issue);
-
             await this.dbContext.SaveChangesAsync();
+
+            await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BacklogUpdate, true);
+
             return issue.Id;
         }
 
@@ -65,7 +70,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidIssueId },
+                    Errors = new string[] { Errors.InvalidIssueId },
                 };
             }
 
@@ -75,6 +80,8 @@
             this.dbContext.Issues.Update(issue);
 
             await this.dbContext.SaveChangesAsync();
+
+            await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BacklogUpdate, true);
 
             return new ResultModel<bool>
             {
@@ -103,7 +110,7 @@
             {
                 return new ResultModel<IEnumerable<IssueListingServiceModel>>
                 {
-                    Errors = new string[] { InvalidProjectId },
+                    Errors = new string[] { Errors.InvalidProjectId },
                 };
             }
 
@@ -166,7 +173,7 @@
             {
                 return new ResultModel<IssueDetailsServiceModel>
                 {
-                    Errors = new string[] { InvalidIssueId },
+                    Errors = new string[] { Errors.InvalidIssueId },
                 };
             }
 
@@ -185,7 +192,7 @@
             {
                 return new ResultModel<bool>
                 {
-                    Errors = new string[] { InvalidIssueId },
+                    Errors = new string[] { Errors.InvalidIssueId },
                 };
             }
 
@@ -215,6 +222,8 @@
             this.dbContext.Update(issue);
             await this.dbContext.SaveChangesAsync();
 
+            await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BacklogUpdate, true);
+
             return new ResultModel<bool>
             {
                 Success = true,
@@ -242,7 +251,7 @@
             {
                 return new ResultModel<UserListingServerModel>
                 {
-                    Errors = new string[] { InvalidIssueId },
+                    Errors = new string[] { Errors.InvalidIssueId },
                 };
             }
 
@@ -264,10 +273,12 @@
             this.dbContext.Update(issue);
             await this.dbContext.SaveChangesAsync();
 
+            await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BoardUpdate, true);
+
             return new ResultModel<UserListingServerModel>
             {
                 Success = true,
-                Result = issue.AssigneeId != null ? await this.identityService.GetAssignee(userId) 
+                Result = issue.AssigneeId != null ? await this.identityService.GetAssignee(userId)
                 : new UserListingServerModel
                 {
                     Id = null,

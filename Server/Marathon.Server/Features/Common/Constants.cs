@@ -38,5 +38,11 @@
             public const int Port = 6379;
             public const string Channel = "marathon";
         }
+
+        public static class HubEvents
+        {
+            public const string BoardUpdate = "BoardUpdate";
+            public const string BacklogUpdate = "BacklogUpdate";
+        }
     }
 }

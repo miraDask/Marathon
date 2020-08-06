@@ -4,7 +4,7 @@
     using System.IO;
     using System.Reflection;
     using System.Text;
-
+    using System.Threading.Tasks;
     using EasyCaching.Core.Configurations;
 
     using Marathon.Server.Data;
@@ -63,6 +63,31 @@
             return services;
         }
 
+        public static IServiceCollection AddSignalRWithOptions(this IServiceCollection services)
+        {
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddCorsWithOptions(this IServiceCollection services)
+        {
+            services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>
+            {
+                builder
+                    .WithOrigins("http://localhost:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                    .SetIsOriginAllowed((host) => true);
+        }));
+
+            return services;
+        }
+
         public static IServiceCollection AddRedisEasyCaching(this IServiceCollection services)
         {
             services.AddEasyCaching(options =>
@@ -114,6 +139,24 @@
                         ValidateAudience = false,
                         RequireExpirationTime = false,
                         ValidateLifetime = true,
+                    };
+                    x.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            // If the request is for our hub...
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                path.StartsWithSegments("/updatesHub"))
+                            {
+                                // Read the token out of the query string
+                                context.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
+                        },
                     };
                 });
 

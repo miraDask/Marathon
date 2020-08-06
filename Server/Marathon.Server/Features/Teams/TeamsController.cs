@@ -148,6 +148,7 @@
         /// </summary>
         /// <param name="teamId"></param>
         /// <param name="projectId"></param>
+        /// <param name="input"></param>
         /// <response code="200"> Successfully removed user from team.</response>
         /// <response code="400"> Bad Reaquest.</response>
         /// <response code="401"> Unauthorized request.</response>
