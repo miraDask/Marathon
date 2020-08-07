@@ -8,9 +8,11 @@
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Hubs;
     using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Invitations.Models;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.SignalR;
     using Microsoft.EntityFrameworkCore;
 
     using static Marathon.Server.Features.Common.Constants;
@@ -20,12 +22,18 @@
         private readonly MarathonDbContext dbContext;
         private readonly UserManager<User> userManager;
         private readonly IIdentityService identityService;
+        private readonly IHubContext<UpdatesHub> hub;
 
-        public InvitationsService(MarathonDbContext dbContext, UserManager<User> userManager, IIdentityService identityService)
+        public InvitationsService(
+            MarathonDbContext dbContext,
+            UserManager<User> userManager,
+            IIdentityService identityService,
+            IHubContext<UpdatesHub> hub)
         {
             this.dbContext = dbContext;
             this.userManager = userManager;
             this.identityService = identityService;
+            this.hub = hub;
         }
 
         public async Task<ResultModel<bool>> InviteUserToTeamAsync(string email, int teamId, int projectId, string senderId)
@@ -98,6 +106,7 @@
             await this.dbContext.SaveChangesAsync();
 
             var token = await this.identityService.AddClaimToUserAsync(user.Id, Claims.Team, invitation.ProjectId.ToString(), secret);
+            await this.hub.Clients.Group(invitation.ProjectId.ToString()).SendAsync(HubEvents.UnAcceptedInvitationsUpdate, true);
 
             return new ResultModel<string>
             {

@@ -286,7 +286,7 @@
             this.dbContext.Update(sprint);
             await this.dbContext.SaveChangesAsync();
 
-            await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BoardUpdate, true);
+            await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.SprintCompletedUpdate, true);
 
             return new ResultModel<bool>
             {
