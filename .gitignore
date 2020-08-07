@@ -359,3 +359,4 @@ appsettings.Development.json
 *.min.css
 *.min.js
 tailwind.config.js
+.env
