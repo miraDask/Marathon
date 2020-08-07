@@ -1,7 +1,7 @@
 # Marathon
 
 Marathon is project management application designed for agile teams that use scrum methodology to organize and prioritize their projects.
-
+This project is the defense project for the React course (part of the JS Web Module at Software University).
 
 ## Technology stack
 
@@ -55,7 +55,7 @@ Main languages & libraries :
 
 - create ".env" file in the root directory of the project and create variables for the Cloudinary "cloudName" and "uploadPreset", 
 
-   that are needed for uploading images to Cloudinary server. It is important variables to start with "REACT_APP_", for example:
+   which are needed for uploading images to Cloudinary server. It is important variables to start with "REACT_APP_", for example:
 
    >REACT_APP_CLOUD_NAME=your_cloud_name
 
@@ -65,12 +65,7 @@ Main languages & libraries :
 
 ### Back End:
 
-- ASP.NET Core 3.1
+- Check connection string in appsettings.json.
+   If you don't use SQLEXPRESS you should replace "Server=.\\SQLEXPRESS..." with "Server=.;...".
 
-- Entity Framework Core 3.1
-
-- MS SQL Server
-
-- Redis
-
-- SignalR
+- App depends on [Redis](https://redis.io/download) server for caching, so make sure that you have it installed.
