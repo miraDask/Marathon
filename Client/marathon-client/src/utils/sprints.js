@@ -1,8 +1,10 @@
 export const getCompleteSprintFormOptions = (collection, activeSprintId) => {
-	return collection.filter((x) => x.id !== activeSprintId).map((x, i) => {
+	const filteredCollection = collection.filter((x) => x.id !== activeSprintId);
+	console.log('filteredCollection', filteredCollection);
+	return filteredCollection.map((x, i) => {
 		return {
-			id: i < collection[collection.length - 1] ? x.id : '',
-			title: i < collection[collection.length - 1] ? x.title : 'Backlog'
+			id: i === filteredCollection.length - 1 ? '' : x.id,
+			title: i === filteredCollection.length - 1 ? 'Backlog' : x.title
 		};
 	});
 };
