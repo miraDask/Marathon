@@ -79,9 +79,9 @@ const BacklogPage = () => {
 						activeSprintId: activeSprint ? activeSprint.id : null
 					});
 
-					if (activeSprint) {
-						saveActiveSprintId(activeSprint.id);
-					}
+					// if (activeSprint) {
+					// 	saveActiveSprintId(activeSprint.id);
+					// }
 				}
 			};
 			getCurrentProjectDetails();

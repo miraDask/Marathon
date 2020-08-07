@@ -20,7 +20,7 @@ const StartSprintModal = () => {
 	const history = useHistory();
 
 	const handleStartSprint = async (sprint) => {
-		saveActiveSprintId(sprint.id);
+		//saveActiveSprintId(sprint.id);
 		const token = getCookie('x-auth-token');
 		//TODO check whether sprint is modified then update
 		try {

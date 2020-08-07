@@ -29,7 +29,7 @@ const BoardPage = () => {
 	const { toggleModalIsOpen } = useContext(Context);
 	const { updateBoardIssues } = useContext(IssuesContext);
 	const { currentProject } = useContext(ProjectsContext);
-	const { toggleCompletingSprint, saveActiveSprintId, activeSprintId } = useContext(SprintsContext);
+	const { toggleCompletingSprint } = useContext(SprintsContext);
 	const history = useHistory();
 	const { projectId } = useParams();
 	const { state } = useLocation();
@@ -38,7 +38,6 @@ const BoardPage = () => {
 	useEffect(
 		() => {
 			const token = getCookie('x-auth-token');
-			saveActiveSprintId(currentProject.activeSprintId);
 
 			const getActiveSprintDetails = async () => {
 				const response = await getSprintDetails(projectId, token, currentProject.activeSprintId);
@@ -59,14 +58,13 @@ const BoardPage = () => {
 			if (currentProject.activeSprintId) {
 				getActiveSprintDetails();
 				console.log('reload');
-			} else {
+			} else if (title) {
 				setTitle('');
 				setRemainingDays('');
-				saveActiveSprintId(null);
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[ update ]
+		[ update, title ]
 	);
 
 	const handleCompleteSprint = () => {
@@ -91,15 +89,15 @@ const BoardPage = () => {
 				</div>
 				<PageTopicContainer
 					size="lg:w-5/6"
-					title={!activeSprintId ? 'Active Sprint' : `${currentProject.key} / ${title}`}
+					title={!currentProject.activeSprintId ? 'Active Sprint' : `${currentProject.key} / ${title}`}
 				>
 					{remainingDays ? (
 						<InfoMessageContainer addClass="mr-4">{'Remaining days ' + remainingDays}</InfoMessageContainer>
 					) : null}
 					<FormButton
 						onClick={handleCompleteSprint}
-						disabled={!activeSprintId}
-						addClass={!activeSprintId ? 'cursor-not-allowed' : ''}
+						disabled={!currentProject.activeSprintId}
+						addClass={!currentProject.activeSprintId ? 'cursor-not-allowed' : ''}
 						textSize="text-md"
 					>
 						Complete Sprint
@@ -108,7 +106,7 @@ const BoardPage = () => {
 
 				<div className="container px-6 mb-8 mx-auto flex flex-wrap">
 					<Board />
-					{!activeSprintId ? <NoActiveSprint /> : null}
+					{!currentProject.activeSprintId ? <NoActiveSprint /> : null}
 					<CompleteSprintModal />
 				</div>
 			</MainWrapper>

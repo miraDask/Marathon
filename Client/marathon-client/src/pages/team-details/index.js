@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect, useContext, useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import useHubConnection from '../../hooks/useHubConnection';
 
 import { getTeamDetails } from '../../services/teams.service';
 import { getCookie } from '../../utils/cookie';
@@ -22,6 +23,7 @@ const TeamDetailsPage = () => {
 	const { currentProject } = useContext(ProjectsContext);
 	const { invitationsAreChanged } = useContext(TeamsContext);
 	const { teamId, projectId } = useParams();
+	const { update } = useHubConnection('UnAcceptedInvitationsUpdate');
 	const history = useHistory();
 
 	const getTeam = useCallback(
@@ -42,7 +44,7 @@ const TeamDetailsPage = () => {
 		() => {
 			getTeam();
 		},
-		[ getTeam, invitationsAreChanged ]
+		[ getTeam, invitationsAreChanged, update ]
 	);
 
 	return (
