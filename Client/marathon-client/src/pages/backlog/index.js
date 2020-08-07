@@ -42,10 +42,8 @@ const BacklogPage = () => {
 		updateBacklogIssues,
 		updateBoardIssues
 	} = useContext(IssuesContext);
-	const { currentSprint, updatingSprint, startingSprint, saveCurrentSprint, saveActiveSprintId } = useContext(
-		SprintsContext
-	);
-	const { update } = useHubConnection('BacklogUpdate');
+	const { currentSprint, updatingSprint, startingSprint, saveCurrentSprint } = useContext(SprintsContext);
+	const { update } = useHubConnection([ { funcName: 'BacklogUpdate' } ]);
 	const history = useHistory();
 	const { projectId } = useParams();
 	const { state } = useLocation();

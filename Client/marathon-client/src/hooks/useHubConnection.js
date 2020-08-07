@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { getCookie } from '../utils/cookie';
 
-const useHubConnection = (connectionFuncName) => {
+const useHubConnection = (connectionFuncsCollection) => {
 	const [ update, setUpdate ] = useState([]);
 
 	useEffect(() => {
@@ -19,9 +19,15 @@ const useHubConnection = (connectionFuncName) => {
 			.then(() => console.log('Connection started!'))
 			.catch((err) => console.log('Error while establishing connection :('));
 
-		hubConnection.on(connectionFuncName, (message) => {
-			setUpdate([ ...update, message ]);
+		connectionFuncsCollection.forEach((x) => {
+			hubConnection.on(x.funcName, (message) => {
+				setUpdate([ ...update, message ]);
+				if (x.successFunc) {
+					x.successFunc();
+				}
+			});
 		});
+
 		return () => {
 			hubConnection.stop();
 		};

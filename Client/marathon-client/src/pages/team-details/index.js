@@ -23,7 +23,7 @@ const TeamDetailsPage = () => {
 	const { currentProject } = useContext(ProjectsContext);
 	const { invitationsAreChanged } = useContext(TeamsContext);
 	const { teamId, projectId } = useParams();
-	const { update } = useHubConnection('UnAcceptedInvitationsUpdate');
+	const { update } = useHubConnection([ { funcName: 'UnAcceptedInvitationsUpdate' } ]);
 	const history = useHistory();
 
 	const getTeam = useCallback(

@@ -24,15 +24,21 @@ import InfoMessageContainer from '../../components/form-input-info-message';
 
 const BoardPage = () => {
 	const [ title, setTitle ] = useState('');
-	const { update } = useHubConnection('BoardUpdate');
 	const [ remainingDays, setRemainingDays ] = useState('');
 	const { toggleModalIsOpen } = useContext(Context);
 	const { updateBoardIssues } = useContext(IssuesContext);
-	const { currentProject } = useContext(ProjectsContext);
+	const { currentProject, saveCurrentProject } = useContext(ProjectsContext);
 	const { toggleCompletingSprint } = useContext(SprintsContext);
 	const history = useHistory();
 	const { projectId } = useParams();
 	const { state } = useLocation();
+	const { update } = useHubConnection([
+		{ funcName: 'BoardUpdate' },
+		{
+			funcName: 'SprintCompletedUpdate',
+			successFunc: () => history.push(`/user/dashboard/${currentProject.id}/backlog`)
+		}
+	]);
 	const showAlert = state ? state.showAlert : false;
 
 	useEffect(
@@ -58,13 +64,10 @@ const BoardPage = () => {
 			if (currentProject.activeSprintId) {
 				getActiveSprintDetails();
 				console.log('reload');
-			} else if (title) {
-				setTitle('');
-				setRemainingDays('');
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[ update, title ]
+		[ update ]
 	);
 
 	const handleCompleteSprint = () => {
