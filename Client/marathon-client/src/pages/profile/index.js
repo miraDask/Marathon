@@ -5,6 +5,7 @@ import { getCookie } from '../../utils/cookie';
 import { updateUser } from '../../services/users.service';
 import { Context } from '../../providers/global-context.provider';
 import MainWrapper from '../../components/main-wrapper';
+
 const ProfilePage = () => {
 	const [ loading, setLoading ] = useState(false);
 	const { user, saveUser } = useContext(Context);
@@ -13,8 +14,8 @@ const ProfilePage = () => {
 		setLoading(true);
 		const widget = window.cloudinary.createUploadWidget(
 			{
-				cloudName: 'miradask',
-				uploadPreset: 'marathon'
+				cloudName: process.env.REACT_APP_CLOUD_NAME,
+				uploadPreset: process.env.REACT_APP_CLOUD_PRESET
 			},
 			async (error, result) => {
 				const token = getCookie('x-auth-token');
@@ -29,11 +30,11 @@ const ProfilePage = () => {
 						token
 					);
 				}
+				setLoading(false);
 			}
 		);
 
 		widget.open();
-		setLoading(false);
 	};
 	return (
 		<MainWrapper>

@@ -38,12 +38,12 @@ const DashboardNavBar = ({ otherClasses }) => {
 		[ pathname ]
 	);
 
-	const handleArchiveLinkClick = () => {
-		setArchiveLinkIsClicked(true);
-		setBoardLinkIsClicked(false);
-		setBacklogLinkIsClicked(false);
-		setTeamLinkIsClicked(false);
-	};
+	// const handleArchiveLinkClick = () => {
+	// 	setArchiveLinkIsClicked(true);
+	// 	setBoardLinkIsClicked(false);
+	// 	setBacklogLinkIsClicked(false);
+	// 	setTeamLinkIsClicked(false);
+	// };
 
 	const handleBoardLinkClick = () => {
 		setBoardLinkIsClicked(true);
@@ -93,13 +93,13 @@ const DashboardNavBar = ({ otherClasses }) => {
 						Teams
 					</DashboardNavItem>
 
-					<DashboardNavItem
+					{/* <DashboardNavItem
 						handleClick={handleArchiveLinkClick}
 						type={archiveLinkIsClicked ? 'active' : 'inactive'}
 						to={`/user/dashboard/${id}/archive`}
 					>
 						Archive
-					</DashboardNavItem>
+					</DashboardNavItem> */}
 				</ul>
 			</div>
 		</div>

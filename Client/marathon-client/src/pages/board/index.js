@@ -27,7 +27,7 @@ const BoardPage = () => {
 	const [ remainingDays, setRemainingDays ] = useState('');
 	const { toggleModalIsOpen } = useContext(Context);
 	const { updateBoardIssues } = useContext(IssuesContext);
-	const { currentProject, saveCurrentProject } = useContext(ProjectsContext);
+	const { currentProject } = useContext(ProjectsContext);
 	const { toggleCompletingSprint } = useContext(SprintsContext);
 	const history = useHistory();
 	const { projectId } = useParams();

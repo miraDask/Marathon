@@ -49,11 +49,11 @@ const Navigation = () => {
 					</div>
 				) : null}
 				<nav className="flex lg:w-2/5 flex-wrap items-center text-base lg:justify-end md:ml-auto md:mr-5">
-					<span className="mr-5">
+					{/* <span className="mr-5">
 						<NavLink to="/help" hoverColor="green-400">
 							HELP
 						</NavLink>
-					</span>
+					</span> */}
 					{isLoggedIn ? (
 						<AccountDropdown show={!isModalOpen} />
 					) : (
