@@ -37,6 +37,10 @@ const BoardPage = () => {
 		{
 			funcName: 'SprintCompletedUpdate',
 			successFunc: () => history.push(`/user/dashboard/${currentProject.id}/backlog`)
+		},
+		{
+			funcName: 'DeletedProjectUpdate',
+			successFunc: () => history.push(`/user/projects`)
 		}
 	]);
 	const showAlert = state ? state.showAlert : false;
