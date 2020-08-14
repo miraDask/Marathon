@@ -82,10 +82,6 @@ const BacklogPage = () => {
 						isCreator: response.isCreator,
 						activeSprintId: activeSprint ? activeSprint.id : null
 					});
-
-					// if (activeSprint) {
-					// 	saveActiveSprintId(activeSprint.id);
-					// }
 				}
 			};
 			getCurrentProjectDetails();
@@ -127,6 +123,7 @@ const BacklogPage = () => {
 		setDragging(false);
 		const data = {
 			...movingItem.current,
+			assigneeId: movingItem.current.assignee.id,
 			backlogIndex: dragItem.current.index,
 			sprintId: dragItem.current.sprintId ? dragItem.current.sprintId : null
 		};

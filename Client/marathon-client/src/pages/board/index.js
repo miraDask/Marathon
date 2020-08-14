@@ -67,7 +67,6 @@ const BoardPage = () => {
 
 			if (currentProject.activeSprintId) {
 				getActiveSprintDetails();
-				console.log('reload');
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
