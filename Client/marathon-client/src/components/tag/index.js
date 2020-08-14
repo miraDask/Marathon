@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ProjectRoleTag = ({ color, size, text }) => {
+const Tag = ({ color, size, text }) => {
 	return (
 		<div
 			className={`flex-shrink-0 ${size} rounded-full bg-${color} 
@@ -12,4 +12,4 @@ const ProjectRoleTag = ({ color, size, text }) => {
 	);
 };
 
-export default ProjectRoleTag;
+export default Tag;

@@ -1,5 +1,5 @@
 import { getHeaders, fetcher } from './common';
-const API_URL = 'https://localhost:44391/api/identity/';
+const API_URL = 'http://localhost:2277/api/identity/';
 
 export const registerUser = async (data) => {
 	return fetchUser(data, API_URL + 'register');

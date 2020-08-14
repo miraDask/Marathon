@@ -13,7 +13,7 @@ import ErrorMessageContainer from '../form-input-error-message';
 import FormInput from '../form-input';
 import NavLink from '../nav-link';
 import CardFormContainer from '../card-form-container';
-import ProjectRoleTag from '../tag';
+import Tag from '../tag';
 
 const initialIsEditClicked = false;
 const initialError = { name: '', key: '' };
@@ -102,9 +102,9 @@ const ProjectCard = ({ initialData }) => {
 						<p className="mt-1">{data.key}</p>
 						<div>
 							{data.isCurrentUserCreator ? (
-								<ProjectRoleTag text="creator" color="orange-500" size="w-16 h-4" />
+								<Tag text="creator" color="orange-500" size="w-16 h-4" />
 							) : (
-								<ProjectRoleTag text="team" color="green-500" size="w-16 h-4" />
+								<Tag text="team" color="green-500" size="w-16 h-4" />
 							)}
 						</div>
 					</Fragment>

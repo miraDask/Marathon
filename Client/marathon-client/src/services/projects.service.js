@@ -1,5 +1,5 @@
 import { fetcher, getHeaders } from './common';
-const API_URL = 'https://localhost:44391/api/projects';
+const API_URL = 'http://localhost:2277/api/projects';
 
 export const getProjects = async (token) => {
 	const headers = getHeaders(token);

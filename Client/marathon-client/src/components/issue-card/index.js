@@ -6,6 +6,7 @@ import { Context } from '../../providers/global-context.provider';
 import PriorityIcon from '../priority-icon';
 import IssueIcon from '../issue-icon';
 import Avatar from '../avatar';
+import Tag from '../tag';
 
 const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleClick }) => {
 	const { newAssignee, saveNewAssignee } = useContext(IssuesContext);
@@ -27,7 +28,12 @@ const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleC
 		[ newAssignee ]
 	);
 
-	const renderAssignee = () => (assignee.fullName ? <Avatar user={assignee} bgColor="green" /> : 'unassigned');
+	const renderAssignee = () =>
+		assignee.fullName ? (
+			<Avatar user={assignee} bgColor="green" />
+		) : (
+			<Tag text="unassigned" color="gray-500" size="w-24 h-4" />
+		);
 
 	return (
 		<div

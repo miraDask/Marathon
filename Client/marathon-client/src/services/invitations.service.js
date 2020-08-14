@@ -1,6 +1,6 @@
 import { fetcher, getHeaders } from './common';
 
-const API_URL = 'https://localhost:44391/api/projects/invitations';
+const API_URL = 'http://localhost:2277/api/projects/invitations';
 
 export const acceptInvitation = async (token, data) => {
 	const headers = getHeaders(token);

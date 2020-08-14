@@ -9,7 +9,7 @@ const useHubConnection = (connectionFuncsCollection) => {
 		const token = getCookie('x-auth-token');
 		// Builds the SignalR connection, mapping it to /chat
 		const hubConnection = new HubConnectionBuilder()
-			.withUrl('https://localhost:44391/updatesHub', { accessTokenFactory: () => token })
+			.withUrl('http://localhost:2277/updatesHub', { accessTokenFactory: () => token })
 			.configureLogging(LogLevel.Debug)
 			.build();
 
