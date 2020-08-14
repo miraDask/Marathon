@@ -1,5 +1,6 @@
 ﻿namespace Marathon.Server.Features.Identity
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -204,12 +205,12 @@
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task<string[]> GetAllUsersNamesByProjectIdAsync(int projectId)
+        public async Task<string[]> GetAllUsersIdsConnectedToProjectByIdAsync(int projectId)
         => await this.dbContext.Users
             .Where(x => x.ProjectsAdmins.Any(x => x.ProjectId == projectId)
                 || x.TeamsUsers.Any(x => x.Team.ProjectId == projectId)
                 || x.CreatedProjects.Any(x => x.Id == projectId))
-            .Select(x => x.UserName)
+            .Select(x => x.Id)
             .ToArrayAsync();
 
         private async Task<User> AddNewClaimToUserAsync(string userId, string claimKey, string claimValue)

@@ -6,9 +6,9 @@
     using System.Threading.Tasks;
 
     using Marathon.Server.Data;
-    using Marathon.Server.Data.Enumerations;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Hubs;
     using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Features.Issues.Models;
@@ -16,6 +16,7 @@
     using Marathon.Server.Features.Sprints;
     using Marathon.Server.Features.Sprints.Models;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.SignalR;
     using Microsoft.EntityFrameworkCore;
 
     using static Marathon.Server.Features.Common.Constants;
@@ -26,17 +27,20 @@
         private readonly IIdentityService identityService;
         private readonly UserManager<User> userManager;
         private readonly ISprintsService sprintsService;
+        private readonly IHubContext<UpdatesHub> hub;
 
         public ProjectsService(
             MarathonDbContext dbContext,
             IIdentityService identityService,
             UserManager<User> userManager,
-            ISprintsService sprintsService)
+            ISprintsService sprintsService,
+            IHubContext<UpdatesHub> hub)
         {
             this.dbContext = dbContext;
             this.identityService = identityService;
             this.userManager = userManager;
             this.sprintsService = sprintsService;
+            this.hub = hub;
         }
 
         public async Task<int> CreateAsync(string name, string key, string imageUrl, string userId)
@@ -99,6 +103,15 @@
             this.dbContext.Projects.Update(project);
 
             await this.dbContext.SaveChangesAsync();
+
+            await this.hub.Clients.Group(id.ToString()).SendAsync(HubEvents.DeletedProjectUpdate, true);
+
+            var connectedToProjectUsers = await this.identityService.GetAllUsersIdsConnectedToProjectByIdAsync(id);
+            foreach (var userId in connectedToProjectUsers)
+            {
+                await this.identityService.RemoveClaimFromUserAsync(userId, Claims.Admin, id.ToString());
+                await this.identityService.RemoveClaimFromUserAsync(userId, Claims.Team, id.ToString());
+            }
 
             return new ResultModel<bool>
             {

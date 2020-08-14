@@ -1,7 +1,9 @@
 ﻿namespace Marathon.Server.Features.Identity
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
 
@@ -19,7 +21,7 @@
 
         Task<UserDetailsServiceModel> GetUser(string id);
 
-        Task<string[]> GetAllUsersNamesByProjectIdAsync(int projectId);
+        Task<string[]> GetAllUsersIdsConnectedToProjectByIdAsync(int projectId);
 
         Task<string> AddClaimToUserAsync(string userId, string claimKey, string claimValue, string secret);
 

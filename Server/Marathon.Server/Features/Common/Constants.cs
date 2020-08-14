@@ -43,6 +43,7 @@
         {
             public const string BoardUpdate = "BoardUpdate";
             public const string BacklogUpdate = "BacklogUpdate";
+            public const string DeletedProjectUpdate = "DeletedProjectUpdate";
             public const string SprintCompletedUpdate = "SprintCompletedUpdate";
             public const string UnAcceptedInvitationsUpdate = "UnAcceptedInvitationsUpdate";
         }
