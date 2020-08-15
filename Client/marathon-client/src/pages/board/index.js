@@ -50,7 +50,6 @@ const BoardPage = () => {
 			const token = getCookie('x-auth-token');
 
 			const getActiveSprintDetails = async () => {
-				console.log(currentProject);
 				if (!currentProject) {
 					history.push('/user/projects');
 				}

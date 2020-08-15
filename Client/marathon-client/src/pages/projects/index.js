@@ -11,7 +11,7 @@ import ProjectsAll from '../../components/all-projects';
 import Spinner from '../../components/spinner';
 
 const UserProjectsPage = () => {
-	const [ projects, setProjects ] = useState(null);
+	const [ projects, setProjects ] = useState([]);
 	const [ isLoading, setLoading ] = useState(true);
 	const { updatedProjects } = useContext(ProjectsContext);
 

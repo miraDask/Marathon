@@ -4,7 +4,7 @@ import { Context } from '../../providers/global-context.provider';
 import IssueIcon from '../issue-icon';
 import PriorityIcon from '../priority-icon';
 
-const BacklogIssueCard = ({ issue, handleClick, handleDragEnter, handleDragStart, invisible }) => {
+const BacklogIssueCard = ({ issue, projectKey, handleClick, handleDragEnter, handleDragStart, invisible }) => {
 	const { isModalOpen } = useContext(Context);
 	const { id, title, storyPoints, type, priority } = issue;
 
@@ -37,6 +37,7 @@ const BacklogIssueCard = ({ issue, handleClick, handleDragEnter, handleDragStart
 					<span className="p-1">{storyPoints}</span>
 				</span>
 				<div className="ml-3 text-gray-900 inline-block">{title}</div>
+				<span className="inline-flex ml-4">/ {projectKey}</span>
 			</div>
 			<div>
 				<span className="inline-flex ml-2">

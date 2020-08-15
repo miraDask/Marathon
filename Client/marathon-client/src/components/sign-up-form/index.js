@@ -39,9 +39,10 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 		const result = await registerUser({ fullName, username, email, password });
 
 		if (result.token) {
-			toggleLoggedIn(true);
 			saveUser(result.user);
 			setCookie('x-auth-token', result.token);
+			toggleLoggedIn(true);
+			setErrors(initialUser);
 			history.push('/user/projects');
 		} else {
 			const errorsObject = getServerErrorsObject(result);
@@ -70,7 +71,7 @@ const SignUpForm = ({ classes, ...otherProps }) => {
 				type="text"
 				name="lastName"
 				value={data.lastName}
-				placeholder="Full Name"
+				placeholder="Last Name"
 				handleOnBlur={(event) => handleOnBlur(event, validateLastName, { lastName: data.lastName })}
 				handleChange={handleChange}
 			/>

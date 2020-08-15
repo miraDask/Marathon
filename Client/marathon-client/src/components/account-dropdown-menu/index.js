@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { DropdownContainer, NavLinkContainer, UserInfoContainer, UseInfo, Border } from './index.styles';
 import { useHistory } from 'react-router-dom';
 
-import { getCookie } from '../../utils/cookie';
+import { getCookie, deleteCookie } from '../../utils/cookie';
 import { logoutUser } from '../../services/users.service';
 
 import { Context } from '../../providers/global-context.provider';
@@ -18,6 +18,7 @@ const AccountDropdownMenu = () => {
 		const token = getCookie('x-auth-token');
 		await logoutUser(token);
 		toggleLoggedIn(false);
+		deleteCookie('x-auth-token');
 		history.push('/');
 	};
 

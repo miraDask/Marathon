@@ -92,11 +92,11 @@ const BacklogPage = () => {
 
 	useEffect(
 		() => {
-			if (currentProject) {
+			if (currentProject && currentProject.id === +projectId) {
 				setLoading(false);
 			}
 		},
-		[ currentProject ]
+		[ currentProject, projectId ]
 	);
 
 	const handleDragStart = (e, item) => {
@@ -161,6 +161,7 @@ const BacklogPage = () => {
 				<Fragment key={issue.id}>
 					<BacklogIssueCard
 						issue={issue}
+						projectKey={currentProject.key}
 						handleClick={() => onOpen(issue, parentIndex)}
 						handleDragStart={(e) => handleDragStart(e, { parentIndex, index, issue })}
 						handleDragEnter={

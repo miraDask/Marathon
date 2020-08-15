@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, Fragment } from 'react';
-
+import useHubConnection from '../../hooks/useHubConnection';
 import { getCookie } from '../../utils/cookie';
 
 import { Context } from '../../providers/global-context.provider';
@@ -18,10 +18,8 @@ const Board = () => {
 	const [ dragging, setDragging ] = useState(false);
 	const { toggleModalIsOpen } = useContext(Context);
 	const { currentProject } = useContext(ProjectsContext);
-
-	const { toggleUpdating, boardIssuesCollections, updateBoardIssues, saveOpenedIssue, saveNewAssignee } = useContext(
-		IssuesContext
-	);
+	const { toggleUpdating, boardIssuesCollections, updateBoardIssues, saveOpenedIssue } = useContext(IssuesContext);
+	const { setUpdate } = useHubConnection([ { funcName: 'BoardUpdate' } ]);
 
 	const dragItem = useRef();
 	const dragItemNode = useRef();
@@ -53,9 +51,7 @@ const Board = () => {
 
 		const token = getCookie('x-auth-token');
 		const assignee = await changeIssueStatus(data, token, currentProject.id, movingItem.current.id);
-		if (assignee) {
-			saveNewAssignee({ ...assignee, issueId: movingItem.current.id });
-		}
+		setUpdate((update) => [ ...update, assignee ]);
 
 		dragItem.current = null;
 		dragItemNode.current.removeEventListener('dragend', handleDragEnd);

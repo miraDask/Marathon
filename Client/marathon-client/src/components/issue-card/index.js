@@ -9,28 +9,12 @@ import Avatar from '../avatar';
 import Tag from '../tag';
 
 const IssueCard = ({ issue, handleDragStart, handleDragEnter, invisible, handleClick }) => {
-	const { newAssignee, saveNewAssignee } = useContext(IssuesContext);
 	const { isModalOpen } = useContext(Context);
-	const [ assignee, setAssignee ] = useState(issue.assignee);
 	const { id, title, priority, type, storyPoints } = issue;
 
-	useEffect(
-		() => {
-			if (newAssignee) {
-				const assignedUser = newAssignee.issueId === id ? newAssignee : issue.assignee;
-				setAssignee(assignedUser);
-			}
-			return () => {
-				saveNewAssignee(null);
-			};
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[ newAssignee ]
-	);
-
 	const renderAssignee = () =>
-		assignee.fullName ? (
-			<Avatar user={assignee} bgColor="green" />
+		issue.assignee.fullName ? (
+			<Avatar user={issue.assignee} bgColor="green" />
 		) : (
 			<Tag text="unassigned" color="gray-500" size="w-24 h-4" />
 		);
