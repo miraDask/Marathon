@@ -37,6 +37,7 @@ Main languages & libraries :
 
 - SignalR
 
+- Swagger
 
 
 ## Application Configurations
@@ -53,9 +54,7 @@ Main languages & libraries :
 
 - There is Cloudinary upload image widget implemented in the profile page, so you need to have your own Cloudinary account and do some changes to be able to use or try this functionality:
 
-- create ".env" file in the root directory of the project and create variables for the Cloudinary "cloudName" and "uploadPreset", 
-
-   which are needed for uploading images to Cloudinary server. It is important variables to start with "REACT_APP_", for example:
+- create ".env" file in the root directory of the project and create variables for the Cloudinary "cloudName" and "uploadPreset", which are needed for uploading images to Cloudinary server. It is important variables to start with "REACT_APP_", for example:
 
    >REACT_APP_CLOUD_NAME=your_cloud_name
 
