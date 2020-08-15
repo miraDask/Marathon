@@ -1,4 +1,5 @@
 import React, { createContext, useState } from 'react';
+
 import { initialStatuses } from '../data/constants';
 
 const boardIssues = localStorage.getItem('boardIssues')

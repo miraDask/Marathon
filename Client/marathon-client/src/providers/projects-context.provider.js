@@ -17,6 +17,11 @@ const ProjectsContextProvider = ({ children }) => {
 	const [ currentProject, setCurrentProject ] = useState(currProject);
 	const [ updatedProjects, setUpdatedProjects ] = useState([]);
 	const saveCurrentProject = (newProject) => {
+		if (!newProject) {
+			setCurrentProject(null);
+			localStorage.removeItem('currentProject');
+			return;
+		}
 		setCurrentProject(newProject);
 		localStorage.setItem('currentProject', JSON.stringify(newProject));
 	};
