@@ -12,7 +12,7 @@
 
         Task<ResultModel<bool>> UpdateAsync(int id, string name, string key, string imageUrl);
 
-        Task<ResultModel<bool>> DeleteAsync(int id);
+        Task<ResultModel<string>> DeleteAsync(int id, string secret);
 
         Task<IEnumerable<ProjectListingServiceModel>> GetAllByUserIdAsync(string id);
 

@@ -114,7 +114,7 @@
         [HasProjectAdminAuthorization]
         public async Task<ActionResult> Delete(int projectId)
         {
-            var deleteRequest = await this.projectsService.DeleteAsync(projectId);
+            var deleteRequest = await this.projectsService.DeleteAsync(projectId, this.appSettings.Secret);
 
             if (!deleteRequest.Success)
             {
@@ -124,7 +124,7 @@
                 });
             }
 
-            return this.Ok();
+            return this.Ok(deleteRequest.Result);
         }
 
         /// <summary>

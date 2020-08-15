@@ -33,10 +33,9 @@
         {
             var user = await this.AddNewClaimToUserAsync(userId, claimKey, claimValue);
 
-            var claims = await this.userManager.GetClaimsAsync(user);
             await this.tokenService.DeactivateJwtToken(user.Id);
 
-            var token = await this.tokenService.GenerateJwtToken(user.Id, user.UserName, secret, claims);
+            var token = await this.GetUsersRefreshedToken(user, secret);
             return token;
         }
 
@@ -66,8 +65,7 @@
                 };
             }
 
-            var claims = await this.userManager.GetClaimsAsync(user);
-            var token = await this.tokenService.GenerateJwtToken(user.Id, email, secret, claims);
+            var token = await this.GetUsersRefreshedToken(user, secret);
             var userProjects = await this.dbContext.Users.
                 FirstOrDefaultAsync(x => x.Id == user.Id);
 
@@ -203,6 +201,13 @@
 
             this.dbContext.Update(user);
             await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task<string> GetUsersRefreshedToken(User user, string secret)
+        {
+            var claims = await this.userManager.GetClaimsAsync(user);
+            var token = await this.tokenService.GenerateJwtToken(user.Id, user.Email, secret, claims);
+            return token;
         }
 
         public async Task<string[]> GetAllUsersIdsConnectedToProjectByIdAsync(int projectId)

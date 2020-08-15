@@ -85,13 +85,13 @@
             };
         }
 
-        public async Task<ResultModel<bool>> DeleteAsync(int id)
+        public async Task<ResultModel<string>> DeleteAsync(int id, string secret)
         {
             var project = await this.GetByIdAsync(id);
 
             if (project == null)
             {
-                return new ResultModel<bool>
+                return new ResultModel<string>
                 {
                     Errors = new string[] { Errors.InvalidProjectId },
                 };
@@ -113,9 +113,12 @@
                 await this.identityService.RemoveClaimFromUserAsync(userId, Claims.Team, id.ToString());
             }
 
-            return new ResultModel<bool>
+            var user = await this.userManager.FindByIdAsync(project.CreatorId);
+
+            return new ResultModel<string>
             {
                 Success = true,
+                Result = await this.identityService.GetUsersRefreshedToken(user, secret),
             };
         }
 

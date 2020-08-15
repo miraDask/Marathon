@@ -28,5 +28,7 @@
         Task AddClaimToUserAsync(string userId, string claimKey, string claimValue);
 
         Task RemoveClaimFromUserAsync(string userId, string claimType, string claimValue);
+
+        Task<string> GetUsersRefreshedToken(User user, string secret);
     }
 }
