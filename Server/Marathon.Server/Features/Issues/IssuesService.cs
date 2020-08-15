@@ -58,6 +58,7 @@
             await this.dbContext.SaveChangesAsync();
 
             await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BacklogUpdate, true);
+            await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BoardUpdate, true);
 
             return issue.Id;
         }
@@ -223,6 +224,7 @@
             await this.dbContext.SaveChangesAsync();
 
             await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BacklogUpdate, true);
+            await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BoardUpdate, true);
 
             return new ResultModel<bool>
             {
