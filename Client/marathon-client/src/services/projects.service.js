@@ -75,6 +75,8 @@ export const deleteProject = async (token, id) => {
 		if (response.status === 400) {
 			throw new Error('Bad request');
 		}
+		const updatedToken = await response.json();
+		return updatedToken;
 	} catch (error) {
 		console.log(error);
 		return error;

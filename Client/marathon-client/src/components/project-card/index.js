@@ -1,7 +1,7 @@
 import React, { useState, useContext, Fragment } from 'react';
 import useFormProcessor from '../../hooks/useFormProcessor';
 
-import { getCookie } from '../../utils/cookie';
+import { getCookie, setCookie } from '../../utils/cookie';
 
 import { ProjectsContext } from '../../providers/projects-context.provider';
 
@@ -49,11 +49,12 @@ const ProjectCard = ({ initialData }) => {
 		const token = getCookie('x-auth-token');
 
 		try {
-			await deleteProject(token, initialData.id);
+			var updatedToken = await deleteProject(token, initialData.id);
 			if (currentProject.id === initialData.id) {
 				saveCurrentProject(null);
 			}
 			saveUpdatedProjects();
+			setCookie('x-auth-token', updatedToken);
 		} catch (error) {
 			console.log(error);
 		}

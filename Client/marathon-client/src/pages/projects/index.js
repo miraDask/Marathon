@@ -19,9 +19,8 @@ const UserProjectsPage = () => {
 		const token = getCookie('x-auth-token');
 
 		const projectsAll = await getProjects(token);
-		if (projectsAll.length > 0) {
-			setProjects(projectsAll);
-		}
+		setProjects(projectsAll);
+
 		setLoading(false);
 	}, []);
 
@@ -36,7 +35,7 @@ const UserProjectsPage = () => {
 		return <Spinner color="green-400" />;
 	}
 
-	return !projects ? <NoProjects /> : <ProjectsAll projects={projects} />;
+	return projects.length === 0 ? <NoProjects /> : <ProjectsAll projects={projects} />;
 };
 
 export default UserProjectsPage;
