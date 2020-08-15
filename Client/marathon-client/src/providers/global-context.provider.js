@@ -59,7 +59,6 @@ const GlobalContextProvider = ({ children }) => {
 		}
 
 		setUser(response);
-		console.log('user from glob-pro', response);
 		setLoggedIn(true);
 		setLoading(false);
 	};

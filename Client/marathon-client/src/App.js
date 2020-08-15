@@ -8,7 +8,7 @@ import ProjectsContextProvider from '../src/providers/projects-context.provider'
 import IssuesContextProvider from '../src/providers/issues-context.provider';
 import SprintsContextProvider from '../src/providers/sprints-context.provider';
 import TeamsContextProvider from '../src/providers/teams-context.provider';
-
+import ErrorBoundary from '../src/components/error-boundary';
 const App = () => {
 	return (
 		<div className="flex flex-col min-h-screen">
@@ -17,7 +17,9 @@ const App = () => {
 				<IssuesContextProvider>
 					<SprintsContextProvider>
 						<TeamsContextProvider>
-							<RoutesHandler />
+							<ErrorBoundary>
+								<RoutesHandler />
+							</ErrorBoundary>
 						</TeamsContextProvider>
 					</SprintsContextProvider>
 				</IssuesContextProvider>

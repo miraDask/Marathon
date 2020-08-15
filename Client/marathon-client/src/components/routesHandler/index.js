@@ -74,8 +74,8 @@ const RoutesHandler = () => {
 			/>
 			<Route exact path="/signup" render={() => (isLoggedIn ? <Redirect to="/" /> : <SignUpPage />)} />
 			<Route exact path="/signin" render={() => (isLoggedIn ? <Redirect to="/" /> : <SignInPage />)} />
-			<Route path="/404" component={ErrorPage} />
-			<Redirect to="/404" />
+			<Route path="/error" component={ErrorPage} />
+			<Redirect to="/error" />
 		</Switch>
 	);
 };

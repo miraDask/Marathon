@@ -50,6 +50,11 @@ const BoardPage = () => {
 			const token = getCookie('x-auth-token');
 
 			const getActiveSprintDetails = async () => {
+				console.log(currentProject);
+				if (!currentProject) {
+					history.push('/user/projects');
+				}
+
 				const response = await getSprintDetails(projectId, token, currentProject.activeSprintId);
 				const { error } = response;
 				if (error) {
@@ -81,6 +86,12 @@ const BoardPage = () => {
 		toggleModalIsOpen();
 	};
 
+	const getResultIfNoActiveSprint = () => {
+		if (!currentProject.activeSprintId) {
+			return <NoActiveSprint />;
+		}
+	};
+
 	return (
 		<Fragment>
 			<DashboardNavBar otherClasses="w-full" />
@@ -109,10 +120,9 @@ const BoardPage = () => {
 						Complete Sprint
 					</FormButton>
 				</PageTopicContainer>
-
 				<div className="container px-6 mb-8 mx-auto flex flex-wrap">
 					<Board />
-					{!currentProject.activeSprintId ? <NoActiveSprint /> : null}
+					{getResultIfNoActiveSprint()}
 					<CompleteSprintModal />
 				</div>
 			</MainWrapper>

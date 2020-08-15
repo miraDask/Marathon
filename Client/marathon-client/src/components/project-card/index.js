@@ -50,11 +50,13 @@ const ProjectCard = ({ initialData }) => {
 
 		try {
 			var updatedToken = await deleteProject(token, initialData.id);
-			if (currentProject.id === initialData.id) {
+
+			if (currentProject && currentProject.id === initialData.id) {
 				saveCurrentProject(null);
 			}
-			saveUpdatedProjects();
+
 			setCookie('x-auth-token', updatedToken);
+			saveUpdatedProjects();
 		} catch (error) {
 			console.log(error);
 		}
