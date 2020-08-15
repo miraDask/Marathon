@@ -16,6 +16,8 @@
 
         Task<ResultModel<bool>> DeleteAsync(int invitationId);
 
+        Task DeleteAsync(int teamId, string recipientId);
+
         Task<ResultModel<bool>> InviteUserToTeamAsync(string email, int teamId, int projectId, string senderId);
     }
 }

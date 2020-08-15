@@ -288,6 +288,19 @@
             };
         }
 
+
+        public async Task SetIssuesOfRemovedFromTeamUserToNull(int projectId, string assigneeId)
+        {
+            var issues = await this.dbContext.Issues.Where(x => x.ProjectId == projectId && x.AssigneeId == assigneeId).ToListAsync();
+            issues.ForEach(x =>
+            {
+                x.AssigneeId = null;
+            });
+
+            this.dbContext.UpdateRange(issues);
+            await this.dbContext.SaveChangesAsync();
+        }
+
         private async Task ReorderOldSprintBackLogIndexes(int projectId, int oldIndex, int? oldSprintId)
         {
             var issues = await this.dbContext.Issues

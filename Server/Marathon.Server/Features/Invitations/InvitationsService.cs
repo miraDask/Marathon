@@ -147,15 +147,18 @@
                 };
             }
 
-            invitation.IsDeleted = true;
-            invitation.DeletedOn = DateTime.UtcNow;
-            this.dbContext.Update(invitation);
-            await this.dbContext.SaveChangesAsync();
+            await this.DeleteInvitationAsync(invitation);
 
             return new ResultModel<bool>
             {
                 Success = true,
             };
+        }
+
+        public async Task DeleteAsync(int teamId, string recipientId)
+        {
+            var invitation = await this.dbContext.Invitations.FirstOrDefaultAsync(x => x.TeamId == teamId && x.RecipientId == recipientId);
+            await this.DeleteInvitationAsync(invitation);
         }
 
         public async Task<IEnumerable<InvitationServiceModel>> GetAllAsync(string userId)
@@ -169,5 +172,13 @@
                 TeamName = x.Team.Title,
             })
             .ToArrayAsync();
+
+        private async Task DeleteInvitationAsync(Invitation invitation)
+        {
+            invitation.IsDeleted = true;
+            invitation.DeletedOn = DateTime.UtcNow;
+            this.dbContext.Update(invitation);
+            await this.dbContext.SaveChangesAsync();
+        }
     }
 }

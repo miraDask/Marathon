@@ -18,6 +18,8 @@
 
         Task<ResultModel<bool>> DeleteAsync(int issueId, int projectId);
 
+        Task SetIssuesOfRemovedFromTeamUserToNull(int projectId, string assigneeId);
+
         Task<ResultModel<IEnumerable<IssueListingServiceModel>>> GetAllByProjecIdAsync(int id);
 
         Task<ResultModel<IssueDetailsServiceModel>> GetDetailsAsync(int id, int projectId);

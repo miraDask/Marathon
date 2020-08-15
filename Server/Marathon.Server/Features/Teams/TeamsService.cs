@@ -8,11 +8,14 @@
     using Marathon.Server.Data;
     using Marathon.Server.Data.Models;
     using Marathon.Server.Features.Common.Models;
+    using Marathon.Server.Features.Hubs;
     using Marathon.Server.Features.Identity;
     using Marathon.Server.Features.Identity.Models;
+    using Marathon.Server.Features.Invitations;
     using Marathon.Server.Features.Invitations.Models;
+    using Marathon.Server.Features.Issues;
     using Marathon.Server.Features.Teams.Models;
-    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.SignalR;
     using Microsoft.EntityFrameworkCore;
 
     using static Marathon.Server.Features.Common.Constants;
@@ -20,13 +23,22 @@
     public class TeamsService : ITeamsService
     {
         private readonly MarathonDbContext dbContext;
+        private readonly IHubContext<UpdatesHub> hub;
+        private readonly IInvitationsService invitationsService;
+        private readonly IIssuesService issuesService;
         private readonly IIdentityService identityService;
 
         public TeamsService(
             MarathonDbContext dbContext,
+            IHubContext<UpdatesHub> hub,
+            IInvitationsService invitationsService,
+            IIssuesService issuesService,
             IIdentityService identityService)
         {
             this.dbContext = dbContext;
+            this.hub = hub;
+            this.invitationsService = invitationsService;
+            this.issuesService = issuesService;
             this.identityService = identityService;
         }
 
@@ -175,6 +187,10 @@
             await this.dbContext.SaveChangesAsync();
 
             await this.identityService.RemoveClaimFromUserAsync(userId, Claims.Team, projectId.ToString());
+            await this.invitationsService.DeleteAsync(teamId, userId);
+            await this.issuesService.SetIssuesOfRemovedFromTeamUserToNull(projectId, userId);
+            await this.hub.Clients.Group(projectId.ToString()).SendAsync(HubEvents.BoardUpdate, true);
+
             return new ResultModel<bool>
             {
                 Success = true,
