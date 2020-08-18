@@ -25,7 +25,7 @@ export const completeSprint = async (projectId, token, sprintId, newSprintId) =>
 
 	try {
 		await fetcher(API_URL + `/${projectId}/sprints/${sprintId}`, 'PATCH', headers, {
-			newSprintId: newSprintId === '' ? null : newSprintId
+			newSprintId: newSprintId === '' ? null : +newSprintId
 		});
 	} catch (error) {
 		console.log(error);

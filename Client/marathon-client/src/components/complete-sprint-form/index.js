@@ -20,7 +20,7 @@ const CompleteSprintForm = ({ children }) => {
 	const { toggleModalIsOpen, saveAlert } = useContext(Context);
 	const { backlogIssuesCollections, boardIssuesCollections } = useContext(IssuesContext);
 	const { toggleCompletingSprint } = useContext(SprintsContext);
-	const [ sprintId, setSprintId ] = useState(null);
+	const [ sprintId, setSprintId ] = useState('');
 	const [ sprints, setSprints ] = useState(null);
 	const [ completed, setCompleted ] = useState('');
 	const [ uncompleted, setUncompleted ] = useState('');
