@@ -5,6 +5,7 @@
     using Marathon.Server.Features.Common.Models;
     using Marathon.Server.Features.Identity.Models;
     using Marathon.Server.Infrastructure.Extensions;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
 
@@ -101,6 +102,7 @@
         /// <response code="401"> Unauthorized request.</response>
         [HttpGet]
         [Route(Identity.GetUser)]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<UserDetailsServiceModel>> GetUser()
         {
             var userId = this.User.GetId();

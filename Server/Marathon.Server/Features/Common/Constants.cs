@@ -20,7 +20,7 @@
             public const string InvalidIssueId = "Invalid issue Id";
             public const string InvalidStatusId = "Invalid status Id";
             public const string InvalidInvitationId = "Invalid invitation Id";
-            public const string InvalidInvitation = "You are trying to invite yourself?";
+            public const string InvalidInvitation = "You are trying to invite yourself !";
             public const string InvalidInvitationEmail = "There is no registered user with this email";
             public const string AlredySendedInvitation = "Invitation to this user already sended";
             public const string InvalidUserOrProjectId = "Invalid user or project Id";
