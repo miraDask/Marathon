@@ -14,7 +14,7 @@ const NoProjects = () => {
 					<h6 className="title-font sm:text-4xl text-3xl mb-4 font-small text-gray-900">
 						You currently have no projects
 					</h6>
-					<p className="mb-8 leading-relaxed">Create one and let's the Marathon begin</p>
+					<p className="mb-8 leading-relaxed">Create one and let the Marathon begin</p>
 					<div className="flex w-full justify-center">
 						<NavLink to="/user/projects/create">
 							<FormButton addClass="ml-4">Create</FormButton>
