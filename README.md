@@ -39,6 +39,10 @@ Main languages & libraries :
 
 - Swagger
 
+## Snapshots:
+### Home Page (Guest)
+<img width="703" alt="home" src="https://user-images.githubusercontent.com/35633887/90960646-0e590400-e49b-11ea-90cf-97490ac10744.png">
+
 
 ## Application Configurations
 
