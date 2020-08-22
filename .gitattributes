@@ -1,2 +1,4 @@
 * linguist-vendored
+*.cs linguist-language=true
 *.js linguist-vendored=false
+
