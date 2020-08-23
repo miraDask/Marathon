@@ -11,7 +11,7 @@ This project is the defense project for the React course (part of the JS Web Mod
 
 ## Technology stack
 
-Main languages & libraries :
+Main languages : JS, C#
 
 ### Front End:
 
