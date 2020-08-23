@@ -37,7 +37,7 @@ Main languages : JS, C#
 
 - Entity Framework Core 3.1
 
-- MS SQL Server
+- SQL Server
 
 - Redis
 
