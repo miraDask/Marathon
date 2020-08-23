@@ -7,7 +7,7 @@ This project is the defense project for the React course (part of the JS Web Mod
 1. [Technology stack](https://github.com/miraDask/Marathon#technology-stack)
 2. [Screenshots](https://github.com/miraDask/Marathon#screenshots)
 3. [Application Configurations](https://github.com/miraDask/Marathon#application-configurations)
-
+4. [Credits](https://github.com/miraDask/Marathon#credits)
 
 ## Technology stack
 
@@ -133,3 +133,7 @@ Main languages & libraries :
    If you don't use SQLEXPRESS you should replace "Server=.\\SQLEXPRESS..." with "Server=.;...".
 
 - App depends on [Redis](https://redis.io/download) server for caching, so make sure that you have it installed.
+
+### Credits:
+
+Using [DrawKit](https://www.drawkit.io/) Watermelon Illustrations Pack.
