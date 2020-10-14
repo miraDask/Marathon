@@ -17,10 +17,6 @@ Main languages : JS, C#
 
 - React
 
-- Webpack
-
-- Babel
-
 - react-router
 
 - @microsoft/signalr
